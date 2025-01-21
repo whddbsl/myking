@@ -1,0 +1,18 @@
+{
+  "name": "마이킹 - 나만의 하이킹 길잡이",
+  "short_name": "마이킹",
+  "icons": [
+    {
+      "src": "/icons/app-icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff",
+  "theme_color": "#269386",
+  "description": "등산 정보 공유 플랫폼"
+}
