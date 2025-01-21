@@ -1,2 +1,2 @@
 # myking
-my-hiking: 나만의 하이킹 길잡이 
+my-hiking: 나만의 하이킹 메이트
