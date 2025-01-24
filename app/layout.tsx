@@ -32,6 +32,9 @@ const GlobalStyle = createGlobalStyle`
   body {
     line-height: 1;
   }
+  main {
+    padding: 0 16px;
+  }
   ol, ul {
     list-style: none !important;
   }
