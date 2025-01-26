@@ -16,24 +16,8 @@ import React, { useEffect, useState } from "react";
 export default function SetNickname() {
     const router = useRouter();
     const supabase = createClientComponentClient();
-    const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
+    const { kakaoId, name, setUser } = useUserStore((state) => state);
     const [inputNickname, setInputNickname] = useState("");
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-
-            if (user) {
-                const kakaoId = user.id || "";
-                const name = user.user_metadata?.name || "";
-
-                setUser(kakaoId, name, "");
-            }
-        };
-        fetchUser();
-    }, [supabase, setUser]);
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -42,7 +26,7 @@ export default function SetNickname() {
                     const kakaoId = session.user.id || "";
                     const name = session.user.user_metadata.name || "";
 
-                    setUser(kakaoId, name, "");
+                    setUser(kakaoId, name);
                 }
             }
         );
@@ -80,12 +64,38 @@ export default function SetNickname() {
                 throw new Error("닉네임 설정 실패");
             }
 
-            // const result = await response.json();
-            // console.log("닉네임 설정 성공", result);
+            const result = await response.json();
+
+            if (response.ok) {
+                if (response.status === 201) {
+                    console.log("닉네임 설정 성공:", result.message);
+                    router.push("/");
+                } else if (
+                    response.status === 200 &&
+                    result.message === "user already exists"
+                ) {
+                    console.log("이미 등록된 사용자:", result.message);
+                    router.push("/");
+                } else {
+                    throw new Error(
+                        result.message || "알 수 없는 오류가 발생했습니다."
+                    );
+                }
+            } else {
+                if (
+                    response.status === 400 &&
+                    result.message === "nickname already exists"
+                ) {
+                    alert("이미 존재하는 닉네임입니다.");
+                } else {
+                    throw new Error(result.message || "오류가 발생했습니다.");
+                }
+            }
 
             router.push("/");
-        } catch (error) {
+        } catch (error: any) {
             console.error("닉네임 설정 중 오류 발생", error);
+            alert("닉네임 설정 중 문제가 발생했습니다. 다시 시도해주세요");
         }
     };
 

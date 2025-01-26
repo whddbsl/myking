@@ -6,17 +6,10 @@ export const createUser = async (
     user: UserDto
 ): Promise<void> => {
     const existingNickname = await repository.findByNickname(user.nickname);
-    const existingUser = await repository.findById(user.kakao_id);
 
     if (existingNickname) {
-        // throw new Error("nickname already exists");
         const error: any = new Error("nickname already exists");
         error.code = "DUPLICATE_NICKNAME";
-        throw error;
-    } else if (existingUser) {
-        // throw new Error("user already exists");
-        const error: any = new Error("user already exists");
-        error.code = "USER_ALREADY_EXISTS";
         throw error;
     }
 
