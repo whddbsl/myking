@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 export default function SetNickname() {
     const router = useRouter();
     const supabase = createClientComponentClient();
-    const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
+    const { kakaoId, name, setUser } = useUserStore((state) => state);
     const [inputNickname, setInputNickname] = useState("");
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function SetNickname() {
                     const kakaoId = session.user.id || "";
                     const name = session.user.user_metadata.name || "";
 
-                    setUser(kakaoId, name, "");
+                    setUser(kakaoId, name);
                 }
             }
         );
