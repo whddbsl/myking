@@ -6,7 +6,6 @@ interface UserState {
     name: string | "";
     nickname: string;
     setUser: (kakaoId: string, name: string, nickname: string) => void;
-    // setNickname: (nickname: string) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -15,8 +14,8 @@ export const useUserStore = create<UserState>()(
             kakaoId: "",
             name: "",
             nickname: "",
-            setUser: (kakaoId, name) => set({ kakaoId, name }),
-            // setNickname: (nickname) => set({ nickname }),
+            setUser: (kakaoId, name, nickname) =>
+                set({ kakaoId, name, nickname }),
         }),
         {
             name: "user-storage",
