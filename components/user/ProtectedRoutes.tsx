@@ -21,10 +21,6 @@ export default function ProtectedRoute({
             );
             router.push("/auth");
         }
-
-        if (isLoggedIn) {
-            router.push("/");
-        }
     }, [isLoggedIn, hasHydrated, router]);
 
     if (!hasHydrated) {
