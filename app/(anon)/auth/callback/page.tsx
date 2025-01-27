@@ -24,7 +24,7 @@ export default function AuthCallback() {
                     alert(
                         "로그인 세션을 확인할 수 없습니다. 다시 시도해주세요."
                     );
-                    router.push("/");
+                    router.push("/auth");
                     return;
                 }
 
@@ -32,11 +32,11 @@ export default function AuthCallback() {
                 if (!user) {
                     console.error("유저 정보가 없습니다.");
                     alert("유저 정보를 확인할 수 없습니다.");
-                    router.push("/");
+                    router.push("/auth");
                     return;
                 }
 
-                const kakaoId = user.id || "";
+                const kakaoId = user.user_metadata?.provider_id || "";
                 const name = user.user_metadata?.name || "";
                 setUser(kakaoId, name, "");
 
@@ -58,7 +58,6 @@ export default function AuthCallback() {
                 const result = await response.json();
                 console.log("사용자 확인 결과: ", result);
 
-                // 조건에 따라 리다이렉트
                 if (result.exists) {
                     router.push("/");
                 } else {
