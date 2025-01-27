@@ -1,9 +1,8 @@
 "use client";
-import { PartyComponent } from "./page.styles";
+import * as PC from "./page.styles";
 import Filter from "../../../components/party/filter/Filter";
 import { useState, useEffect } from "react";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
-import Link from "next/link";
 const PartyPage: React.FC = () => {
     const [partyList, setPartyList] = useState<PartyListDto[]>([]);
 
@@ -13,53 +12,50 @@ const PartyPage: React.FC = () => {
             .then((data) => setPartyList(data));
     }, []);
 
-    console.log("나와", partyList);
     return (
         <div>
-            <PartyComponent>
-                <Filter />
-                <div>
-                    {partyList.map((party) => (
-                        <div key={party.party_id}>
-                            <div>
-                                <div>
-                                    <div>유저 프로필</div>
-                                    <div>
-                                        <p>유저 닉네임</p>
-                                        <p>{party.timeLabel}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <p>산이름</p>
-                                        <p>{party.meeting_date}</p>
-                                    </div>
-                                    <div>
-                                        <span>{party.max_members}</span>
-                                        <span>{party.filter_gender}</span>
-                                        <span>{party.filter_age}</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>
-                                        <p>모집마감일</p>
-                                        <p>D-{party.end_date}</p>
-                                    </div>
-                                    <div>
-                                        <p>{party.filter_state}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <Link href={`/parties/${party.party_id}`}>
-                                details로 이동
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    <button>작성하기</button>
-                </div>
-            </PartyComponent>
+            <Filter />
+            <PC.Cards>
+                {partyList.map((party) => (
+                    <PC.Card key={party.party_id}>
+                        <PC.ProfileSection>
+                            <PC.ProfileImage>
+                                {/* 프로필 사진 */}
+                            </PC.ProfileImage>
+                            <PC.ProfileInfo>
+                                <h1>유저 닉네임</h1>
+                                <h2>{party.timeLabel}</h2>
+                            </PC.ProfileInfo>
+                        </PC.ProfileSection>
+                        <PC.LinkWrapper href={`/parties/${party.party_id}`}>
+                            <PC.InfoSection>
+                                <PC.Meeting>
+                                    <span>산이름</span>
+                                    <span>{party.meeting_date}</span>
+                                </PC.Meeting>
+                                <PC.Tag>
+                                    <span>#{party.max_members}명</span>
+                                    <span>#{party.filter_gender}</span>
+                                    {party.filter_age.map((age) => (
+                                        <span key={age}>#{age}</span>
+                                    ))}
+                                </PC.Tag>
+                            </PC.InfoSection>
+
+                            <PC.Footer>
+                                <PC.EndDate>
+                                    <h1>모집마감일</h1>
+                                    <h2>D-{party.end_date}</h2>
+                                </PC.EndDate>
+                                <PC.State state={party.filter_state}>
+                                    {party.filter_state}
+                                </PC.State>
+                            </PC.Footer>
+                        </PC.LinkWrapper>
+                    </PC.Card>
+                ))}
+            </PC.Cards>
+            <PC.CreateButton>작성하기</PC.CreateButton>
         </div>
     );
 };
