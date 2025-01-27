@@ -1,6 +1,6 @@
-import { PartyRepository } from "@/domain/repository/PartyRepository";
+import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { PartyDetailDto } from "@/application/usecases/partyLookup/dto/PartyDetailDto";
-import { SbPartyRepository } from "@/infrastructure/repositoties/SbPartyRepository";
+import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 import { findPartyDetail } from "@/application/usecases/partyLookup/DfPartyDetailUsecase";
 import { NextRequest, NextResponse } from "next/server";
 

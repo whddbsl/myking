@@ -1,6 +1,6 @@
 import { Party } from "../../../domain/entities/Party";
 import { PartyDetailDto } from "./dto/PartyDetailDto";
-import { SbPartyRepository } from "@/infrastructure/repositoties/SbPartyRepository";
+import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -18,9 +18,13 @@ function calcDday(date: Date): string {
     const diffTime: number = targetDate.getTime() - today.getTime();
 
     // 밀리초를 일수로 변환
-    const diffDays = String(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays;
+    if (diffDays < 0) {
+        diffDays = 0;
+    }
+
+    return String(diffDays);
 }
 
 function calcTimeLabel(date: Date): string {

@@ -1,4 +1,4 @@
-import { PartyRepository } from "@/domain/repository/PartyRepository";
+import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { Party } from "../../domain/entities/Party";
 import { createClient } from "@/utils/supabase/server";
 
@@ -17,6 +17,7 @@ export class SbPartyRepository implements PartyRepository {
             ...party,
             created_at: new Date(party.created_at),
             meeting_date: new Date(party.meeting_date),
+            end_date: new Date(party.end_date),
             // mountain: {
             //     ...party.mountain,
             //     name: party.mountain.name,
@@ -40,6 +41,7 @@ export class SbPartyRepository implements PartyRepository {
             ...data,
             created_at: new Date(data.created_at),
             meeting_date: new Date(data.meeting_date),
+            end_date: new Date(data.end_date),
         };
     }
     // 생성, 삭제 등 수행 시에 함수 작성

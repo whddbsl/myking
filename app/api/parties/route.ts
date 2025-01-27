@@ -2,8 +2,8 @@
 import { findPartyList } from "@/application/usecases/partyLookup/DfPartyListUsecase";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
 //import { PartyDetailDto } from "@/application/usecases/partyDetail/dto/PartyDetailDto";
-import { PartyRepository } from "@/domain/repository/PartyRepository";
-import { SbPartyRepository } from "@/infrastructure/repositoties/SbPartyRepository";
+import { PartyRepository } from "@/domain/repositories/PartyRepository";
+import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 import { NextResponse } from "next/server";
 
 // 레포지토리, usecase 가져오는 어댑터
