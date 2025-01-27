@@ -1,5 +1,6 @@
 "use client";
 
+import ProtectedRoutes from "@/components/user/ProtectedRoutes";
 import {
     Form,
     Header,
@@ -100,7 +101,7 @@ export default function SetNickname() {
     };
 
     return (
-        <>
+        <ProtectedRoutes>
             <Header>
                 <img src="/logos/logo.png" alt="logo" />
             </Header>
@@ -128,6 +129,6 @@ export default function SetNickname() {
                     <SignUpButton type="submit">마이킹 시작하기</SignUpButton>
                 </Form>
             </Main>
-        </>
+        </ProtectedRoutes>
     );
 }

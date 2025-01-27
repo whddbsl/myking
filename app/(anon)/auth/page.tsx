@@ -1,14 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Container, KakaoButton, LogoContainer } from "./page.styles";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useUserStore } from "@/application/states/userStore";
 
 export default function SignUp() {
     const supabase = createClientComponentClient();
-    const { setUser } = useUserStore((state) => state);
-    const router = useRouter();
 
     const handleSignIn = async (event: React.MouseEvent) => {
         event.preventDefault();
