@@ -15,12 +15,15 @@ export const Th = styled.th`
     text-align: center;
     background-color: #269386;
     color: white;
+    max-width: 300px;
 `;
 
 export const Td = styled.td`
     border: 1px solid #ddd;
-    
+    max-width: 300px;
     text-align: center;
+    vertical-align : middle;
+    padding: 10px;
 `;
 
 export const Tr = styled.tr`

@@ -10,7 +10,7 @@ export default function Home() {
       
         <ul>
           <li>
-            <Link href="/admin">관리자 페이지</Link>
+            <Link href="/admin/user">관리자 페이지</Link>
           </li>
         </ul>
       </main>

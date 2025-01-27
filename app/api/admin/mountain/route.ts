@@ -1,7 +1,7 @@
 import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
 import { SbAdminMountainRepository } from "@/infrastructure/repositories/SbAdminMountainRepository";
 import { findAllMountains } from "@/application/usecases/adminMountain/DfAdminFindMountainUsecase";
-import { AdminMountainDto } from "@/application/usecases/adminMountain/dto/AdminMountainDto";
+import { AdminMountainListDto } from "@/application/usecases/adminMountain/dto/AdminMountainListDto";
 import { NextResponse } from "next/server";
 import { deleteMountain } from "@/application/usecases/adminMountain/AdminDeleteMountainUsecase";
 import { createNewMountain } from "@/application/usecases/adminMountain/AdminCreateMountainUsecase";
@@ -9,7 +9,7 @@ import { createNewMountain } from "@/application/usecases/adminMountain/AdminCre
 export async function GET() {
     const mountainRepository: AdminMountainRepository =
         new SbAdminMountainRepository();
-    const mountains: AdminMountainDto[] = await findAllMountains(
+    const mountains: AdminMountainListDto[] = await findAllMountains(
         mountainRepository
     );
     return NextResponse.json(mountains);

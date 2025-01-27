@@ -1,11 +1,12 @@
 "use client";
 
-import { AdminMountainDto } from "@/application/usecases/adminMountain/dto/AdminMountainDto";
+import { AdminMountainListDto } from "@/application/usecases/adminMountain/dto/AdminMountainListDto";
 import { useEffect, useState } from "react";
-import { Button, Main, Table, Td, Th, Tr, UnstyledLink } from "../user/page.styles";
+import * as Mountain from "../user/page.styles";
+import { CreateButton } from "./page.styles";
 
 const MountainPage = () => {
-    const [mountains, setMountains] = useState<AdminMountainDto[]>([]);
+    const [mountains, setMountains] = useState<AdminMountainListDto[]>([]);
 
     useEffect(() => {
         fetch("/api/admin/mountain")
@@ -38,44 +39,52 @@ const MountainPage = () => {
     };
 
     return (
-        <Main>
-            <Table>
+        <Mountain.Main>
+            <Mountain.Table>
                 <thead>
-                    <Tr>
-                        <Th>아이디</Th>
-                        <Th>산 이름</Th>
-                        <Th>지역</Th>
-                        <Th>설명</Th>
-                        <Th>생성일</Th>
-                        <Th>관리</Th>
-                    </Tr>
+                    <Mountain.Tr>
+                        <Mountain.Th>아이디</Mountain.Th>
+                        <Mountain.Th>산 이름</Mountain.Th>
+                        <Mountain.Th>지역</Mountain.Th>
+                        <Mountain.Th>설명</Mountain.Th>
+                        <Mountain.Th>생성일</Mountain.Th>
+                        <Mountain.Th>관리</Mountain.Th>
+                    </Mountain.Tr>
                 </thead>
                 <tbody>
                     {mountains.map((mountain) => (
-                        <Tr key={mountain.mountain_id}>
-                            <Td>{mountain.mountain_id}</Td>
-                            <Td>{mountain.name}</Td>
-                            <Td>{mountain.region}</Td>
-                            <Td>{mountain.description}</Td>
-                            <Td>{mountain.created_at}</Td>
-                            <Td>
-                                <Button>수정</Button>
-                                <Button
+                        <Mountain.Tr key={mountain.mountain_id}>
+                            <Mountain.Td>{mountain.mountain_id}</Mountain.Td>
+                            <Mountain.Td>{mountain.name}</Mountain.Td>
+                            <Mountain.Td>{mountain.region}</Mountain.Td>
+                            <Mountain.Td>{mountain.description}</Mountain.Td>
+                            <Mountain.Td>{mountain.created_at}</Mountain.Td>
+                            <Mountain.Td>
+                                <Mountain.Button>
+                                    <Mountain.UnstyledLink
+                                        href={`/admin/mountain/${mountain.mountain_id}/edit`}
+                                    >
+                                        수정
+                                    </Mountain.UnstyledLink>
+                                </Mountain.Button>
+                                <Mountain.Button
                                     onClick={() =>
                                         handleDelete(mountain.mountain_id)
                                     }
                                 >
                                     삭제
-                                </Button>
-                            </Td>
-                        </Tr>
+                                </Mountain.Button>
+                            </Mountain.Td>
+                        </Mountain.Tr>
                     ))}
                 </tbody>
-            </Table>
-            <Button>
-                <UnstyledLink href="/admin/mountain/create">산 추가</UnstyledLink>
-            </Button>
-        </Main>
+            </Mountain.Table>
+            <CreateButton>
+                <Mountain.UnstyledLink href="/admin/mountain/create">
+                    산 추가
+                </Mountain.UnstyledLink>
+            </CreateButton>
+        </Mountain.Main>
     );
 };
 
