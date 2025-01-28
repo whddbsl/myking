@@ -1,17 +1,5 @@
 import styled from "styled-components";
 
-export const Header = styled.header`
-    height: 5vh;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-
-    & > img {
-        height: 60%;
-        width: auto;
-    }
-`;
-
 export const Main = styled.main`
     display: flex;
     flex-direction: column;

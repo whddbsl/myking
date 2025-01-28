@@ -1,16 +1,15 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Header, Main } from "./page.styles";
+import { Main } from "./page.styles";
 import ProtectedRoutes from "@/components/user/ProtectedRoutes";
+import HeaderComponent from "@/components/header/header";
 
 const NicknameLayout = ({ children }: { children: ReactNode }) => {
     return (
         <>
-            <Header>
-                <img src="/logos/logo.png" alt="logo" />
-            </Header>
             <ProtectedRoutes>
+                <HeaderComponent logoSrc="/logos/logo.png" />
                 <Main>{children}</Main>
             </ProtectedRoutes>
         </>
