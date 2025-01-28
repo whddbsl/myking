@@ -4,41 +4,24 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUserStore } from "@/application/states/userStore";
+import { restoreSession } from "@/components/user/AuthUtils";
 
 export default function AuthCallback() {
     const supabase = createClientComponentClient();
-    const { setUser } = useUserStore((state) => state);
+    const { setUser, resetUser } = useUserStore((state) => state);
     const router = useRouter();
 
     useEffect(() => {
         const handleAuthCallback = async () => {
             try {
-                const { data: sessionData, error } =
-                    await supabase.auth.getSession();
+                await restoreSession(setUser, resetUser);
 
-                if (error || !sessionData?.session) {
-                    console.error(
-                        "세션 가져오기 실패: ",
-                        error?.message || "세션이 없습니다."
-                    );
-                    alert(
-                        "로그인 세션을 확인할 수 없습니다. 다시 시도해주세요."
-                    );
+                const { kakaoId } = useUserStore.getState();
+                if (!kakaoId) {
+                    alert("사용자 정보를 확인할 수 없습니다.");
                     router.push("/auth");
                     return;
                 }
-
-                const user = sessionData.session.user;
-                if (!user) {
-                    console.error("유저 정보가 없습니다.");
-                    alert("유저 정보를 확인할 수 없습니다.");
-                    router.push("/auth");
-                    return;
-                }
-
-                const kakaoId = user.user_metadata?.provider_id || "";
-                const name = user.user_metadata?.name || "";
-                setUser(kakaoId, name, "");
 
                 const response = await fetch("/api/auth/checkUser", {
                     method: "POST",
