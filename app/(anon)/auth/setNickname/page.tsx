@@ -1,10 +1,7 @@
 "use client";
 
-import ProtectedRoutes from "@/components/user/ProtectedRoutes";
 import {
     Form,
-    Header,
-    Main,
     NicknameContainer,
     ProfileImageContainer,
     SignUpButton,
@@ -101,34 +98,24 @@ export default function SetNickname() {
     };
 
     return (
-        <ProtectedRoutes>
-            <Header>
-                <img src="/logos/logo.png" alt="logo" />
-            </Header>
-            <Main>
-                <Form onSubmit={handleSetNickname}>
-                    <ProfileImageContainer>
-                        <img
-                            src="/images/member_default.svg"
-                            alt="member_default"
-                        />
-                        <h4>프로필 수정</h4>
-                    </ProfileImageContainer>
-                    <NicknameContainer>
-                        <h5>
-                            닉네임 <span>*</span>
-                        </h5>
-                        <input
-                            type="text"
-                            placeholder="닉네임 입력"
-                            maxLength={20}
-                            minLength={2}
-                            onChange={handleNicknameChange}
-                        />
-                    </NicknameContainer>
-                    <SignUpButton type="submit">마이킹 시작하기</SignUpButton>
-                </Form>
-            </Main>
-        </ProtectedRoutes>
+        <Form onSubmit={handleSetNickname}>
+            <ProfileImageContainer>
+                <img src="/images/member_default.svg" alt="member_default" />
+                <h4>프로필 수정</h4>
+            </ProfileImageContainer>
+            <NicknameContainer>
+                <h5>
+                    닉네임 <span>*</span>
+                </h5>
+                <input
+                    type="text"
+                    placeholder="닉네임 입력"
+                    maxLength={20}
+                    minLength={2}
+                    onChange={handleNicknameChange}
+                />
+            </NicknameContainer>
+            <SignUpButton type="submit">마이킹 시작하기</SignUpButton>
+        </Form>
     );
 }
