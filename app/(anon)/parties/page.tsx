@@ -47,9 +47,11 @@ const PartyPage: React.FC = () => {
                                     <h1>모집마감일</h1>
                                     <h2>D-{party.end_date}</h2>
                                 </PC.EndDate>
-                                <PC.State state={party.filter_state}>
-                                    {party.filter_state}
-                                </PC.State>
+                                {party.filter_state && (
+                                    <PC.State state={party.filter_state}>
+                                        {party.filter_state}
+                                    </PC.State>
+                                )}
                             </PC.Footer>
                         </PC.LinkWrapper>
                     </PC.Card>

@@ -14,6 +14,19 @@ const PartyDetailPage: React.FC = () => {
             .then((data) => setPartyDetail(data));
     }, [partyId]);
 
+    const handleAddPartyMember = () => {
+        fetch(`/api/parties/${partyId}`, {
+            method: "POST",
+            headers: {
+                // 담아서 보내는 데이터의 형태가 json
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: "6219a949-5559-4a73-8ed0-34f065366dc0",
+            }), // 추후 user_id도 담아서 보내기
+        });
+    };
+
     return (
         <PD.PartyDetailComponent>
             <PD.Card>
@@ -42,7 +55,7 @@ const PartyDetailPage: React.FC = () => {
                         <h1>모집마감일</h1>
                         <h2>D-{partyDetail?.end_date}</h2>
                     </PD.EndDate>
-                    <PD.Paticipation>
+                    <PD.Paticipation onClick={handleAddPartyMember}>
                         <span>참여하기</span>
                         <span>
                             {partyDetail?.current_members}/
