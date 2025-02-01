@@ -2,12 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUserStore } from "@/application/states/userStore";
 import { restoreSession } from "@/components/user/AuthUtils";
 
 export default function AuthCallback() {
-    const supabase = createClientComponentClient();
     const { setUser, resetUser } = useUserStore((state) => state);
     const router = useRouter();
 
@@ -34,7 +32,7 @@ export default function AuthCallback() {
                 if (!response.ok) {
                     console.error("사용자 확인 실패:", await response.text());
                     alert("사용자 확인 중 오류가 발생했습니다.");
-                    router.push("/");
+                    router.push("/auth");
                     return;
                 }
 
@@ -49,12 +47,12 @@ export default function AuthCallback() {
             } catch (error: any) {
                 console.error("로그인 처리 중 오류 발생: ", error);
                 alert("오류가 발생했습니다. 다시 시도해주세요.");
-                router.push("/");
+                router.push("/auth");
             }
         };
 
         handleAuthCallback();
-    }, [supabase, router, setUser]);
+    }, [router, setUser, resetUser]);
 
     return <div>로그인 처리 중...</div>;
 }

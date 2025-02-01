@@ -34,7 +34,7 @@ export class SbUserRepository implements UserRepository {
             .from("user")
             .select("*")
             .eq("kakao_id", kakaoId)
-            .single();
+            .maybeSingle();
 
         if (error) {
             console.error("Failed to fetch user: ", error.message);

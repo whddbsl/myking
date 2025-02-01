@@ -21,7 +21,8 @@ export default function SetNickname() {
         const { data: authListener } = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 if (session?.user) {
-                    const kakaoId = session.user.id || "";
+                    const kakaoId =
+                        session.user.user_metadata.provider_id || "";
                     const name = session.user.user_metadata.name || "";
 
                     setUser(kakaoId, name, nickname);
@@ -113,6 +114,7 @@ export default function SetNickname() {
                     maxLength={20}
                     minLength={2}
                     onChange={handleNicknameChange}
+                    required
                 />
             </NicknameContainer>
             <SignUpButton type="submit">마이킹 시작하기</SignUpButton>
