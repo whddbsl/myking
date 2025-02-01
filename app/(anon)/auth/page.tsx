@@ -14,12 +14,12 @@ export default function SignUp() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "kakao",
                 options: {
-                    redirectTo: "http://localhost:3000/auth/callback",
-                    // redirectTo: `https://${
-                    //     process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID
-                    // }.supabase.co/auth/v1/callback?state=${encodeURIComponent(
-                    //     process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback"
-                    // )}`,
+                    // redirectTo: "http://localhost:3000/auth/callback",
+                    redirectTo: `https://${
+                        process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID
+                    }.supabase.co/auth/v1/callback?state=${encodeURIComponent(
+                        process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback"
+                    )}`,
                 },
             });
 

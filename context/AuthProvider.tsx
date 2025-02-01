@@ -23,6 +23,8 @@ export default function AuthProvider({
         // 실시간 세션 상태 감시
         const { data: subscription } = supabase.auth.onAuthStateChange(
             (event, session) => {
+                console.log(`Supabase OAuth 이벤트 발생: ${event}`);
+                console.log(`현재 세션 상태: ${session}`);
                 if (event === "SIGNED_OUT" || !session) {
                     alert("세션이 만료되었습니다. 다시 로그인해주세요.");
                     resetUser();
