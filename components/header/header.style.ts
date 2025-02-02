@@ -16,3 +16,10 @@ export const Title = styled.h1`
     font-size: 18px;
     font-weight: bold;
 `;
+
+export const BackButton = styled.img`
+    height: 40%;
+    width: auto;
+    cursor: pointer;
+    margin-right: 10px;
+`;
