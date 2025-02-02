@@ -43,4 +43,24 @@ export class SbUserRepository implements UserRepository {
 
         return data as User;
     }
+
+    async updateNickname(
+        kakaoId: string,
+        newNickname: string
+    ): Promise<User | null> {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("user")
+            .update({ nickname: newNickname })
+            .eq("kakao_id", kakaoId)
+            .single();
+
+        if (error) {
+            console.error("Failed to update nickname: ", error.message);
+            return null;
+        }
+
+        console.log("닉네임 업데이트 성공: ", newNickname);
+        return data as User;
+    }
 }
