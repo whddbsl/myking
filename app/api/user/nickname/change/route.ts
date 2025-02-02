@@ -1,4 +1,4 @@
-import { changeNickname } from "@/application/usecases/user/DfUserUsecase";
+import { changeNickname } from "@/application/usecases/user/DfUpdateUserUsecase";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
