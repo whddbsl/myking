@@ -1,24 +1,31 @@
 import { changeNickname } from "@/application/usecases/user/DfUpdateUserUsecase";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(req: NextRequest) {
     try {
-        const supabase = createClientComponentClient();
+        const authHeader = req.headers.get("Authorization");
 
-        const { data: sessionData, error: sessionError } =
-            await supabase.auth.getSession();
-
-        if (!sessionData || !sessionData.session) {
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return NextResponse.json(
-                { message: "로그인이 필요합니다." },
+                { message: "로그인 정보가 없습니다." },
                 { status: 401 }
             );
         }
 
-        const kakaoId = sessionData.session.user.user_metadata.provider_id;
+        const accessToken = authHeader.split(" ")[1];
+
+        const supabase = createServerComponentClient({
+            cookies,
+        });
+
+        const { data: userData, error: userError } =
+            await supabase.auth.getUser(accessToken);
+
+        const kakaoId = userData.user?.user_metadata.provider_id;
 
         if (!kakaoId) {
             return NextResponse.json(
@@ -27,7 +34,7 @@ export async function PATCH(request: NextRequest) {
             );
         }
 
-        const { newNickname } = await request.json();
+        const { newNickname } = await req.json();
 
         if (!newNickname) {
             return NextResponse.json(
