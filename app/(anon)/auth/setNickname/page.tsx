@@ -1,15 +1,11 @@
 "use client";
 
-import {
-    Form,
-    NicknameContainer,
-    ProfileImageContainer,
-    SignUpButton,
-} from "./page.styles";
+import { Form, NicknameContainer, ProfileImageContainer } from "./page.styles";
 import { useUserStore } from "@/application/states/userStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import SubmitButtonComponent from "@/components/button/submitButton";
 
 export default function SetNickname() {
     const router = useRouter();
@@ -117,7 +113,7 @@ export default function SetNickname() {
                     required
                 />
             </NicknameContainer>
-            <SignUpButton type="submit">마이킹 시작하기</SignUpButton>
+            <SubmitButtonComponent text="마이킹 시작하기" />
         </Form>
     );
 }
