@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import ProtectedRoute from "@/components/user/ProtectedRoutes";
 import { Container, KakaoButton, LogoContainer } from "./page.styles";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
@@ -14,12 +14,12 @@ export default function SignUp() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "kakao",
                 options: {
-                    // redirectTo: "http://localhost:3000/auth/callback",
-                    redirectTo: `https://${
-                        process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID
-                    }.supabase.co/auth/v1/callback?state=${encodeURIComponent(
-                        process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback"
-                    )}`,
+                    redirectTo: "http://localhost:3000/auth/callback",
+                    // redirectTo: `https://${
+                    //     process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID
+                    // }.supabase.co/auth/v1/callback?next=${encodeURIComponent(
+                    //     process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback"
+                    // )}`,
                 },
             });
 
@@ -36,13 +36,15 @@ export default function SignUp() {
     };
 
     return (
-        <Container>
-            <LogoContainer>
-                <h4>나만의 하이킹 메이트</h4>
-                <img src="/logos/logo.png" alt="logo" />
-            </LogoContainer>
+        <ProtectedRoute>
+            <Container>
+                <LogoContainer>
+                    <h4>나만의 하이킹 메이트</h4>
+                    <img src="/logos/logo.png" alt="logo" />
+                </LogoContainer>
 
-            <KakaoButton onClick={handleSignIn}>카카오 로그인</KakaoButton>
-        </Container>
+                <KakaoButton onClick={handleSignIn}>카카오 로그인</KakaoButton>
+            </Container>
+        </ProtectedRoute>
     );
 }

@@ -3,23 +3,31 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/application/states/userStore";
-import { restoreSession } from "@/components/user/AuthUtils";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import ProtectedRoute from "@/components/user/ProtectedRoutes";
 
 export default function AuthCallback() {
     const { setUser, resetUser } = useUserStore((state) => state);
     const router = useRouter();
+    const supabase = createClientComponentClient();
 
     useEffect(() => {
         const handleAuthCallback = async () => {
             try {
-                await restoreSession(setUser, resetUser);
+                const { data } = await supabase.auth.getSession();
+
+                setUser(
+                    data.session?.user.user_metadata.provider_id,
+                    data.session?.user.user_metadata.name,
+                    ""
+                );
+
+                localStorage.setItem(
+                    "supabase-session",
+                    JSON.stringify(data.session)
+                );
 
                 const { kakaoId } = useUserStore.getState();
-                if (!kakaoId) {
-                    alert("사용자 정보를 확인할 수 없습니다.");
-                    router.push("/auth");
-                    return;
-                }
 
                 const response = await fetch("/api/auth/checkUser", {
                     method: "POST",
@@ -54,5 +62,9 @@ export default function AuthCallback() {
         handleAuthCallback();
     }, [router, setUser, resetUser]);
 
-    return <div>로그인 처리 중...</div>;
+    return (
+        <ProtectedRoute>
+            <div>로그인 처리 중...</div>
+        </ProtectedRoute>
+    );
 }

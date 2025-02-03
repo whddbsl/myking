@@ -1,14 +1,13 @@
-import { useUserStore } from "@/application/states/userStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export async function restoreSession(
     setUser: {
         (kakaoId: string, name: string, nickname: string): void;
     },
-    resetUser: () => void
+    resetUser: () => void,
+    nickname: string
 ) {
     const supabase = createClientComponentClient();
-    const { nickname } = useUserStore((state) => state);
 
     console.log("🔍 Supabase 쿠키 기반 세션 복원 시도...");
     let { data, error } = await supabase.auth.getSession();
