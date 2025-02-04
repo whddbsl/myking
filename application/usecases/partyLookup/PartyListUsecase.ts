@@ -1,6 +1,6 @@
 import { Party } from "../../../domain/entities/Party";
 import { PartyListDto } from "./dto/PartyListDto";
-import { SbPartyRepository } from "@/infrastructure/repositoties/SbPartyRepository";
+import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -18,20 +18,39 @@ function calcDday(date: Date): string {
     const diffTime: number = targetDate.getTime() - today.getTime();
 
     // 밀리초를 일수로 변환
-    const diffDays = String(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays;
+    if (diffDays < 0) {
+        diffDays = 0;
+    }
+
+    return String(diffDays);
 }
 
 function calcTimeLabel(date: Date): string {
     const today: Date = new Date();
-    const createdTime: Date = new Date(date);
-    const diffTime: number = today.getTime() - createdTime.getTime();
+    const diffTime: number = today.getTime() - date.getTime();
 
     if (diffTime < 60000) {
         return "방금전";
     } else {
         return formatDate(date);
+    }
+}
+
+function currentState(
+    current_members: number,
+    max_members: number,
+    end_date: Date
+): "모집중" | "마감" {
+    const today = new Date();
+
+    const diffTime: number = end_date.getTime() - today.getTime();
+
+    if (current_members === max_members || diffTime < 0) {
+        return "마감";
+    } else {
+        return "모집중";
     }
 }
 
@@ -46,7 +65,11 @@ export const findPartyList = async (
             creator_id: party.creator_id,
             mountain_id: party.mountain_id,
             max_members: party.max_members,
-            filter_state: party.filter_state,
+            filter_state: currentState(
+                party.current_members,
+                party.max_members,
+                party.end_date
+            ),
             filter_gender: party.filter_gender,
             filter_age: party.filter_age,
             meeting_date: formatDate(party.meeting_date),

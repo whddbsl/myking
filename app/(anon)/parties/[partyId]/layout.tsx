@@ -15,10 +15,7 @@ const PartyDetailLayout: React.FC<{ children: React.ReactNode }> = ({
 }) => {
     return (
         <div>
-            <Header>
-                <h1>상세</h1>
-            </Header>
-            <main>{children}</main>
+            <div>{children}</div>
         </div>
     );
 };
