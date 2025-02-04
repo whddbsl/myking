@@ -5,7 +5,7 @@ import { findPartyDetail } from "@/application/usecases/partyLookup/PartyDetailU
 import { NextRequest, NextResponse } from "next/server";
 import { SbPartyMemberRepository } from "@/infrastructure/repositories/SbPartyMemberRepository";
 import { PartyMemberRepository } from "@/domain/repositories/PartyMemberRepository";
-import { createPartyMember } from "@/application/usecases/PartyMember/DfPartyMemberCreateUsecase";
+import { createPartyMember } from "@/application/usecases/partyMember/DfPartyMemberCreateUsecase";
 
 export async function GET(
     req: NextRequest,
