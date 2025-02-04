@@ -27,6 +27,8 @@ export const ProfileImageContainer = styled.div`
         width: 90px;
         height: 90px;
         padding: 8px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     h4 {

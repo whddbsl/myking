@@ -8,6 +8,7 @@ export class SbUserRepository implements UserRepository {
         const { error } = await supabase.from("user").insert({
             nickname: user.nickname,
             name: user.name,
+            profile_image: user.profile_image,
             kakao_id: user.kakao_id,
         });
 

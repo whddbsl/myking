@@ -2,19 +2,33 @@ import { createUser } from "@/application/usecases/user/CreateUserUsecase";
 import { UserCreateDto } from "@/application/usecases/user/dto/UserCreateDto";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
+import { SupabaseStorageService } from "@/infrastructure/services/SupabaseStorageService";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
-        const { kakaoId, name, nickname } = await request.json();
+        const formData = await request.formData();
         const userRepository: UserRepository = new SbUserRepository();
+        const file = formData.get("file") as File;
+        const dirName: string = "user";
 
-        const userDto: UserCreateDto = {
-            kakao_id: kakaoId,
-            name,
-            nickname,
+        const storageService = new SupabaseStorageService();
+        let profileImage: string;
+
+        if (file && file.size > 0) {
+            profileImage = await storageService.uploadImage(file, dirName);
+        } else {
+            profileImage = `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/images/user/member_default.svg`;
+        }
+
+        const userData: UserCreateDto = {
+            kakao_id: formData.get("kakao_id")?.toString() || "",
+            name: formData.get("name")?.toString() || "",
+            nickname: formData.get("nickname")?.toString() || "",
+            profile_image: profileImage,
         };
 
-        await createUser(userRepository, userDto);
+        await createUser(userRepository, userData);
 
         return new Response(
             JSON.stringify({

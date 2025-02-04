@@ -12,6 +12,10 @@ export default function SetNickname() {
     const supabase = createClientComponentClient();
     const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
     const [inputNickname, setInputNickname] = useState("");
+    const [profileImage, setProfileImage] = useState<string>(
+        "/images/member_default.svg"
+    );
+    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -31,28 +35,63 @@ export default function SetNickname() {
         };
     }, [supabase, setUser]);
 
+    const handleProfileImageChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfileImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleNicknameChange = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setInputNickname(event.target.value);
     };
 
-    const handleSetNickname = async (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         setUser(kakaoId, name, inputNickname);
 
+        const formData = new FormData();
+
+        formData.append("kakao_id", kakaoId);
+        formData.append("name", name);
+        formData.append("nickname", inputNickname);
+        if (file) {
+            formData.append("file", file);
+        } else {
+            formData.append(
+                "file",
+                new File(
+                    [],
+                    `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/images/user/member_default.svg`
+                )
+            );
+        }
+
         try {
+            // const response = await fetch("/api/auth", {
+            //     method: "POST",
+            //     body: JSON.stringify({
+            //         kakaoId,
+            //         name,
+            //         nickname: inputNickname,
+            //     }),
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            // });
             const response = await fetch("/api/auth", {
                 method: "POST",
-                body: JSON.stringify({
-                    kakaoId,
-                    name,
-                    nickname: inputNickname,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                body: formData,
             });
 
             if (!response.ok) {
@@ -95,10 +134,25 @@ export default function SetNickname() {
     };
 
     return (
-        <Form onSubmit={handleSetNickname}>
-            <ProfileImageContainer>
-                <img src="/images/member_default.svg" alt="member_default" />
+        <Form onSubmit={handleSubmit}>
+            <ProfileImageContainer
+                onClick={() =>
+                    (
+                        document.querySelector(
+                            "#profileImage"
+                        ) as HTMLInputElement
+                    )?.click()
+                }
+            >
+                <img src={profileImage} alt="profile_image" />
                 <h4>프로필 수정</h4>
+                <input
+                    type="file"
+                    id="profileImage"
+                    style={{ display: "none" }}
+                    accept="image/*"
+                    onChange={handleProfileImageChange}
+                />
             </ProfileImageContainer>
             <NicknameContainer>
                 <h5>
