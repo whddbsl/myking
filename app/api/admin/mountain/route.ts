@@ -1,14 +1,14 @@
-import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
-import { SbAdminMountainRepository } from "@/infrastructure/repositories/SbAdminMountainRepository";
-import { findAllMountains } from "@/application/usecases/adminMountain/DfAdminFindMountainUsecase";
-import { AdminMountainListDto } from "@/application/usecases/adminMountain/dto/AdminMountainListDto";
+import { createNewMountain } from "@/application/usecases/admin/mountain/CreateMountainUsecase";
+import { deleteMountain } from "@/application/usecases/admin/mountain/DeleteMountainUsecase";
+import { findAllMountains } from "@/application/usecases/admin/mountain/AdminFindMountainUsecase";
+import { AdminMountainListDto } from "@/application/usecases/admin/mountain/dto/AdminMountainListDto";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRepository";
+
 import { NextResponse } from "next/server";
-import { deleteMountain } from "@/application/usecases/adminMountain/AdminDeleteMountainUsecase";
-import { createNewMountain } from "@/application/usecases/adminMountain/AdminCreateMountainUsecase";
 
 export async function GET() {
-    const mountainRepository: AdminMountainRepository =
-        new SbAdminMountainRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
     const mountains: AdminMountainListDto[] = await findAllMountains(
         mountainRepository
     );
@@ -17,16 +17,14 @@ export async function GET() {
 
 export async function DELETE(request: Request) {
     const { mountainId } = await request.json();
-    const mountainRepository: AdminMountainRepository =
-        new SbAdminMountainRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
     await deleteMountain(mountainRepository, mountainId);
     return NextResponse.json({ message: "Mountain deleted successfully" });
 }
 
 export async function POST(request: Request) {
     const { name, region, description } = await request.json();
-    const mountainRepository: AdminMountainRepository =
-        new SbAdminMountainRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
     await createNewMountain(mountainRepository, {
         name,
         region,

@@ -1,12 +1,12 @@
 "use client";
 
-import { AdminMountainListDto } from "@/application/usecases/adminMountain/dto/AdminMountainListDto";
+import { Mountain } from "@/domain/entities/Mountain";
 import { useEffect, useState } from "react";
-import * as Mountain from "../user/page.styles";
+import * as Mountains from "../user/page.styles";
 import { CreateButton } from "./page.styles";
 
 const MountainPage = () => {
-    const [mountains, setMountains] = useState<AdminMountainListDto[]>([]);
+    const [mountains, setMountains] = useState<Mountain[]>([]);
 
     useEffect(() => {
         fetch("/api/admin/mountain")
@@ -27,7 +27,7 @@ const MountainPage = () => {
             if (response.ok) {
                 setMountains((prevList) =>
                     prevList.filter(
-                        (mountain) => mountain.mountain_id !== mountainId
+                        (mountain) => mountain.mountain_id !== Number(mountainId)
                     )
                 );
             } else {
@@ -39,52 +39,58 @@ const MountainPage = () => {
     };
 
     return (
-        <Mountain.Main>
-            <Mountain.Table>
+        <Mountains.Main>
+            <Mountains.Table>
                 <thead>
-                    <Mountain.Tr>
-                        <Mountain.Th>아이디</Mountain.Th>
-                        <Mountain.Th>산 이름</Mountain.Th>
-                        <Mountain.Th>지역</Mountain.Th>
-                        <Mountain.Th>설명</Mountain.Th>
-                        <Mountain.Th>생성일</Mountain.Th>
-                        <Mountain.Th>관리</Mountain.Th>
-                    </Mountain.Tr>
+                    <Mountains.Tr>
+                        <Mountains.Th>아이디</Mountains.Th>
+                        <Mountains.Th>산 이름</Mountains.Th>
+                        <Mountains.Th>이미지</Mountains.Th>
+                        <Mountains.Th>지역</Mountains.Th>
+                        <Mountains.Th>설명</Mountains.Th>
+                        <Mountains.Th>고도</Mountains.Th>
+                        <Mountains.Th>생성일</Mountains.Th>
+                        <Mountains.Th>관리</Mountains.Th>
+                    </Mountains.Tr>
                 </thead>
                 <tbody>
                     {mountains.map((mountain) => (
-                        <Mountain.Tr key={mountain.mountain_id}>
-                            <Mountain.Td>{mountain.mountain_id}</Mountain.Td>
-                            <Mountain.Td>{mountain.name}</Mountain.Td>
-                            <Mountain.Td>{mountain.region}</Mountain.Td>
-                            <Mountain.Td>{mountain.description}</Mountain.Td>
-                            <Mountain.Td>{mountain.created_at}</Mountain.Td>
-                            <Mountain.Td>
-                                <Mountain.Button>
-                                    <Mountain.UnstyledLink
+                        <Mountains.Tr key={mountain.mountain_id}>
+                            <Mountains.Td>{mountain.mountain_id}</Mountains.Td>
+                            <Mountains.Td>{mountain.name}</Mountains.Td>
+                            <Mountains.Td>{mountain.image_url}</Mountains.Td>
+                            <Mountains.Td>{mountain.region}</Mountains.Td>
+                            <Mountains.Td>{mountain.description}</Mountains.Td>
+                            <Mountains.Td>{mountain.altitude}</Mountains.Td>
+                            <Mountains.Td>
+                                {mountain.created_at.toString()}
+                            </Mountains.Td>
+                            <Mountains.Td>
+                                <Mountains.Button>
+                                    <Mountains.UnstyledLink
                                         href={`/admin/mountain/${mountain.mountain_id}/edit`}
                                     >
                                         수정
-                                    </Mountain.UnstyledLink>
-                                </Mountain.Button>
-                                <Mountain.Button
+                                    </Mountains.UnstyledLink>
+                                </Mountains.Button>
+                                <Mountains.Button
                                     onClick={() =>
-                                        handleDelete(mountain.mountain_id)
+                                        handleDelete(mountain.mountain_id.toString())
                                     }
                                 >
                                     삭제
-                                </Mountain.Button>
-                            </Mountain.Td>
-                        </Mountain.Tr>
+                                </Mountains.Button>
+                            </Mountains.Td>
+                        </Mountains.Tr>
                     ))}
                 </tbody>
-            </Mountain.Table>
+            </Mountains.Table>
             <CreateButton>
-                <Mountain.UnstyledLink href="/admin/mountain/create">
+                <Mountains.UnstyledLink href="/admin/mountain/create">
                     산 추가
-                </Mountain.UnstyledLink>
+                </Mountains.UnstyledLink>
             </CreateButton>
-        </Mountain.Main>
+        </Mountains.Main>
     );
 };
 

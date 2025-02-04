@@ -11,6 +11,9 @@ const nextConfig = {
     config.cache = false; // Webpack 캐시 비활성화
     return config;
   },
+  compiler: {
+    styledComponents: true,
+  }
 };
 
 export default nextPWA(nextConfig);

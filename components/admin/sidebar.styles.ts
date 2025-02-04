@@ -6,7 +6,7 @@ interface MenuItemProps {
 
 export const SidebarContainer = styled.div`
     width: 200px;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #f2f2f2;
     color: #000;
     display: flex;

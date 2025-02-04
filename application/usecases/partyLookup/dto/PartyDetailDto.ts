@@ -1,6 +1,7 @@
 export interface PartyDetailDto {
     party_id: string;
-    creator_id: number;
+    //creator_image: string;
+    //creator_name: string;
     mountain_id: number;
     description: string;
     max_members: number;

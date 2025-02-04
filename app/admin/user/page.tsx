@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AdminUserDto } from "@/application/usecases/adminUser/dto/AdminUserDto";
+import { AdminUserListDto } from "@/application/usecases/admin/user/AdminUserListDto";
 import { Table, Th, Td, Tr, Button, Main } from "./page.styles";
 
 const UserPage = () => {
-    const [userList, setUserList] = useState<AdminUserDto[]>([]);
+    const [userList, setUserList] = useState<AdminUserListDto[]>([]);
 
     useEffect(() => {
         fetch("/api/admin/user")

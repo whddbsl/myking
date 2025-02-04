@@ -1,5 +1,5 @@
 export interface Course {
-    course_id: string;
+    course_id: number;
     mountain_id: number;
     name: string;
     description: string;

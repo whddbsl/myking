@@ -1,22 +1,34 @@
 "use client";
 
-import { AdminMountainCreateDto } from "@/application/usecases/adminMountain/dto/AdminMountainCreateDto";
 import { useState } from "react";
-import { Button, Main, Input, Form, H1 } from "./page.styles";
+import {
+    Container,
+    Title,
+    FormWrapper,
+    Label,
+    Input,
+    Button,
+    TextArea,
+} from "./page.styles";
 import { useRouter } from "next/navigation";
+import { MountainCreateDto } from "@/application/usecases/admin/mountain/dto/MountainCreateDto";
 
 const MountainCreatePage = () => {
     const router = useRouter();
-    const [mountain, setMountain] = useState<AdminMountainCreateDto>({
+    const [mountain, setMountain] = useState<MountainCreateDto>({
         name: "",
         region: "",
         description: "",
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (
+        e:
+            | React.ChangeEvent<HTMLInputElement>
+            | React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
-        setMountain((prevMountain) => ({
-            ...prevMountain,
+        setMountain((prev) => ({
+            ...prev,
             [name]: value,
         }));
     };
@@ -45,33 +57,38 @@ const MountainCreatePage = () => {
     };
 
     return (
-        <Main>
-            <H1>산 정보 등록</H1>
-            <Form onSubmit={handleSubmit}>
+        <Container>
+            <Title>산 정보 등록</Title>
+            <FormWrapper onSubmit={handleSubmit}>
+                <Label htmlFor="name">산 이름</Label>
                 <Input
+                    id="name"
                     type="text"
                     name="name"
-                    placeholder="산 이름"
                     value={mountain.name}
                     onChange={handleChange}
                 />
+
+                <Label htmlFor="region">지역</Label>
                 <Input
+                    id="region"
                     type="text"
                     name="region"
-                    placeholder="지역"
                     value={mountain.region}
                     onChange={handleChange}
                 />
-                <Input
-                    type="text"
+
+                <Label htmlFor="description">설명</Label>
+                <TextArea
+                    id="description"
                     name="description"
-                    placeholder="설명"
                     value={mountain.description}
                     onChange={handleChange}
                 />
+
                 <Button type="submit">등록</Button>
-            </Form>
-        </Main>
+            </FormWrapper>
+        </Container>
     );
 };
 
