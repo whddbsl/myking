@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     const storageService = new SupabaseStorageService();
-    const imageUrl = await storageService.uploadImage(file);
+    const imageUrl = await storageService.uploadImage(file, "courses");
 
     const courseData = {
         name: formData.get("name")?.toString() || "",

@@ -6,7 +6,7 @@ const supabase = createClient(
 );
 
 export class SupabaseStorageService {
-    async uploadImage(file: File): Promise<string> {
+    async uploadImage(file: File, directory: string): Promise<string> {
         const { data, error } = await supabase.storage
             .from("images")
             .upload(`courses/${file.name}`, file);
@@ -15,6 +15,6 @@ export class SupabaseStorageService {
         } else {
             console.log("File uploaded successfully:", data);
         }
-        return `${supabase.storageUrl}/object/public/images/courses/${file.name}`;
+        return `${supabase.storageUrl}/object/public/images/${directory}/${file.name}`;
     }
 }
