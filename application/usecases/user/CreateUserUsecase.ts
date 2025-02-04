@@ -1,9 +1,9 @@
 import { UserRepository } from "@/domain/repositories/UserRepository";
-import { UserDto } from "./dto/UserDto";
+import { UserCreateDto } from "./dto/UserCreateDto";
 
 export const createUser = async (
     repository: UserRepository,
-    user: UserDto
+    user: UserCreateDto
 ): Promise<void> => {
     const existingNickname = await repository.findByNickname(user.nickname);
 
@@ -15,9 +15,12 @@ export const createUser = async (
 
     try {
         await repository.create({
+            user_id: "id",
             kakao_id: user.kakao_id,
             name: user.name,
             nickname: user.nickname,
+            profile_image: "image.png",
+            created_at: new Date(),
         });
     } catch (error: any) {
         throw new Error(`사용자 저장 실패: ${error.message}`);
