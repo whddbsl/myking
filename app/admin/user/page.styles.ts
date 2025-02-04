@@ -7,22 +7,22 @@ export const Main = styled.main`
 
 export const Table = styled.table`
     width: 100%;
+    table-layout: fixed;
 `;
 
 export const Th = styled.th`
-    border: 1px solid #ddd;
+    border: 1px solid #808080;
     padding: 10px;
     text-align: center;
     background-color: #269386;
     color: white;
-    max-width: 300px;
 `;
 
 export const Td = styled.td`
-    border: 1px solid #ddd;
-    max-width: 300px;
+    border: 1px solid #808080;
+
     text-align: center;
-    vertical-align : middle;
+    vertical-align: middle;
     padding: 10px;
 `;
 

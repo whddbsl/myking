@@ -1,14 +1,22 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { Button, Main, Input, Form, H1 } from "../../create/page.styles";
+import {
+    Container,
+    Title,
+    FormWrapper,
+    Label,
+    Input,
+    TextArea,
+    Button,
+} from "../../create/page.styles";
 import { useEffect, useState } from "react";
-import { AdminMountainCreateDto } from "@/application/usecases/adminMountain/dto/AdminMountainCreateDto";
+import { MountainCreateDto } from "@/application/usecases/admin/mountain/dto/MountainCreateDto";
 
 const EditMountainPage = () => {
     const { mountainId } = useParams();
     const router = useRouter();
-    const [mountain, setMountain] = useState<AdminMountainCreateDto>({
+    const [mountain, setMountain] = useState<MountainCreateDto>({
         name: "",
         region: "",
         description: "",
@@ -26,7 +34,11 @@ const EditMountainPage = () => {
             });
     }, [mountainId]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (
+        e:
+            | React.ChangeEvent<HTMLInputElement>
+            | React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         setMountain((prevMountain) => ({
             ...prevMountain,
@@ -37,13 +49,16 @@ const EditMountainPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await fetch(`/api/admin/mountain/${mountainId}/edit`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(mountain),
-            });
+            const response = await fetch(
+                `/api/admin/mountain/${mountainId}/edit`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(mountain),
+                }
+            );
 
             if (response.ok) {
                 alert("산 정보가 수정되었습니다.");
@@ -56,34 +71,38 @@ const EditMountainPage = () => {
         }
     };
     return (
-        <Main>
-            <H1>산 수정하기</H1>
-            <div>산이름 {mountain.name}</div>
-            <Form onSubmit={handleSubmit}>
+        <Container>
+            <Title>산 수정하기</Title>
+            <FormWrapper onSubmit={handleSubmit}>
+                <Label htmlFor="name">산 이름</Label>
                 <Input
+                    id="name"
                     type="text"
                     name="name"
                     placeholder="산 이름"
                     value={mountain.name || ""}
                     onChange={handleChange}
                 />
+                <Label htmlFor="region">지역</Label>
                 <Input
+                    id="region"
                     type="text"
                     name="region"
                     placeholder="지역"
                     value={mountain.region || ""}
                     onChange={handleChange}
                 />
-                <Input
-                    type="text"
+                <Label htmlFor="description">설명</Label>
+                <TextArea
+                    id="description"
                     name="description"
                     placeholder="설명"
                     value={mountain.description || ""}
                     onChange={handleChange}
                 />
                 <Button type="submit">수정</Button>
-            </Form>
-        </Main>
+            </FormWrapper>
+        </Container>
     );
 };
 
