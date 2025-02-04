@@ -1,11 +1,11 @@
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { PartyDetailDto } from "@/application/usecases/partyLookup/dto/PartyDetailDto";
 import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
-import { findPartyDetail } from "@/application/usecases/partyLookup/DfPartyDetailUsecase";
+import { findPartyDetail } from "@/application/usecases/partyLookup/PartyDetailUsecase";
 import { NextRequest, NextResponse } from "next/server";
 import { SbPartyMemberRepository } from "@/infrastructure/repositories/SbPartyMemberRepository";
-import { AddPartyMemberRepository } from "@/domain/repositories/AddPartyMemberRepository";
-import { addPartyMember } from "@/application/usecases/addPartyMember/DfAddPartyMemberUsecase";
+import { PartyMemberRepository } from "@/domain/repositories/PartyMemberRepository";
+import { createPartyMember } from "@/application/usecases/PartyMember/DfPartyMemberCreateUsecase";
 
 export async function GET(
     req: NextRequest,
@@ -17,6 +17,7 @@ export async function GET(
 
     const partyDetail: PartyDetailDto = await findPartyDetail(
         partyRepository,
+        // userRepository,
         partyId
     );
     return NextResponse.json(partyDetail);
@@ -28,10 +29,10 @@ export async function POST(
 ) {
     const { partyId } = params; // 엔드포인트에서 뽑아서?
     const { /* party_id, */ user_id } = await request.json(); //body를 구조분해할당
-    const partyMemberRepository: AddPartyMemberRepository =
+    const partyMemberRepository: PartyMemberRepository =
         new SbPartyMemberRepository();
 
-    await addPartyMember(partyMemberRepository, {
+    await createPartyMember(partyMemberRepository, {
         // 객체를 바로 넣지 않고 속성에 맞는 값을 담아줌
         party_id: partyId,
         user_id,

@@ -1,9 +1,9 @@
-import { AddPartyMember } from "@/domain/entities/AddPartyMember";
+import { PartyMember } from "@/domain/entities/PartyMember";
 import { createClient } from "@/utils/supabase/server";
-import { AddPartyMemberRepository } from "@/domain/repositories/AddPartyMemberRepository";
+import { PartyMemberRepository } from "@/domain/repositories/PartyMemberRepository";
 
-export class SbPartyMemberRepository implements AddPartyMemberRepository {
-    async addPartyMember(partyMember: AddPartyMember): Promise<void> {
+export class SbPartyMemberRepository implements PartyMemberRepository {
+    async createPartyMember(partyMember: PartyMember): Promise<void> {
         const supabase = await createClient();
         const { error } = await supabase
             .from("party_member")
@@ -11,6 +11,7 @@ export class SbPartyMemberRepository implements AddPartyMemberRepository {
                 {
                     party_id: partyMember.party_id,
                     user_id: partyMember.user_id,
+                    // created_at은 필요 없음(supabase에서 생성)
                 },
             ])
             .select(); // select -> 바뀐 데이터가 반환됨 (currentmember +1)
@@ -19,7 +20,7 @@ export class SbPartyMemberRepository implements AddPartyMemberRepository {
         }
     }
 
-    async getMembersByPartyId(partyId: string): Promise<AddPartyMember[]> {
+    async getMembersByPartyId(partyId: string): Promise<PartyMember[]> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("party_members")
@@ -32,6 +33,6 @@ export class SbPartyMemberRepository implements AddPartyMemberRepository {
             );
         }
 
-        return data as AddPartyMember[];
+        return data as PartyMember[];
     }
 }
