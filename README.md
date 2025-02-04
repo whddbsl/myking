@@ -1,6 +1,3 @@
-# myking
-
-my-hiking: 나만의 하이킹 메이트
 
 ```
 myking
@@ -42,6 +39,7 @@ myking
 ├─ eslint.config.mjs
 ├─ infrastructure
 │  └─ repositories
+│     ├─ SbCourseRepository.ts
 │     └─ SbMountainRepository.ts
 ├─ next-env.d.ts
 ├─ next.config.ts

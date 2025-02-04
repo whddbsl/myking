@@ -2,11 +2,11 @@ import { Course } from "../entities/Course";
 
 //코스데이터를 조회하는데 필요한 계약을 정의하는 인터페이스
 export interface CourseRepository {
-    //산 ID로 코스 리스트 검색색
-    getCourseById(mountainId: number): Promise<Course[]>; //반환값은 Course객체들의 배열
+    //산 ID로 코스 리스트 검색
+    findByMountainId(mountainId: number): Promise<Course[]>; //반환값은 Course객체들의 배열
 
     //코스 ID로 코스 정보 검색(선택적)
-    findById(courseId: number): Promise<Course | null>; //검색 성공하면
+    //findById(courseId: number): Promise<Course | null>; //검색 성공하면
 }
 
 //CourseRepository의 역할

@@ -1,15 +1,39 @@
 // infrastructure/repositories/SbMountainRepository.ts
 import { createClient } from "@/utils/supabase/server";
 import { SearchMountainDto } from "@/application/usecases/mountainSearch/dto/SearchMountainDto";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { Mountain } from "@/domain/entities/Mountain";
+export class SbMountainRepository implements MountainRepository {
+    //산 상세정보 조회
+    async getMountainDetailsById(mountainId: number): Promise<Mountain> {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("mountain")
+            .select("mountain_id, name, region, altitude, description, image_url")
+            .eq("mountain_id", mountainId)
+            .single();
 
-export class SbMountainRepository {
-    // private async getSupabaseClient() {
-    //     return await createClient(); // 서버 환경에 맞는 Supabase 클라이언트 생성
-    // }
+        if (error) {
+            throw new Error(`산 상세 조회 오류: ${error.message}`);
+        }
+        if (!data) {
+            throw new Error(`해당 산(모든 컬럼이 null)이 존재하지 않습니다: ID=${mountainId}`);
+        }
 
+        // 반환: 단일 Mountain 객체
+        return {
+            mountain_id: data.mountain_id,
+            name: data.name,
+            region: data.region,
+            altitude: data.altitude,
+            description: data.description,
+            image_url: data.image_url || "",
+        };
+    }
+
+    //산 이름 검색
     async searchByName(query: string): Promise<SearchMountainDto[]> {
         const supabase = await createClient();
-
         // Supabase에서 산 이름 검색
         const { data, error } = await supabase
             .from("mountain") // 테이블 이름 수정: 단수형

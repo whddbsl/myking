@@ -4,7 +4,7 @@ export interface Course {
     name: string;
     description: string;
     difficulty: "easy" | "medium" | "hard";
-    duration: string; // HH:MM:SS 형식
+    duration: number; // HH:MM:SS 형식
     distance: number; // 거리 (km 단위)
     popularity: number;
     image_url: string;

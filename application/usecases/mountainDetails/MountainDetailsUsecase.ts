@@ -1,33 +1,18 @@
-import { getCourseById } from '@/domain/repositories/CourseRepository';
-import { getMountainDetailsById } from "@/domain/repositories/MountainRepository";
-
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { CourseRepository } from "@/domain/repositories/CourseRepository";
 import { GetMountainDetailsDto } from "./dto/GetMountainDetailsDto";
-import { GetMountainRequestDto } from "./dto/GetMountainRequestDto";
 
-
-export const getMountainDetails = async (request: GetMountainRequestDto): Promise<GetMountainDetailsDto> => {
-    const mountain = await getMountainDetailsById(request.mountain_id);
-    const courses = await getCourseById(request.mountain_id);
-    return { mountain, courses };
-};
-
-export const getMountainDetail = async (
-    request: GetMountainRequestDto,
-    mountainRepository: MountainRepository,
-    courseRepository: CourseRepository
+//산 상세 + 코스 목록을 한번에 가져오는 Usecase
+export const getMountainDetailsUsecase = async (
+    mountainRepo: MountainRepository,
+    courseRepo: CourseRepository,
+    mountainId: number
 ): Promise<GetMountainDetailsDto> => {
-    const { name } = request;
+    //산 상세 조회
+    const mountain = await mountainRepo.getMountainDetailsById(mountainId);
 
-    //1.산 정보 검색
-    const mountain = await mountainRepository.getMountainDetailsById(name);
-    if (!mountain) {
-        throw new Error("검색 결과가 없습니다.");
-    }
-
-    //2.해당 산의 코스 리스트 검색
-    const courses = await courseRepository.getCourseByMountainId(mountain.mountain_id);
-
-    //3.결과 반환
+    //관련 코스 목록 조회
+    const courses = await courseRepo.findByMountainId(mountainId);
     return {
         mountain,
         courses,
