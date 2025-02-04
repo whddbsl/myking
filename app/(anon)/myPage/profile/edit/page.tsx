@@ -86,7 +86,6 @@ export default function ProfileEdit() {
 
     return (
         <ProtectedRoute>
-            <HeaderComponent showBackButton title="내 정보 확인" />
             <Main style={{ justifyContent: "unset" }}>
                 <Form onSubmit={handleSaveNickname}>
                     <ProfileImageContainer style={{ marginTop: "10px" }}>

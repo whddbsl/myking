@@ -1,5 +1,5 @@
-import { createUser } from "@/application/usecases/user/DfCreateUserUsecase";
-import { UserDto } from "@/application/usecases/user/dto/UserDto";
+import { createUser } from "@/application/usecases/user/CreateUserUsecase";
+import { UserCreateDto } from "@/application/usecases/user/dto/UserCreateDto";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         const { kakaoId, name, nickname } = await request.json();
         const userRepository: UserRepository = new SbUserRepository();
 
-        const userDto: UserDto = {
+        const userDto: UserCreateDto = {
             kakao_id: kakaoId,
             name,
             nickname,

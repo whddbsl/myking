@@ -1,12 +1,8 @@
-import { findUser } from "@/application/usecases/user/DfFindUserUsecase";
-import { UserDto } from "@/application/usecases/user/dto/UserDto";
+import { UserFindDto } from "@/application/usecases/userLookup/dto/UserFindDto";
+import { findUser } from "@/application/usecases/userLookup/FindUserUsecase";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
-import {
-    createClientComponentClient,
-    createServerComponentClient,
-} from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -43,7 +39,7 @@ export async function GET(req: Request) {
         );
     }
     const userRepository: UserRepository = new SbUserRepository();
-    const user: UserDto | null = await findUser(userRepository, kakaoId);
+    const user: UserFindDto | null = await findUser(userRepository, kakaoId);
 
     return NextResponse.json(user);
 }

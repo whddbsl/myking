@@ -1,4 +1,5 @@
-import { changeNickname } from "@/application/usecases/user/DfUpdateUserUsecase";
+import { UserUpdateDto } from "@/application/usecases/user/dto/UserUpdateDto";
+import { changeNickname } from "@/application/usecases/user/UpdateUserUsecase";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -44,7 +45,11 @@ export async function PATCH(req: NextRequest) {
         }
 
         const userRepository: UserRepository = new SbUserRepository();
-        await changeNickname(userRepository, kakaoId, newNickname);
+        const userDto: UserUpdateDto = {
+            kakao_id: kakaoId,
+            new_nickname: newNickname,
+        };
+        await changeNickname(userRepository, userDto);
 
         return NextResponse.json(
             { message: "닉네임이 성공적으로 변경되었습니다." },
