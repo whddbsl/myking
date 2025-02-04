@@ -1,36 +1,39 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import {
-    Container,
-    Title,
-    FormWrapper,
-    Label,
-    Input,
-    TextArea,
-    Select,
     Button,
+    Container,
+    FormWrapper,
+    Input,
+    Label,
+    Select,
+    TextArea,
+    Title,
 } from "./page.styles";
 
-import { useRouter } from "next/navigation";
 import { CourseCreateDto } from "@/application/usecases/admin/course/dto/CourseCreateDto";
-import { AdminMountainNameDto } from "@/application/usecases/admin/mountain/dto/AdminMountainNameDto";
+import { useRouter } from "next/navigation";
+import { AdminMountainListDto } from "@/application/usecases/admin/mountain/dto/AdminMountainListDto";
 
 const CreateCoursePage: React.FC = () => {
-    const [file, setFile] = useState<File | null>(null);
     const router = useRouter();
-
-    const [mountainNames, setMountainNames] = useState<AdminMountainNameDto[]>(
-        []
-    );
+    const [file, setFile] = useState<File | null>(null);
+    const [mountain, setMountain] = useState<AdminMountainListDto[]>([]);
 
     useEffect(() => {
-        fetch("/api/admin/course/create")
+        fetch("/api/admin/mountain")
             .then((response) => response.json())
             .then((data) => {
-                setMountainNames(data);
+                const filteredData = data.map((item: AdminMountainListDto) => ({
+                    mountain_id: item.mountain_id,
+                    name: item.name,
+                }));
+                setMountain(filteredData);
             });
     }, []);
+
+    console.log(mountain);
 
     const [course, setCourse] = useState<CourseCreateDto>({
         name: "",
@@ -84,7 +87,7 @@ const CreateCoursePage: React.FC = () => {
         formData.append("file", file);
 
         try {
-            const response = await fetch("/api/admin/course", {
+            const response = await fetch("/api/admin/course/create", {
                 method: "POST",
                 body: formData,
             });
@@ -120,12 +123,9 @@ const CreateCoursePage: React.FC = () => {
                     value={course.mountain_id}
                     onChange={handleChange}
                 >
-                    {mountainNames.map((mountain) => (
-                        <option
-                            key={mountain.mountain_id}
-                            value={mountain.mountain_id}
-                        >
-                            {mountain.name}
+                    {mountain.map((item) => (
+                        <option key={item.mountain_id} value={item.mountain_id}>
+                            {item.name}
                         </option>
                     ))}
                 </Select>
