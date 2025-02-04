@@ -1,17 +1,5 @@
 import styled from "styled-components";
 
-export const Header = styled.header`
-    height: 5vh;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-
-    & > img {
-        height: 60%;
-        width: auto;
-    }
-`;
-
 export const Main = styled.main`
     display: flex;
     flex-direction: column;
@@ -55,31 +43,19 @@ export const NicknameContainer = styled.div`
     align-self: stretch;
     margin: 48px 0;
 
-    & > h5 {
+    h5 {
         & > span {
             color: #de4d4d;
         }
     }
 
-    & > input {
+    input {
         outline: none;
         border: none;
         border-bottom: 1px solid #bfbfbf;
+        border-radius: 0;
         width: 100%;
         padding: 16px 0;
+        font-size: 15px;
     }
-`;
-
-export const SignUpButton = styled.button`
-    background-color: #269386;
-    color: #ffffff;
-    border: none;
-    padding: 16px 120px;
-    width: 100%;
-    border-radius: 12px;
-    outline: none;
-    cursor: pointer;
-    font-weight: 400;
-    font-size: 16px;
-    margin-top: auto;
 `;

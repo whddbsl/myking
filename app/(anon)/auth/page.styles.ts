@@ -15,14 +15,14 @@ export const LogoContainer = styled.div`
     margin-top: 42vh;
     flex-direction: column;
 
-    & > h4 {
+    h4 {
         color: #5d7370;
         font-weight: bold;
         align-self: flex-end;
         margin-bottom: 9px;
     }
 
-    & > img {
+    img {
         width: 250px;
         height: auto;
     }

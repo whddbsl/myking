@@ -1,11 +1,15 @@
-import { User } from "@/domain/entities/User";
+import { User } from "../../domain/entities/User";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { createClient } from "@/utils/supabase/server";
 
 export class SbUserRepository implements UserRepository {
     async create(user: User): Promise<void> {
         const supabase = await createClient();
-        const { error } = await supabase.from("user").insert(user);
+        const { error } = await supabase.from("user").insert({
+            nickname: user.nickname,
+            name: user.name,
+            kakao_id: user.kakao_id,
+        });
 
         if (error) {
             throw new Error(`사용자 정보 저장 실패: ${error.message}`);
@@ -65,5 +69,32 @@ export class SbUserRepository implements UserRepository {
         if (error) {
             throw new Error(error.message);
         }
+    }
+
+    async updateNickname(
+        kakaoId: string,
+        newNickname: string
+    ): Promise<User | null> {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("user")
+            .update({ nickname: newNickname }, { count: "exact" })
+            .eq("kakao_id", kakaoId)
+            .select("*")
+            .single();
+
+        if (error) {
+            console.error("Failed to update nickname: ", error.message);
+            return null;
+        }
+
+        if (!data || data.length === 0) {
+            console.error("Failed to update nickname: No rows returned");
+            return null;
+        }
+
+        console.log("닉네임 업데이트 성공: ", newNickname);
+        return data as User;
     }
 }
