@@ -1,6 +1,6 @@
 export interface Party {
     party_id: number;
-    creator_id: number;
+    creator_id: string;
     mountain_id: number;
     description: string;
     max_members: number;
