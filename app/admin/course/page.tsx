@@ -26,6 +26,30 @@ const CoursePage = () => {
         }));
     };
 
+    const handleDelete = async (course_id: string) => {
+        try {
+            const response = await fetch("/api/admin/course", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ course_id: course_id }),
+            });
+
+            if (response.ok) {
+                setCourses((prevList) =>
+                    prevList.filter(
+                        (course) => course.course_id !== Number(course_id)
+                    )
+                );
+            } else {
+                console.error("Failed to delete course", response);
+            }
+        } catch (error) {
+            console.error("Error deleting course:", error);
+        }
+    };
+
     return (
         <Course.Main>
             <Course.Table>
@@ -52,7 +76,15 @@ const CoursePage = () => {
                                 <Course.Td>{course.created_at}</Course.Td>
                                 <Course.Td>
                                     <Course.Button>수정</Course.Button>
-                                    <Course.Button>삭제</Course.Button>
+                                    <Course.Button
+                                        onClick={() =>
+                                            handleDelete(
+                                                course.course_id.toString()
+                                            )
+                                        }
+                                    >
+                                        삭제
+                                    </Course.Button>
                                     <Course.Button
                                         onClick={() =>
                                             handleDetail(course.course_id)

@@ -1,3 +1,4 @@
+import { deleteCourse } from "@/application/usecases/admin/course/AdminDeleteCourseUsecase";
 import { findAllCourses } from "@/application/usecases/admin/course/AdminFindCourseUsecase";
 import { AdminCourseListDto } from "@/application/usecases/admin/course/dto/AdminCourseListDto";
 import { CourseRepository } from "@/domain/repositories/CourseRepository";
@@ -16,3 +17,9 @@ export async function GET() {
     return NextResponse.json(courses);
 }
 
+export async function DELETE(request: Request) {
+    const { course_id } = await request.json();
+    const courseRepository: CourseRepository = new SbCourseRepository();
+    await deleteCourse(courseRepository, course_id);
+    return NextResponse.json({ message: "Course deleted successfully" });
+}

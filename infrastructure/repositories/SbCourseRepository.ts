@@ -37,4 +37,14 @@ export class SbCourseRepository {
             throw new Error(error.message);
         }
     }
+    async deleteCourse(course_id: number): Promise<void> {
+        const supabase = await createClient();
+        const { error } = await supabase
+            .from("course")
+            .delete()
+            .eq("course_id", course_id);
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
 }
