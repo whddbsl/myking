@@ -3,6 +3,8 @@ import * as PC from "./page.styles";
 import Filter from "../../../components/party/filter/Filter";
 import { useState, useEffect } from "react";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
+import Link from "next/link";
+
 const PartyPage: React.FC = () => {
     const [partyList, setPartyList] = useState<PartyListDto[]>([]);
 
@@ -57,7 +59,9 @@ const PartyPage: React.FC = () => {
                     </PC.Card>
                 ))}
             </PC.Cards>
-            <PC.CreateButton>작성하기</PC.CreateButton>
+            <PC.CreateButton>
+                <Link href={`/parties/create`}>작성하기</Link>
+            </PC.CreateButton>
         </div>
     );
 };

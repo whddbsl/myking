@@ -5,4 +5,5 @@ import { Party } from "../entities/Party";
 export interface PartyRepository {
     getParty(): Promise<Party[]>;
     getPartyById(partyId: string): Promise<Party>;
+    createParty(party: Party): Promise<void>;
 }

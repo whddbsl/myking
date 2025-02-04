@@ -44,5 +44,28 @@ export class SbPartyRepository implements PartyRepository {
             end_date: new Date(data.end_date),
         };
     }
-    // 생성, 삭제 등 수행 시에 함수 작성
+
+    async createParty(party: Party): Promise<void> {
+        const supabase = await createClient();
+        const { error } = await supabase
+            .from("party")
+            .insert([
+                {
+                    creator_id: party.creator_id,
+                    mountain_id: party.mountain_id,
+                    description: party.description,
+                    max_members: party.max_members,
+                    //current_members: party.current_members,
+                    meeting_date: party.meeting_date.toISOString(),
+                    end_date: party.end_date.toISOString(),
+                    //filter_state: party.filter_state,
+                    filter_gender: party.filter_gender,
+                    filter_age: JSON.stringify(party.filter_age), // JSON 문자열로 저장
+                },
+            ])
+            .select();
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
 }
