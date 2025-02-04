@@ -5,6 +5,7 @@ import * as PC from "./page.styles";
 import LevelInfo from "@/components/user/userLevel/level";
 import PartyButton from "@/components/user/partyButton/party";
 import { useRouter } from "next/navigation";
+import ProfileLayout from "./layout";
 
 export default function Profile() {
     const router = useRouter();

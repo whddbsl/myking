@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Main } from "../../auth/setNickname/page.styles";
 
 export const ProfileContainer = styled.div`
     padding: 24px 0;
@@ -20,4 +21,9 @@ export const ProfileInfo = styled.p`
     padding: 8px 8px 8px 16px;
     font-size: 12px;
     color: #808080;
+`;
+
+export const ProfileMain = styled(Main)`
+    justify-content: unset;
+    align-items: unset;
 `;

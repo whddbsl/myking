@@ -12,6 +12,7 @@ import HeaderComponent from "@/components/header/header";
 import ProtectedRoute from "@/components/user/ProtectedRoutes";
 import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
+import ProfileLayout from "../layout";
 
 export default function ProfileEdit() {
     const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);

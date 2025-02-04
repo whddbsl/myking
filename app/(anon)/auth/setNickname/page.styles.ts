@@ -23,13 +23,13 @@ export const ProfileImageContainer = styled.div`
     align-items: center;
     margin-top: 15vh;
 
-    & > img {
+    img {
         width: 90px;
         height: 90px;
         padding: 8px;
     }
 
-    & > h4 {
+    h4 {
         color: #a5a5a5;
         padding: 8px;
         font-weight: 300;
