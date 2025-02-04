@@ -9,7 +9,7 @@ export class SupabaseStorageService {
     async uploadImage(file: File, directory: string): Promise<string> {
         const { data, error } = await supabase.storage
             .from("images")
-            .upload(`courses/${file.name}`, file);
+            .upload(`${directory}/${file.name}`, file);
         if (error) {
             console.error("Error uploading file:", error);
         } else {
