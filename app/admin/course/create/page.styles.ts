@@ -10,7 +10,7 @@ export const Container = styled.main`
 `;
 
 export const Title = styled.h1`
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
     color: #333;
 `;
@@ -41,20 +41,7 @@ export const Input = styled.input`
         border-color: #53beb1;
         outline: none;
     }
-`;
-
-export const Button = styled.button`
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #53beb1;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    &:hover {
-        background-color: #269386;
-    }
+    background-color: #fff;
 `;
 
 export const TextArea = styled.textarea`
@@ -68,5 +55,31 @@ export const TextArea = styled.textarea`
     &:focus {
         border-color: #53beb1;
         outline: none;
+    }
+`;
+
+export const Select = styled.select`
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+    &:focus {
+        border-color: #53beb1;
+        outline: none;
+    }
+`;
+
+export const Button = styled.button`
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #53beb1;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    &:hover {
+        background-color: #269386;
     }
 `;

@@ -7,7 +7,6 @@ export const Main = styled.main`
 
 export const Table = styled.table`
     width: 100%;
-    table-layout: fixed;
 `;
 
 export const Th = styled.th`
@@ -20,7 +19,6 @@ export const Th = styled.th`
 
 export const Td = styled.td`
     border: 1px solid #808080;
-
     text-align: center;
     vertical-align: middle;
     padding: 10px;
@@ -44,4 +42,26 @@ export const Button = styled.button`
 export const UnstyledLink = styled(Link)`
     text-decoration: none;
     color: inherit;
+`;
+
+export const DetailContainer = styled.div`
+    display: flex;
+    padding: 10px;
+`;
+
+export const DetailImage = styled.img`
+    width: 15%;
+    margin-right: 10px;
+    border-radius: 8px;
+`;
+
+export const DetailText = styled.ul`
+    margin: 4px;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.5;
+    li {
+        margin-left: 16px;
+        list-style: disc;
+    }
 `;

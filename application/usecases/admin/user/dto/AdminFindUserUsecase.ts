@@ -1,6 +1,6 @@
-import { AdminUserDto } from "./dto/AdminUserDto";
-import { AdminUser } from "@/domain/entities/AdminUser";
-import { AdminUserRepository } from "@/domain/repositories/AdminUserRepository";
+import { User } from "@/domain/entities/User";
+import { UserRepository } from "@/domain/repositories/UserRepository";
+import { AdminUserListDto } from "../AdminUserListDto";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -14,11 +14,11 @@ function formatDate(date: Date): string {
 }
 
 export const findAllUsers = async (
-    repository: AdminUserRepository
-): Promise<AdminUserDto[]> => {
-    const users: AdminUser[] = await repository.getUsers();
+    repository: UserRepository
+): Promise<AdminUserListDto[]> => {
+    const users: User[] = await repository.getUsers();
 
-    const userList: AdminUserDto[] = await Promise.all(
+    const userList: AdminUserListDto[] = await Promise.all(
         users.map(async (user) => ({
             user_id: user.user_id,
             name: user.name,

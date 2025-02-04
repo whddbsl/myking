@@ -1,5 +1,5 @@
 import { createUser } from "@/application/usecases/user/DfUserUsecase";
-import { UserDto } from "@/application/usecases/user/dto/UserDto";
+import { UserDto } from "@/application/usecases/admin/user/dto/UserDto";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 

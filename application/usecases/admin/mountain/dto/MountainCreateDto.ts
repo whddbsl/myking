@@ -1,4 +1,4 @@
-export interface AdminMountainCreateDto {
+export interface MountainCreateDto {
     name: string;
     region: string;
     description: string;

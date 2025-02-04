@@ -1,11 +1,9 @@
-import { AdminMountainList } from "@/domain/entities/AdminMountainList";
-import { AdminMountainCreate } from "@/domain/entities/AdminMountainCreate";
-import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
+import { Mountain } from "@/domain/entities/Mountain";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
 import { createClient } from "@/utils/supabase/server";
-import { AdminMountain } from "@/domain/entities/AdminMountain";
-import { AdminMountainUpdate } from "@/domain/entities/AdminMountainUpdate";
-export class SbAdminMountainRepository implements AdminMountainRepository {
-    async getMountains(): Promise<AdminMountainList[]> {
+
+export class SbMountainRepository implements MountainRepository {
+    async getMountains(): Promise<Mountain[]> {
         const supabase = await createClient();
         const { data: mountains, error } = await supabase
             .from("mountain")
@@ -20,7 +18,7 @@ export class SbAdminMountainRepository implements AdminMountainRepository {
         }));
     }
 
-    async getMountainById(mountainId: string): Promise<AdminMountain> {
+    async getMountainById(mountainId: string): Promise<Mountain> {
         const supabase = await createClient();
         const { data: mountain, error } = await supabase
             .from("mountain")
@@ -47,7 +45,7 @@ export class SbAdminMountainRepository implements AdminMountainRepository {
         }
     }
 
-    async createMountain(mountain: AdminMountainCreate): Promise<void> {
+    async createMountain(mountain: Mountain): Promise<void> {
         const supabase = await createClient();
         const { error } = await supabase
             .from("mountain")
@@ -64,7 +62,7 @@ export class SbAdminMountainRepository implements AdminMountainRepository {
         }
     }
 
-    async updateMountain(mountain: AdminMountainUpdate): Promise<void> {
+    async updateMountain(mountain: Mountain): Promise<void> {
         const supabase = await createClient();
         const { error } = await supabase
             .from("mountain")

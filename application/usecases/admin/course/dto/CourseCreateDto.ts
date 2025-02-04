@@ -1,5 +1,4 @@
-export interface Course {
-    course_id: number;
+export interface CourseCreateDto {
     mountain_id: number;
     name: string;
     description: string;
@@ -10,5 +9,4 @@ export interface Course {
     longitude: number;
     duration: number;
     image_url: string;
-    created_at: Date;
 }

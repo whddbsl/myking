@@ -1,8 +1,8 @@
-import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
 
 export const deleteMountain = async (
-    repository: AdminMountainRepository,
+    repository: MountainRepository,
     mountainId: string
 ): Promise<void> => {
     await repository.deleteMountain(mountainId);
-}
+};

@@ -1,6 +1,6 @@
-import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { Mountain } from "@/domain/entities/Mountain";
 import { AdminMountainListDto } from "./dto/AdminMountainListDto";
-import { AdminMountainList } from "@/domain/entities/AdminMountainList";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -14,9 +14,9 @@ function formatDate(date: Date): string {
 }
 
 export const findAllMountains = async (
-    repository: AdminMountainRepository
+    repository: MountainRepository
 ): Promise<AdminMountainListDto[]> => {
-    const mountains: AdminMountainList[] = await repository.getMountains();
+    const mountains: Mountain[] = await repository.getMountains();
 
     const mountainList: AdminMountainListDto[] = await Promise.all(
         mountains.map(async (mountain) => ({

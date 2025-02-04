@@ -1,16 +1,15 @@
-import { findMountainById } from "@/application/usecases/adminMountain/AdminFindMountainaByIdUsecase";
-import { updateMountain } from "@/application/usecases/adminMountain/AdminUpdateMountainUsecase";
-import { AdminMountainDto } from "@/application/usecases/adminMountain/dto/AdminMountainDto";
-import { AdminMountainUpdateDto } from "@/application/usecases/adminMountain/dto/AdminMountainUpdateDto";
-import { AdminMountainRepository } from "@/domain/repositories/AdminMountainRepository";
-import { SbAdminMountainRepository } from "@/infrastructure/repositories/SbAdminMountainRepository";
+import { MountainUpdateDto } from "@/application/usecases/admin/mountain/dto/MountainUpdateDto";
+import { updateMountain } from "@/application/usecases/admin/mountain/UpdateMountainUsecase";
+import { findMountainById } from "@/application/usecases/admin/mountain/AdminFindMountainaByIdUsecase";
+import { AdminMountainDto } from "@/application/usecases/admin/mountain/dto/AdminMountainDto";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRepository";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const mountainId = String(url.pathname.split("/").slice(-2, -1)[0]);
-    const mountainRepository: AdminMountainRepository =
-        new SbAdminMountainRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
     const mountain: AdminMountainDto = await findMountainById(
         mountainRepository,
         mountainId
@@ -21,9 +20,8 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     const url = new URL(req.url);
     const mountainId = Number(url.pathname.split("/").slice(-2, -1)[0]);
-    const mountainRepository: AdminMountainRepository =
-        new SbAdminMountainRepository();
-    const mountain: AdminMountainUpdateDto = await req.json();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
+    const mountain: MountainUpdateDto = await req.json();
     await updateMountain(mountainRepository, {
         mountain_id: mountainId,
         name: mountain.name,
