@@ -4,3 +4,4 @@ export interface MountainUpdateDto {
     region: string;
     description: string;
 }
+
