@@ -60,6 +60,7 @@ const AdminMountainPage = () => {
                 <S.Table>
                     <S.Thead>
                         <S.Tr>
+                            <S.Th>아이디</S.Th>
                             <S.Th>이미지</S.Th>
                             <S.Th>산 이름</S.Th>
                             <S.Th>지역</S.Th>
@@ -72,6 +73,7 @@ const AdminMountainPage = () => {
                     <S.Tbody>
                         {mountains.map((mountain) => (
                             <S.Tr key={mountain.mountain_id}>
+                                <S.Td>{mountain.mountain_id}</S.Td>
                                 <S.Td>
                                     <S.ImagePreview>
                                         <S.Image

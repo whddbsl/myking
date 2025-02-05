@@ -50,7 +50,7 @@ const EditMountainPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            let updatedMountain = { ...mountain };
+            const updatedMountain = { ...mountain };
 
             if (newImage) {
                 try {

@@ -84,7 +84,7 @@ export const Tr = styled.tr`
 `;
 
 export const Td = styled.td`
-    padding: 1rem;
+    padding: 0.6rem;
     color: #334155;
     font-size: 0.875rem;
     vertical-align: middle;
@@ -92,8 +92,8 @@ export const Td = styled.td`
 `;
 
 export const TdDescription = styled(Td)`
-    max-width: 450px;
-    width: 450px;
+    max-width: 400px;
+    width: 400px;
     vertical-align: middle;
     text-align: left;
 `;
