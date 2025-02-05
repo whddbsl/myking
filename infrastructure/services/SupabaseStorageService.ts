@@ -11,10 +11,15 @@ export class SupabaseStorageService {
             .from("images")
             .upload(`${directory}/${file.name}`, file);
         if (error) {
-            console.error("Error uploading file:", error);
-        } else {
-            console.log("File uploaded successfully:", data);
+            throw new Error(`Error uploading file: ${error.message}`);
         }
-        return `${supabase.storageUrl}/object/public/images/${directory}/${file.name}`;
+
+        const {
+            data: { publicUrl },
+        } = supabase.storage
+            .from("images")
+            .getPublicUrl(`${directory}/${file.name}`);
+
+        return publicUrl;
     }
 }
