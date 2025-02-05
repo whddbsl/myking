@@ -1,5 +1,6 @@
 "use client";
 
+import AuthProvider from "@/context/AuthProvider";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
@@ -32,6 +33,58 @@ const GlobalStyle = createGlobalStyle`
   body {
     line-height: 1;
   }
+<<<<<<< HEAD
+=======
+  main {
+    padding: 0 16px;
+  }
+  ol, ul {
+    list-style: none !important;
+  }
+  blockquote, q {
+    quotes: none;
+  }
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  /* Custom Global Styles */
+  /* Reset CSS */
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  /* HTML5 display-role reset for older browsers */
+  article, aside, details, figcaption, figure, 
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+  body {
+    line-height: 1;
+  }
+>>>>>>> main
   ol, ul {
     list-style: none !important;
   }
@@ -68,15 +121,31 @@ const GlobalStyle = createGlobalStyle`
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
   }
+
+  main {
+    padding: 16px;
+  }
 `;
 
 const theme = {
     colors: {
+<<<<<<< HEAD
         primary: "#0070f3",
     },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+=======
+        primary: "#269386",
+    },
+};
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+>>>>>>> main
     return (
         <html lang="en">
             <head>
@@ -86,7 +155,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <ThemeProvider theme={theme}>
                     <GlobalStyle />
+<<<<<<< HEAD
                     {children}
+=======
+                    <AuthProvider>{children}</AuthProvider>
+>>>>>>> main
                 </ThemeProvider>
             </body>
         </html>

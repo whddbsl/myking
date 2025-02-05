@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Course } from "../entities/Course";
 
 //코스데이터를 조회하는데 필요한 계약을 정의하는 인터페이스
@@ -15,3 +16,11 @@ export interface CourseRepository {
 //     - 코스 정보를 생성,업뎃,삭제
 //     - 인기순,거리순 등의 정렬된 코스 리스트 반환
 // 3. 데이터베이스 캡슐화: DB와 직접 통신하는 코드를 캡슐화 하여 Usecase와 분리
+=======
+import { Course } from "@/domain/entities/Course";
+
+export interface CourseRepository {
+    getCourses(): Promise<Course[]>;
+    createCourse(course: Course): Promise<void>;
+}
+>>>>>>> main
