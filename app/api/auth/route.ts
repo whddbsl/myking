@@ -10,13 +10,16 @@ export async function POST(request: Request) {
         const formData = await request.formData();
         const userRepository: UserRepository = new SbUserRepository();
         const file = formData.get("file") as File;
-        const dirName: string = "user";
+        const kakaoId = formData.get("kakao_id") as string;
 
         const storageService = new SupabaseStorageService();
         let profileImage: string;
 
         if (file && file.size > 0) {
-            profileImage = await storageService.uploadImage(file, dirName);
+            profileImage = await storageService.uploadProfileImage(
+                file,
+                kakaoId
+            );
         } else {
             profileImage = `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/images/user/member_default.svg`;
         }
@@ -50,10 +53,8 @@ export async function POST(request: Request) {
             message = `오류 발생: ${error.message}`;
         }
 
-        return new Response(
-            JSON.stringify({
-                message,
-            }),
+        return NextResponse.json(
+            { message },
             { status, headers: { "Content-Type": "application/json" } }
         );
     }

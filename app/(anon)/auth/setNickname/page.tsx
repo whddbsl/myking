@@ -78,17 +78,6 @@ export default function SetNickname() {
         }
 
         try {
-            // const response = await fetch("/api/auth", {
-            //     method: "POST",
-            //     body: JSON.stringify({
-            //         kakaoId,
-            //         name,
-            //         nickname: inputNickname,
-            //     }),
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            // });
             const response = await fetch("/api/auth", {
                 method: "POST",
                 body: formData,
