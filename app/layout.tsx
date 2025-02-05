@@ -33,6 +33,8 @@ const GlobalStyle = createGlobalStyle`
   body {
     line-height: 1;
   }
+<<<<<<< HEAD
+=======
   main {
     padding: 0 16px;
   }
@@ -82,6 +84,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     line-height: 1;
   }
+>>>>>>> main
   ol, ul {
     list-style: none !important;
   }
@@ -126,6 +129,13 @@ const GlobalStyle = createGlobalStyle`
 
 const theme = {
     colors: {
+<<<<<<< HEAD
+        primary: "#0070f3",
+    },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+=======
         primary: "#269386",
     },
 };
@@ -135,6 +145,7 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+>>>>>>> main
     return (
         <html lang="en">
             <head>
@@ -144,9 +155,14 @@ export default function RootLayout({
             <body>
                 <ThemeProvider theme={theme}>
                     <GlobalStyle />
+<<<<<<< HEAD
+                    {children}
+=======
                     <AuthProvider>{children}</AuthProvider>
+>>>>>>> main
                 </ThemeProvider>
             </body>
         </html>
     );
 }
+                  
