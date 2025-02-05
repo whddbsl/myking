@@ -2,21 +2,25 @@
 
 import {
     Form,
-    Main,
     NicknameContainer,
-    ProfileImageContainer,
 } from "@/app/(anon)/auth/setNickname/page.styles";
 import { useUserStore } from "@/application/states/userStore";
 import SubmitButtonComponent from "@/components/button/submitButton";
-import HeaderComponent from "@/components/header/header";
+import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
 import ProtectedRoute from "@/components/user/ProtectedRoutes";
 import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
-import ProfileLayout from "../layout";
+import styled from "styled-components";
+
+const CustomProfileImageUploader = styled(ProfileImageUploader)`
+    margin-top: 10px;
+`;
 
 export default function ProfileEdit() {
     const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
     const [newNickname, setNewNickname] = useState<string>("");
+    const [file, setFile] = useState<File | null>(null);
+    const [imgSrc, setImgSrc] = useState<string>("/images/member_default.svg");
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -24,7 +28,7 @@ export default function ProfileEdit() {
             if (!token) return;
 
             try {
-                const response = await fetch("/api/user/nickname", {
+                const response = await fetch("/api/user", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -32,13 +36,14 @@ export default function ProfileEdit() {
                     },
                 });
                 if (!response.ok) {
-                    throw new Error("닉네임을 가져오는 데 실패했습니다.");
+                    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
                 }
 
                 const data = await response.json();
                 setNewNickname(data.nickname);
+                setImgSrc(data.profile_image);
             } catch (error: any) {
-                console.error("닉네임 가져오기 실패: ", error);
+                console.error("사용자 정보 가져오기 실패: ", error);
             }
         };
         fetchUser();
@@ -51,7 +56,7 @@ export default function ProfileEdit() {
         if (!token) return;
 
         try {
-            const response = await fetch("/api/user/nickname/change", {
+            const response = await fetch("/api/user/edit", {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -87,38 +92,32 @@ export default function ProfileEdit() {
 
     return (
         <ProtectedRoute>
-            <Main style={{ justifyContent: "unset" }}>
-                <Form onSubmit={handleSaveNickname}>
-                    <ProfileImageContainer style={{ marginTop: "10px" }}>
-                        <img
-                            src="/images/member_default.svg"
-                            alt="member_default"
-                        />
-                        <h4>프로필 수정</h4>
-                    </ProfileImageContainer>
-                    <NicknameContainer>
-                        <h5>
-                            닉네임 <span>*</span>
-                        </h5>
-                        <input
-                            type="text"
-                            value={newNickname}
-                            onChange={(event) =>
-                                setNewNickname(event.target.value)
-                            }
-                            placeholder="닉네임 입력"
-                            maxLength={20}
-                            minLength={2}
-                            required
-                        />
-                    </NicknameContainer>
-                    <NicknameContainer>
-                        <h5>이름</h5>
-                        <input type="text" value={name} disabled />
-                    </NicknameContainer>
-                    <SubmitButtonComponent text="수정 완료" />
-                </Form>
-            </Main>
+            <Form onSubmit={handleSaveNickname}>
+                <CustomProfileImageUploader
+                    profileImage={imgSrc}
+                    setFile={setFile}
+                    setProfileImage={setImgSrc}
+                />
+                <NicknameContainer>
+                    <h5>
+                        닉네임 <span>*</span>
+                    </h5>
+                    <input
+                        type="text"
+                        value={newNickname}
+                        onChange={(event) => setNewNickname(event.target.value)}
+                        placeholder="닉네임 입력"
+                        maxLength={20}
+                        minLength={2}
+                        required
+                    />
+                </NicknameContainer>
+                <NicknameContainer>
+                    <h5>이름</h5>
+                    <input type="text" value={name} disabled />
+                </NicknameContainer>
+                <SubmitButtonComponent text="수정 완료" />
+            </Form>
         </ProtectedRoute>
     );
 }

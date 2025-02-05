@@ -1,11 +1,12 @@
 "use client";
 
-import { Form, NicknameContainer, ProfileImageContainer } from "./page.styles";
+import { Form, NicknameContainer } from "./page.styles";
 import { useUserStore } from "@/application/states/userStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import SubmitButtonComponent from "@/components/button/submitButton";
+import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
 
 export default function SetNickname() {
     const router = useRouter();
@@ -34,20 +35,6 @@ export default function SetNickname() {
             authListener.subscription.unsubscribe();
         };
     }, [supabase, setUser]);
-
-    const handleProfileImageChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setProfileImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const handleNicknameChange = async (
         event: React.ChangeEvent<HTMLInputElement>
@@ -124,25 +111,11 @@ export default function SetNickname() {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <ProfileImageContainer
-                onClick={() =>
-                    (
-                        document.querySelector(
-                            "#profileImage"
-                        ) as HTMLInputElement
-                    )?.click()
-                }
-            >
-                <img src={profileImage} alt="profile_image" />
-                <h4>프로필 수정</h4>
-                <input
-                    type="file"
-                    id="profileImage"
-                    style={{ display: "none" }}
-                    accept="image/*"
-                    onChange={handleProfileImageChange}
-                />
-            </ProfileImageContainer>
+            <ProfileImageUploader
+                profileImage={profileImage}
+                setFile={setFile}
+                setProfileImage={setProfileImage}
+            />
             <NicknameContainer>
                 <h5>
                     닉네임 <span>*</span>
