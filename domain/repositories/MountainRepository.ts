@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+import { SearchMountainDto } from "@/application/usecases/mountainSearch/dto/SearchMountainDto";
+import { Mountain } from "../entities/Mountain";
+
+export interface MountainRepository {
+    //산의 상세정보를 ID로 조회
+    getMountainDetailsById(mountainId: number): Promise<Mountain>;
+
+    //모든 산 목록 조회
+    //getAllMountains(): Promise<Mountain[]>;
+
+    //산 이름 검색
+    searchByName(query: string): Promise<SearchMountainDto[]>;
+}
+
+//interface는 typescript에서 클래스나 객체가 반드시 구현해야 하는 함수의 형태를 정의하는 역할을 함.
+=======
 import { Mountain } from "../entities/Mountain";
 
 export interface MountainRepository {
@@ -7,3 +24,4 @@ export interface MountainRepository {
     getMountainById(mountainId: string): Promise<Mountain>;
     updateMountain(mountain: Mountain): Promise<void>;
 }
+>>>>>>> main
