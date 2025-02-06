@@ -31,10 +31,12 @@ export class SupabaseStorageService {
 
         if (userData?.profile_image) {
             const filePath = userData.profile_image.replace(
-                `${supabase.storageUrl}/object/public/images/user/`,
+                `${supabase.storageUrl}/object/public/images/`,
                 ""
             );
-            await supabase.storage.from("images").remove([filePath]);
+            if (filePath !== "member_default.svg") {
+                await supabase.storage.from("images").remove([filePath]);
+            }
         }
 
         const newFileName = `${kakaoId}-${file.name}`;

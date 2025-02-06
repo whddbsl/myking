@@ -5,8 +5,6 @@ export const changeProfile = async (
     repository: UserRepository,
     user: UserUpdateDto
 ): Promise<void> => {
-    console.log("Starting changeProfile function");
-    console.log("Received user data:", user);
     if (user.new_nickname && user.new_nickname !== user.current_nickname) {
         const existingNickname = await repository.findByNickname(
             user.new_nickname
@@ -48,7 +46,6 @@ export const changeProfile = async (
     // 프로필 이미지만 변경하는 경우
     else if (user.profile_image) {
         try {
-            console.log("프로필이미지 변경");
             await repository.updateProfileImage(
                 user.kakao_id,
                 user.profile_image
