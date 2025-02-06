@@ -60,7 +60,7 @@ export class SbPartyRepository implements PartyRepository {
                     end_date: party.end_date.toISOString(),
                     //filter_state: party.filter_state,
                     filter_gender: party.filter_gender,
-                    filter_age: JSON.stringify(party.filter_age), // JSON 문자열로 저장
+                    filter_age: party.filter_age,
                 },
             ])
             .select();
