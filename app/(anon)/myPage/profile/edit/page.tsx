@@ -43,13 +43,14 @@ export default function ProfileEdit() {
                 }
 
                 const data = await response.json();
-                setCurrentNickname(data.nickname);
-                setNewNickname(data.nickname);
+
                 setImgSrc(data.profile_image);
             } catch (error: any) {
                 console.error("사용자 정보 가져오기 실패: ", error);
             }
         };
+        setCurrentNickname(nickname);
+        setNewNickname(nickname);
         fetchUser();
     }, [nickname]);
 
@@ -89,7 +90,6 @@ export default function ProfileEdit() {
                 throw new Error(errorData.message || "프로필 변경 실패");
             }
 
-            setUser(kakaoId, name, newNickname);
             localStorage.setItem(
                 "user-storage",
                 JSON.stringify({
@@ -102,7 +102,7 @@ export default function ProfileEdit() {
             );
 
             const result = await response.json();
-            setUser(kakaoId, name, newNickname);
+            setUser(kakaoId, name, newNickname, imgSrc);
             console.log("프로필 변경 성공: ", result);
             alert(result.message);
         } catch (error: any) {

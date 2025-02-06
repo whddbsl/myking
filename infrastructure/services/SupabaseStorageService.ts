@@ -34,7 +34,7 @@ export class SupabaseStorageService {
                 `${supabase.storageUrl}/object/public/images/`,
                 ""
             );
-            if (filePath !== "member_default.svg") {
+            if (filePath !== "user/member_default.svg") {
                 await supabase.storage.from("images").remove([filePath]);
             }
         }

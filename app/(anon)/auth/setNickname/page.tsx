@@ -26,7 +26,7 @@ export default function SetNickname() {
                         session.user.user_metadata.provider_id || "";
                     const name = session.user.user_metadata.name || "";
 
-                    setUser(kakaoId, name, nickname);
+                    setUser(kakaoId, name, nickname, profileImage);
                 }
             }
         );
@@ -45,7 +45,7 @@ export default function SetNickname() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        setUser(kakaoId, name, inputNickname);
+        setUser(kakaoId, name, inputNickname, profileImage);
 
         const formData = new FormData();
 

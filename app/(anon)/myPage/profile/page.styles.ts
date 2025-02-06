@@ -8,6 +8,28 @@ export const ProfileContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+
+    :nth-child(1) {
+        display: flex;
+        align-items: center;
+    }
+
+    #profile-image {
+        width: 55px;
+        height: 55px;
+        padding: 8px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    #nickname-container {
+        div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
 `;
 
 export const H4 = styled.h4`

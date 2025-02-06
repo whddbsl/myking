@@ -1,37 +1,60 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as PC from "./page.styles";
 import LevelInfo from "@/components/user/userLevel/level";
 import PartyButton from "@/components/user/partyButton/party";
 import { useRouter } from "next/navigation";
-import ProfileLayout from "./layout";
+import { useUserStore } from "@/application/states/userStore";
+import { getToken } from "@/utils/getToken";
 
 export default function Profile() {
     const router = useRouter();
+    const { setUser } = useUserStore();
+    const [nickname, setNickname] = useState<string>("");
+    const [imgSrc, setImgSrc] = useState<string>("/images/member_default.svg");
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = getToken();
+            if (!token) return;
+
+            try {
+                const response = await fetch("/api/user", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+                }
+
+                const data = await response.json();
+                setUser(
+                    data.kakao_id,
+                    data.name,
+                    data.nickname,
+                    data.profile_image
+                );
+                setNickname(data.nickname);
+                setImgSrc(data.profile_image);
+            } catch (error: any) {
+                console.error("사용자 정보 가져오기 실패: ", error);
+            }
+        };
+        fetchUser();
+    }, []);
+
     return (
         <>
             <PC.ProfileContainer>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <img
-                        src="/images/member_default.svg"
-                        alt="profile"
-                        style={{ width: "55px", height: "55px" }}
-                    />
-                    <div>
-                        <PC.H4>이름</PC.H4>
+                <div>
+                    <img id="profile-image" src={imgSrc} alt="profile" />
+                    <div id="nickname-container">
+                        <PC.H4>{nickname}</PC.H4>
                         <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                cursor: "pointer",
-                            }}
                             onClick={() => router.push("/myPage/profile/edit")}
                         >
                             <PC.ProfileInfo>내 정보 확인</PC.ProfileInfo>
