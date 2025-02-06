@@ -27,3 +27,8 @@ export const ProfileMain = styled(Main)`
     justify-content: unset;
     align-items: unset;
 `;
+
+export const ErrorMessage = styled.p`
+    color: #ff0000;
+    margin-top: 10px;
+`;

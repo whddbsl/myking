@@ -11,6 +11,7 @@ import ProtectedRoute from "@/components/user/ProtectedRoutes";
 import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { ErrorMessage } from "../page.styles";
 
 const CustomProfileImageUploader = styled(ProfileImageUploader)`
     margin-top: 10px;
@@ -18,8 +19,10 @@ const CustomProfileImageUploader = styled(ProfileImageUploader)`
 
 export default function ProfileEdit() {
     const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
+    const [currentNickname, setCurrentNickname] = useState<string>("");
     const [newNickname, setNewNickname] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const [imgSrc, setImgSrc] = useState<string>("/images/member_default.svg");
 
     useEffect(() => {
@@ -40,6 +43,7 @@ export default function ProfileEdit() {
                 }
 
                 const data = await response.json();
+                setCurrentNickname(data.nickname);
                 setNewNickname(data.nickname);
                 setImgSrc(data.profile_image);
             } catch (error: any) {
@@ -49,24 +53,40 @@ export default function ProfileEdit() {
         fetchUser();
     }, [nickname]);
 
-    const handleSaveNickname = async (event: React.FormEvent) => {
+    const handleEditProfile = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (newNickname === currentNickname && !file) {
+            alert("변경된 내용이 없습니다.");
+            return;
+        }
 
         const token = getToken();
         if (!token) return;
+
+        const formData = new FormData();
+        formData.append("current_nickname", currentNickname);
+
+        if (newNickname !== currentNickname) {
+            formData.append("new_nickname", newNickname);
+        }
+
+        if (file) {
+            formData.append("file", file);
+        }
 
         try {
             const response = await fetch("/api/user/edit", {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ newNickname }),
+                body: formData,
             });
 
             if (!response.ok) {
-                throw new Error("닉네임 변경 실패");
+                const errorData = await response.json(); // API에서 반환한 JSON 데이터 읽기
+                throw new Error(errorData.message || "프로필 변경 실패");
             }
 
             setUser(kakaoId, name, newNickname);
@@ -83,16 +103,17 @@ export default function ProfileEdit() {
 
             const result = await response.json();
             setUser(kakaoId, name, newNickname);
-            console.log("닉네임 변경 성공: ", result);
+            console.log("프로필 변경 성공: ", result);
             alert(result.message);
         } catch (error: any) {
-            console.error("닉네임 변경 중 오류 발생: ", error);
+            console.error("프로필 변경 중 오류 발생: ", error);
+            setErrorMessage(error.message);
         }
     };
 
     return (
         <ProtectedRoute>
-            <Form onSubmit={handleSaveNickname}>
+            <Form onSubmit={handleEditProfile}>
                 <CustomProfileImageUploader
                     profileImage={imgSrc}
                     setFile={setFile}
@@ -111,6 +132,9 @@ export default function ProfileEdit() {
                         minLength={2}
                         required
                     />
+                    {errorMessage && (
+                        <ErrorMessage>{errorMessage}</ErrorMessage>
+                    )}
                 </NicknameContainer>
                 <NicknameContainer>
                     <h5>이름</h5>

@@ -98,4 +98,60 @@ export class SbUserRepository implements UserRepository {
         console.log("닉네임 업데이트 성공: ", newNickname);
         return data as User;
     }
+
+    async updateNicknameAndProfileImage(
+        kakaoId: string,
+        newNickname: string,
+        profileImage: string
+    ): Promise<User | null> {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("user")
+            .update({ nickname: newNickname, profile_image: profileImage })
+            .eq("kakao_id", kakaoId)
+            .single();
+
+        if (error) {
+            console.error(
+                "Failed to update nickname and profile image: ",
+                error
+            );
+        }
+
+        if (!data) {
+            console.error(
+                "Failed to update nickname and profile image: No rows returned"
+            );
+            return null;
+        }
+
+        console.log("닉네임과 프로필 사진 업데이트 성공: ", data);
+        return data as User;
+    }
+
+    async updateProfileImage(
+        kakaoId: string,
+        profileImage: string
+    ): Promise<User | null> {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("user")
+            .update({ profile_image: profileImage })
+            .eq("kakao_id", kakaoId)
+            .single();
+
+        if (error) {
+            console.error("Failed to fetch update profile image: ", error);
+        }
+
+        if (!data) {
+            console.error("Failed to update profile image: No rows returned");
+            return null;
+        }
+
+        console.log("프로필 사진 업데이트 성공: ", data);
+        return data as User;
+    }
 }
