@@ -7,4 +7,3 @@ export interface Mountain {
     altitude: number;
     created_at: Date;
 }
-
