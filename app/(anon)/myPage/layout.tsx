@@ -1,8 +1,16 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ProfileMain } from "./page.styles";
 import HeaderComponent from "@/components/header/header";
+import ProfileNavBar from "@/components/user/profileNavBar/profileNavBar";
+import styled from "styled-components";
+import { ProfileMain } from "./profile/page.styles";
+
+const NavBarContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
 export default function ProfileLayout({
     children,
@@ -25,6 +33,11 @@ export default function ProfileLayout({
                 title={title}
                 showBackButton={showBackButton}
             ></HeaderComponent>
+            {!pathname.includes("profile/edit") && (
+                <NavBarContainer>
+                    <ProfileNavBar />
+                </NavBarContainer>
+            )}
             <ProfileMain>{children}</ProfileMain>
         </>
     );

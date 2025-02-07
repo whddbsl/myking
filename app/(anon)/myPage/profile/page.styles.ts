@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Main } from "../../auth/setNickname/page.styles";
 
 export const ProfileContainer = styled.div`
-    padding: 24px 0;
+    padding: 8px 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -48,6 +48,7 @@ export const ProfileInfo = styled.p`
 export const ProfileMain = styled(Main)`
     justify-content: unset;
     align-items: unset;
+    height: calc(95vh - 50px);
 `;
 
 export const ErrorMessage = styled.p`
