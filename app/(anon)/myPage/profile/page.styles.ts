@@ -8,6 +8,7 @@ export const ProfileContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    height: 76px;
 
     :nth-child(1) {
         display: flex;

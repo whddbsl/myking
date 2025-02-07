@@ -28,6 +28,8 @@ export default function Profile() {
                     },
                 });
                 if (!response.ok) {
+                    alert("로그인되어 있지 않습니다.");
+                    router.push("/auth");
                     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
                 }
 

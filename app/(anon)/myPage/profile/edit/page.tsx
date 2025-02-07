@@ -7,7 +7,6 @@ import {
 import { useUserStore } from "@/application/states/userStore";
 import SubmitButtonComponent from "@/components/button/submitButton";
 import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
-import ProtectedRoute from "@/components/user/ProtectedRoutes";
 import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -18,7 +17,9 @@ const CustomProfileImageUploader = styled(ProfileImageUploader)`
 `;
 
 export default function ProfileEdit() {
-    const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
+    const { kakaoId, name, nickname, profileImage, setUser } = useUserStore(
+        (state) => state
+    );
     const [currentNickname, setCurrentNickname] = useState<string>("");
     const [newNickname, setNewNickname] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
@@ -112,7 +113,7 @@ export default function ProfileEdit() {
     };
 
     return (
-        <ProtectedRoute>
+        <>
             <Form onSubmit={handleEditProfile}>
                 <CustomProfileImageUploader
                     profileImage={imgSrc}
@@ -142,6 +143,6 @@ export default function ProfileEdit() {
                 </NicknameContainer>
                 <SubmitButtonComponent text="수정 완료" />
             </Form>
-        </ProtectedRoute>
+        </>
     );
 }

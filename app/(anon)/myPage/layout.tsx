@@ -5,6 +5,7 @@ import HeaderComponent from "@/components/header/header";
 import ProfileNavBar from "@/components/user/profileNavBar/profileNavBar";
 import styled from "styled-components";
 import { ProfileMain } from "./profile/page.styles";
+import ProtectedRoute from "@/components/user/ProtectedRoutes";
 
 const NavBarContainer = styled.div`
     display: flex;
@@ -28,7 +29,7 @@ export default function ProfileLayout({
     }
 
     return (
-        <>
+        <ProtectedRoute>
             <HeaderComponent
                 title={title}
                 showBackButton={showBackButton}
@@ -39,6 +40,6 @@ export default function ProfileLayout({
                 </NavBarContainer>
             )}
             <ProfileMain>{children}</ProfileMain>
-        </>
+        </ProtectedRoute>
     );
 }
