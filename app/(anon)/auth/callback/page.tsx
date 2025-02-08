@@ -19,6 +19,7 @@ export default function AuthCallback() {
                 setUser(
                     data.session?.user.user_metadata.provider_id,
                     data.session?.user.user_metadata.name,
+                    "",
                     ""
                 );
 

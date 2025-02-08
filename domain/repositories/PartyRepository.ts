@@ -6,4 +6,5 @@ export interface PartyRepository {
     getParty(): Promise<Party[]>;
     getPartyById(partyId: string): Promise<Party>;
     createParty(party: Party): Promise<void>;
+    getPartyByCreatorId(kakaoId: string): Promise<Party[]>;
 }

@@ -68,4 +68,33 @@ export class SbPartyRepository implements PartyRepository {
             throw new Error(error.message);
         }
     }
+
+    async getPartyByCreatorId(kakaoId: string): Promise<Party[]> {
+        const supabase = await createClient();
+        const { data: user, error: userError } = await supabase
+            .from("user")
+            .select("user_id")
+            .eq("kakao_id", kakaoId)
+            .single();
+
+        if (userError) {
+            throw new Error(userError.message);
+        }
+
+        const { data, error } = await supabase
+            .from("party")
+            .select("*")
+            .eq("creator_id", user?.user_id);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return data.map((data) => ({
+            ...data,
+            created_at: new Date(data.created_at),
+            meeting_date: new Date(data.meeting_date),
+            end_date: new Date(data.end_date),
+        }));
+    }
 }
