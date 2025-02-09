@@ -64,6 +64,7 @@ export const findMyCreatedPartyList = async (
             party_id: party.party_id.toString(),
             creator_id: party.creator_id,
             mountain_id: party.mountain_id,
+            current_members: party.current_members,
             max_members: party.max_members,
             filter_state: currentState(
                 party.current_members,

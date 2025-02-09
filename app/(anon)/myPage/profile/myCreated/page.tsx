@@ -1,15 +1,24 @@
 "use client";
 
-import { useUserStore } from "@/application/states/userStore";
-import Filter from "@/components/party/filter/Filter";
 import * as PC from "@/app/(anon)/parties/page.styles";
 import { getToken } from "@/utils/getToken";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyMyCreatedDto";
+import { useUserStore } from "@/application/states/userStore";
+import styled from "styled-components";
+
+const CustomProfileImage = styled(PC.ProfileImage)`
+    img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+`;
 
 export default function MyCreatedPage() {
     const [partyList, setPartyList] = useState<PartyMyCreatedDto[]>([]);
+    const { nickname, profileImage } = useUserStore();
 
     useEffect(() => {
         const fetchList = async () => {
@@ -45,47 +54,46 @@ export default function MyCreatedPage() {
                 {partyList.map((party) => (
                     <PC.Card key={party.party_id}>
                         <PC.ProfileSection>
-                            <PC.ProfileImage>
-                                {/* 프로필 사진 */}
-                            </PC.ProfileImage>
+                            <CustomProfileImage>
+                                <img src={profileImage} alt="profile_image" />
+                            </CustomProfileImage>
                             <PC.ProfileInfo>
-                                <h1>유저 닉네임</h1>
+                                <h1>{nickname}</h1>
                                 <h2>{party.timeLabel}</h2>
                             </PC.ProfileInfo>
+                            <PC.ActionButtons>
+                                <button>수정</button>
+                                <button style={{ color: "#7e7e7e" }}>
+                                    삭제
+                                </button>
+                            </PC.ActionButtons>
                         </PC.ProfileSection>
-                        <PC.LinkWrapper href={`/parties/${party.party_id}`}>
-                            <PC.InfoSection>
-                                <PC.Meeting>
-                                    <span>산이름</span>
-                                    <span>{party.meeting_date}</span>
-                                </PC.Meeting>
-                                <PC.Tag>
-                                    <span>#{party.max_members}명</span>
-                                    <span>#{party.filter_gender}</span>
-                                    {party.filter_age.map((age) => (
-                                        <span key={age}>#{age}</span>
-                                    ))}
-                                </PC.Tag>
-                            </PC.InfoSection>
+                        <PC.InfoSection>
+                            <PC.Meeting>
+                                <span>산이름</span>
+                                <span>{party.meeting_date}</span>
+                            </PC.Meeting>
+                            <PC.Tag>
+                                <span>#{party.max_members}명</span>
+                                <span>#{party.filter_gender}</span>
+                                {party.filter_age.map((age) => (
+                                    <span key={age}>#{age}</span>
+                                ))}
+                            </PC.Tag>
+                        </PC.InfoSection>
 
-                            <PC.Footer>
-                                <PC.EndDate>
-                                    <h1>모집마감일</h1>
-                                    <h2>D-{party.end_date}</h2>
-                                </PC.EndDate>
-                                {party.filter_state && (
-                                    <PC.State state={party.filter_state}>
-                                        {party.filter_state}
-                                    </PC.State>
-                                )}
-                            </PC.Footer>
-                        </PC.LinkWrapper>
+                        <PC.Footer>
+                            <PC.EndDate>
+                                <h1>모집마감일</h1>
+                                <h2>D-{party.end_date}</h2>
+                            </PC.EndDate>
+                            <PC.State state={party.filter_state}>
+                                {party.current_members} / {party.max_members}
+                            </PC.State>
+                        </PC.Footer>
                     </PC.Card>
                 ))}
             </PC.Cards>
-            <PC.CreateButton>
-                <Link href={`/parties/create`}>작성하기</Link>
-            </PC.CreateButton>
         </div>
     );
 }

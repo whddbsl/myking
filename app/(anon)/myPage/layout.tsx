@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import HeaderComponent from "@/components/header/header";
 import ProfileNavBar from "@/components/user/profileNavBar/profileNavBar";
 import styled from "styled-components";
@@ -18,7 +19,12 @@ export default function ProfileLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const pathname = usePathname();
+    const rawPathname = usePathname();
+    const [pathname, setPathname] = useState("");
+
+    useEffect(() => {
+        setPathname(rawPathname);
+    }, [rawPathname]);
 
     let title: string = "마이페이지";
     let showBackButton: boolean = false;
@@ -30,11 +36,9 @@ export default function ProfileLayout({
 
     return (
         <ProtectedRoute>
-            <HeaderComponent
-                title={title}
-                showBackButton={showBackButton}
-            ></HeaderComponent>
-            {!pathname.includes("profile/edit") &&
+            <HeaderComponent title={title} showBackButton={showBackButton} />
+            {pathname &&
+                !pathname.includes("profile/edit") &&
                 !pathname.includes("myCreated") && (
                     <NavBarContainer>
                         <ProfileNavBar />

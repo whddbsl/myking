@@ -2,6 +2,7 @@ export interface PartyMyCreatedDto {
     party_id: string;
     creator_id: string;
     mountain_id: number;
+    current_members: number;
     max_members: number;
     meeting_date: string;
     end_date: string;
