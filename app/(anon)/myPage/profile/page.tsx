@@ -69,8 +69,11 @@ export default function Profile() {
             <PC.H4 style={{ padding: "8px 0", marginTop: "24px" }}>
                 등산 메이트 모집 현황
             </PC.H4>
-            <PartyButton text="내가 올린 파티" />
-            <PartyButton text="내가 참여한 파티" />
+            <PartyButton
+                text="내가 올린 파티"
+                route="/myPage/profile/myCreated"
+            />
+            <PartyButton text="내가 참여한 파티" route="#" />
         </>
     );
 }
