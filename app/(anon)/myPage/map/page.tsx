@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, MouseEvent } from "react";
+import * as MC from "./page.styles";
 
 export default function MapPage() {
     const [scale, setScale] = useState<number>(1);
@@ -49,20 +50,29 @@ export default function MapPage() {
     }, [scale]);
 
     // 마우스 휠 줌 기능
-    const handleWheel = (e: WheelEvent) => {
-        e.preventDefault();
-        const zoomFactor = 0.1;
-        const newScale = Math.min(
-            3,
-            Math.max(1, scale + (e.deltaY > 0 ? -zoomFactor : zoomFactor))
-        );
+    useEffect(() => {
+        const handleWheel = (e: WheelEvent) => {
+            e.preventDefault();
+            const zoomFactor = 0.1;
+            const newScale = Math.min(
+                3,
+                Math.max(1, scale + (e.deltaY > 0 ? -zoomFactor : zoomFactor))
+            );
 
-        setScale(newScale);
+            setScale(newScale);
 
-        if (newScale === 1) {
-            setPosition({ x: 0, y: 0 });
-        }
-    };
+            if (newScale === 1) {
+                setPosition({ x: 0, y: 0 });
+            }
+        };
+
+        const container = containerRef.current;
+        container?.addEventListener("wheel", handleWheel, { passive: false });
+
+        return () => {
+            container?.removeEventListener("wheel", handleWheel);
+        };
+    }, [scale]);
 
     const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -93,37 +103,21 @@ export default function MapPage() {
     };
 
     return (
-        <div
+        <MC.MapContainer
             ref={containerRef}
-            style={{
-                height: "350px",
-                width: "100%",
-                overflow: "hidden",
-                position: "relative",
-                cursor: dragging ? "grabbing" : "grab",
-            }}
-            onWheel={handleWheel as any} // TypeScript에서 WheelEvent 경고 방지
+            dragging={dragging}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
         >
-            <img
+            <MC.MapImg
                 ref={mapRef}
                 src="/images/map.png"
                 alt="map"
-                style={{
-                    position: "absolute",
-                    left: `${position.x}px`,
-                    top: `${position.y}px`,
-                    transform: `scale(${scale})`,
-                    transformOrigin: "center",
-                    objectFit: "cover",
-                    width: "100%",
-                    height: "100%",
-                    cursor: "grab",
-                }}
+                position={position}
+                scale={scale}
             />
-        </div>
+        </MC.MapContainer>
     );
 }
