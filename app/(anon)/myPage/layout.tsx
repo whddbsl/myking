@@ -34,11 +34,12 @@ export default function ProfileLayout({
                 title={title}
                 showBackButton={showBackButton}
             ></HeaderComponent>
-            {!pathname.includes("profile/edit") && (
-                <NavBarContainer>
-                    <ProfileNavBar />
-                </NavBarContainer>
-            )}
+            {!pathname.includes("profile/edit") ||
+                (!pathname.includes("myCreated") && (
+                    <NavBarContainer>
+                        <ProfileNavBar />
+                    </NavBarContainer>
+                ))}
             <ProfileMain>{children}</ProfileMain>
         </ProtectedRoute>
     );
