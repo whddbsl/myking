@@ -22,7 +22,7 @@ export const MapContainer = styled.div.withConfig({
 export const MapImg = styled.img<MapImgProps>`
     position: absolute;
     transform-origin: center;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     height: 100%;
     cursor: grab;

@@ -32,6 +32,9 @@ export default function ProfileLayout({
     if (pathname.includes("profile") && pathname.includes("edit")) {
         title = "내 정보 확인";
         showBackButton = true;
+    } else if (pathname.includes("profile") && pathname.includes("myCreated")) {
+        title = "내가 올린 파티";
+        showBackButton = true;
     }
 
     return (

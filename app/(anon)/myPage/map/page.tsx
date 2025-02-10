@@ -86,13 +86,9 @@ export default function MapPage() {
         let newX = e.clientX - start.x;
         let newY = e.clientY - start.y;
 
-        if (scale === 1) {
-            newX = 0;
-            newY = 0;
-        } else {
-            newX = Math.max(bounds.minX, Math.min(bounds.maxX, newX));
-            newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY));
-        }
+        // 이동 범위를 bounds 내로 제한
+        newX = Math.max(bounds.minX / 2, Math.min(bounds.maxX / 2, newX));
+        newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY));
 
         setPosition({ x: newX, y: newY });
     };
