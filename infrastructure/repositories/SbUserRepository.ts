@@ -17,7 +17,7 @@ export class SbUserRepository implements UserRepository {
         }
     }
 
-    async findByNickname(nickname: string): Promise<User> {
+    async findByNickname(nickname: string): Promise<boolean> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("user")
@@ -26,10 +26,10 @@ export class SbUserRepository implements UserRepository {
             .single();
 
         if (error) {
-            throw new Error(`Failed to find user: ${error.message}`);
+            return false;
         }
 
-        return data;
+        return true;
     }
 
     async findById(kakaoId: string): Promise<User> {
@@ -101,6 +101,7 @@ export class SbUserRepository implements UserRepository {
             .from("user")
             .update({ nickname: newNickname, profile_image: profileImage })
             .eq("kakao_id", kakaoId)
+            .select("*")
             .single();
 
         if (error || !data) {
@@ -123,6 +124,7 @@ export class SbUserRepository implements UserRepository {
             .from("user")
             .update({ profile_image: profileImage })
             .eq("kakao_id", kakaoId)
+            .select("*")
             .single();
 
         if (error) {
