@@ -35,6 +35,12 @@ export default function ProfileLayout({
     } else if (pathname.includes("profile") && pathname.includes("myCreated")) {
         title = "내가 올린 파티";
         showBackButton = true;
+    } else if (
+        pathname.includes("profile") &&
+        pathname.includes("myParticipated")
+    ) {
+        title = "내가 참여한 파티";
+        showBackButton = true;
     }
 
     return (
@@ -42,7 +48,8 @@ export default function ProfileLayout({
             <HeaderComponent title={title} showBackButton={showBackButton} />
             {pathname &&
                 !pathname.includes("profile/edit") &&
-                !pathname.includes("myCreated") && (
+                !pathname.includes("myCreated") &&
+                !pathname.includes("myParticipated") && (
                     <NavBarContainer>
                         <ProfileNavBar />
                     </NavBarContainer>

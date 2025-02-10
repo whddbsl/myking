@@ -73,7 +73,10 @@ export default function Profile() {
                 text="내가 올린 파티"
                 route="/myPage/profile/myCreated"
             />
-            <PartyButton text="내가 참여한 파티" route="#" />
+            <PartyButton
+                text="내가 참여한 파티"
+                route="/myPage/profile/myParticipated"
+            />
         </>
     );
 }

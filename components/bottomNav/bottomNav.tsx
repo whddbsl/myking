@@ -3,11 +3,9 @@
 import * as BN from "@/components/bottomNav/bottomNav.styles";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
 const BottomNav = () => {
     const pathname = usePathname();
-    const [currentPath] = useState<string>(pathname);
 
     const navItems = [
         { name: "등산메이트", href: "/parties", icon: "/images/parties.svg" },
@@ -24,11 +22,11 @@ const BottomNav = () => {
         <BN.NavContainer>
             {navItems.map((item) => {
                 const isActive = !!(item.href === "/"
-                    ? currentPath === item.href
-                    : (currentPath.startsWith(item.href) ||
+                    ? pathname === item.href
+                    : (pathname.startsWith(item.href) ||
                           (item.additionalPaths &&
                               item.additionalPaths.some((path) =>
-                                  currentPath.startsWith(path)
+                                  pathname.startsWith(path)
                               ))) ??
                       false);
                 return (
