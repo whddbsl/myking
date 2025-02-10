@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyMyCreatedDto";
 import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
+import { Container } from "./page.styles";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     img {
@@ -50,50 +51,60 @@ export default function MyCreatedPage() {
 
     return (
         <div>
-            <PC.Cards>
-                {partyList.map((party) => (
-                    <PC.Card key={party.party_id}>
-                        <PC.ProfileSection>
-                            <CustomProfileImage>
-                                <img src={profileImage} alt="profile_image" />
-                            </CustomProfileImage>
-                            <PC.ProfileInfo>
-                                <h1>{nickname}</h1>
-                                <h2>{party.timeLabel}</h2>
-                            </PC.ProfileInfo>
-                            <PC.ActionButtons>
-                                <button>수정</button>
-                                <button style={{ color: "#7e7e7e" }}>
-                                    삭제
-                                </button>
-                            </PC.ActionButtons>
-                        </PC.ProfileSection>
-                        <PC.InfoSection>
-                            <PC.Meeting>
-                                <span>산이름</span>
-                                <span>{party.meeting_date}</span>
-                            </PC.Meeting>
-                            <PC.Tag>
-                                <span>#{party.max_members}명</span>
-                                <span>#{party.filter_gender}</span>
-                                {party.filter_age.map((age) => (
-                                    <span key={age}>#{age}</span>
-                                ))}
-                            </PC.Tag>
-                        </PC.InfoSection>
+            {partyList.length === 0 ? (
+                <Container>
+                    <div>아직 작성한 글이 없습니다.</div>
+                </Container>
+            ) : (
+                <PC.Cards>
+                    {partyList.map((party) => (
+                        <PC.Card key={party.party_id}>
+                            <PC.ProfileSection>
+                                <CustomProfileImage>
+                                    <img
+                                        src={profileImage}
+                                        alt="profile_image"
+                                    />
+                                </CustomProfileImage>
+                                <PC.ProfileInfo>
+                                    <h1>{nickname}</h1>
+                                    <h2>{party.timeLabel}</h2>
+                                </PC.ProfileInfo>
+                                <PC.ActionButtons>
+                                    <button>수정</button>
+                                    <button style={{ color: "#7e7e7e" }}>
+                                        삭제
+                                    </button>
+                                </PC.ActionButtons>
+                            </PC.ProfileSection>
+                            <PC.InfoSection>
+                                <PC.Meeting>
+                                    <span>산이름</span>
+                                    <span>{party.meeting_date}</span>
+                                </PC.Meeting>
+                                <PC.Tag>
+                                    <span>#{party.max_members}명</span>
+                                    <span>#{party.filter_gender}</span>
+                                    {party.filter_age.map((age) => (
+                                        <span key={age}>#{age}</span>
+                                    ))}
+                                </PC.Tag>
+                            </PC.InfoSection>
 
-                        <PC.Footer>
-                            <PC.EndDate>
-                                <h1>모집마감일</h1>
-                                <h2>D-{party.end_date}</h2>
-                            </PC.EndDate>
-                            <PC.State state={party.filter_state}>
-                                {party.current_members} / {party.max_members}
-                            </PC.State>
-                        </PC.Footer>
-                    </PC.Card>
-                ))}
-            </PC.Cards>
+                            <PC.Footer>
+                                <PC.EndDate>
+                                    <h1>모집마감일</h1>
+                                    <h2>D-{party.end_date}</h2>
+                                </PC.EndDate>
+                                <PC.State state={party.filter_state}>
+                                    {party.current_members} /{" "}
+                                    {party.max_members}
+                                </PC.State>
+                            </PC.Footer>
+                        </PC.Card>
+                    ))}
+                </PC.Cards>
+            )}
         </div>
     );
 }

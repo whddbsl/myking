@@ -3,6 +3,8 @@
 import AuthProvider from "@/context/AuthProvider";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Head from "next/head";
+import BottomNav from "@/components/bottomNav/bottomNav";
+import { usePathname } from "next/navigation";
 
 const GlobalStyle = createGlobalStyle`
   /* Reset CSS */
@@ -80,7 +82,12 @@ const theme = {
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const pathname = usePathname();
     return (
         <html lang="en">
             <head>
@@ -94,6 +101,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <GlobalStyle />
                     <AuthProvider>{children}</AuthProvider>
                 </ThemeProvider>
+                {pathname !== "/auth" && (
+                    <footer>
+                        <BottomNav />
+                    </footer>
+                )}
             </body>
         </html>
     );
