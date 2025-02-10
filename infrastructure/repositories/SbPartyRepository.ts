@@ -1,6 +1,10 @@
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { Party } from "../../domain/entities/Party";
 import { createClient } from "@/utils/supabase/server";
+import {
+    PartyMyParticipatedDto,
+    UserDto,
+} from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
 
 //implements -> SbPartyRepository는 PartyRepository를 따른다
 export class SbPartyRepository implements PartyRepository {
@@ -98,7 +102,9 @@ export class SbPartyRepository implements PartyRepository {
         }));
     }
 
-    async getMyParticipatedParty(kakaoId: string): Promise<Party[]> {
+    async getMyParticipatedParty(
+        kakaoId: string
+    ): Promise<PartyMyParticipatedDto[]> {
         const supabase = await createClient();
         const { data: userData, error: userError } = await supabase
             .from("user")
@@ -134,11 +140,28 @@ export class SbPartyRepository implements PartyRepository {
             throw new Error(participatedError.message);
         }
 
+        const creatorId = participatedData.map((data) => data.creator_id);
+
+        const { data: creatorData, error: creatorError } = await supabase
+            .from("user")
+            .select("*")
+            .in("user_id", creatorId);
+
+        if (!creatorData || creatorError) {
+            throw new Error(creatorError.message);
+        }
+
+        const creatorMap = creatorData.reduce((acc, creator) => {
+            acc[creator.user_id] = creator;
+            return acc;
+        }, {} as Record<string, UserDto>);
+
         return participatedData.map((partyList) => ({
             ...partyList,
             created_at: new Date(partyList.created_at),
             meeting_date: new Date(partyList.meeting_date),
             end_date: new Date(partyList.end_date),
+            user: creatorMap[partyList.creator_id],
         }));
     }
 }

@@ -1,6 +1,5 @@
 import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 import { PartyMyParticipatedDto } from "./dto/PartyParticipatedDto";
-import { Party } from "@/domain/entities/Party";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -58,24 +57,27 @@ export const findMyParticipatedList = async (
     repository: SbPartyRepository,
     userId: string
 ): Promise<PartyMyParticipatedDto[]> => {
-    const parties: Party[] = await repository.getMyParticipatedParty(userId);
+    const parties: PartyMyParticipatedDto[] =
+        await repository.getMyParticipatedParty(userId);
     const partyList: PartyMyParticipatedDto[] = await Promise.all(
         parties.map((party) => ({
             party_id: party.party_id.toString(),
             creator_id: party.creator_id,
+            created_at: party.created_at,
             mountain_id: party.mountain_id,
             current_members: party.current_members,
             max_members: party.max_members,
             filter_state: currentState(
                 party.current_members,
                 party.max_members,
-                party.end_date
+                new Date(party.end_date)
             ),
             filter_gender: party.filter_gender,
             filter_age: party.filter_age,
-            meeting_date: formatDate(party.meeting_date),
-            end_date: calcDday(party.end_date),
-            timeLabel: calcTimeLabel(party.created_at),
+            meeting_date: formatDate(new Date(party.meeting_date)),
+            end_date: calcDday(new Date(party.end_date)),
+            timeLabel: calcTimeLabel(new Date(party.created_at)),
+            user: party.user,
         }))
     );
 
