@@ -101,7 +101,7 @@ export default function RootLayout({
                     <GlobalStyle />
                     <AuthProvider>{children}</AuthProvider>
                 </ThemeProvider>
-                {pathname !== "/auth" && (
+                {!pathname.includes("/auth") && (
                     <footer>
                         <BottomNav />
                     </footer>
