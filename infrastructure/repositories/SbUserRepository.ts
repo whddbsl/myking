@@ -8,6 +8,7 @@ export class SbUserRepository implements UserRepository {
         const { error } = await supabase.from("user").insert({
             nickname: user.nickname,
             name: user.name,
+            profile_image: user.profile_image,
             kakao_id: user.kakao_id,
         });
 
@@ -16,7 +17,7 @@ export class SbUserRepository implements UserRepository {
         }
     }
 
-    async findByNickname(nickname: string): Promise<User | null> {
+    async findByNickname(nickname: string): Promise<boolean> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("user")
@@ -25,14 +26,13 @@ export class SbUserRepository implements UserRepository {
             .single();
 
         if (error) {
-            if (error.code === "PGRST116") return null;
-            throw new Error(`Failed to find user: ${error.message}`);
+            return false;
         }
 
-        return data as User;
+        return true;
     }
 
-    async findById(kakaoId: string): Promise<User | null> {
+    async findById(kakaoId: string): Promise<User> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("user")
@@ -40,12 +40,11 @@ export class SbUserRepository implements UserRepository {
             .eq("kakao_id", kakaoId)
             .single();
 
-        if (error) {
-            console.error("Failed to fetch user: ", error.message);
-            return null;
+        if (error || !data) {
+            throw new Error(`User not found with kakao_id: ${kakaoId}`);
         }
 
-        return data as User;
+        return data;
     }
     async getUsers(): Promise<User[]> {
         const supabase = await createClient();
@@ -71,10 +70,7 @@ export class SbUserRepository implements UserRepository {
         }
     }
 
-    async updateNickname(
-        kakaoId: string,
-        newNickname: string
-    ): Promise<User | null> {
+    async updateNickname(kakaoId: string, newNickname: string): Promise<User> {
         const supabase = await createClient();
 
         const { data, error } = await supabase
@@ -84,17 +80,64 @@ export class SbUserRepository implements UserRepository {
             .select("*")
             .single();
 
-        if (error) {
-            console.error("Failed to update nickname: ", error.message);
-            return null;
-        }
-
-        if (!data || data.length === 0) {
-            console.error("Failed to update nickname: No rows returned");
-            return null;
+        if (error || !data) {
+            throw new Error(
+                `Failed to update nickname for kakao_id: ${kakaoId}`
+            );
         }
 
         console.log("닉네임 업데이트 성공: ", newNickname);
-        return data as User;
+        return data;
+    }
+
+    async updateNicknameAndProfileImage(
+        kakaoId: string,
+        newNickname: string,
+        profileImage: string
+    ): Promise<User> {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("user")
+            .update({ nickname: newNickname, profile_image: profileImage })
+            .eq("kakao_id", kakaoId)
+            .select("*")
+            .single();
+
+        if (error || !data) {
+            throw new Error(
+                `Failed to update nickname and profile image for kakao_id: ${kakaoId}`
+            );
+        }
+
+        console.log("닉네임과 프로필 사진 업데이트 성공: ", data);
+        return data;
+    }
+
+    async updateProfileImage(
+        kakaoId: string,
+        profileImage: string
+    ): Promise<User> {
+        const supabase = await createClient();
+
+        const { data, error } = await supabase
+            .from("user")
+            .update({ profile_image: profileImage })
+            .eq("kakao_id", kakaoId)
+            .select("*")
+            .single();
+
+        if (error) {
+            console.error("Failed to fetch update profile image: ", error);
+        }
+
+        if (!data) {
+            throw new Error(
+                `Failed to update profile image for kakao_id: ${kakaoId}`
+            );
+        }
+
+        console.log("프로필 사진 업데이트 성공: ", data);
+        return data;
     }
 }

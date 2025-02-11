@@ -6,15 +6,51 @@ const supabase = createClient(
 );
 
 export class SupabaseStorageService {
-    async uploadImage(file: File): Promise<string> {
+    async uploadImage(file: File, directory: string): Promise<string> {
         const { data, error } = await supabase.storage
             .from("images")
-            .upload(`courses/${file.name}`, file);
+            .upload(`${directory}/${file.name}`, file);
         if (error) {
             console.error("Error uploading file:", error);
         } else {
             console.log("File uploaded successfully:", data);
         }
-        return `${supabase.storageUrl}/object/public/images/courses/${file.name}`;
+        return `${supabase.storageUrl}/object/public/images/${directory}/${file.name}`;
+    }
+
+    async uploadProfileImage(file: File, kakaoId: string): Promise<string> {
+        const { data: userData, error: userError } = await supabase
+            .from("user")
+            .select("profile_image")
+            .eq("kakao_id", kakaoId)
+            .single();
+
+        if (userError) {
+            console.error("Error fetching user data: ", userError);
+        }
+
+        if (userData?.profile_image) {
+            const filePath = userData.profile_image.replace(
+                `${supabase.storageUrl}/object/public/images/`,
+                ""
+            );
+            if (filePath !== "user/member_default.svg") {
+                await supabase.storage.from("images").remove([filePath]);
+            }
+        }
+
+        const newFileName = `${kakaoId}-${file.name}`;
+
+        const { data, error } = await supabase.storage
+            .from("images")
+            .upload(`user/${newFileName}`, file);
+
+        if (error) {
+            console.error("Error uploading profile image: ", error);
+        } else {
+            console.log("File uploaded successfully: ", data);
+        }
+
+        return `${supabase.storageUrl}/object/public/images/user/${newFileName}`;
     }
 }

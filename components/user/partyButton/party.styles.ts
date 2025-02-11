@@ -9,6 +9,7 @@ export const Container = styled.div`
     align-items: center;
     height: 87px;
     margin: 10px 0;
+    cursor: pointer;
 `;
 
 export const H4 = styled.div`
