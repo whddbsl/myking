@@ -20,10 +20,18 @@ myking
 │  │  │  └─ [mountainId]
 │  │  │     └─ page.tsx
 │  │  ├─ myPage
+│  │  │  ├─ layout.tsx
+│  │  │  ├─ map
+│  │  │  │  ├─ page.styles.ts
+│  │  │  │  └─ page.tsx
 │  │  │  └─ profile
 │  │  │     ├─ edit
 │  │  │     │  └─ page.tsx
-│  │  │     ├─ layout.tsx
+│  │  │     ├─ myCreated
+│  │  │     │  ├─ page.styles.ts
+│  │  │     │  └─ page.tsx
+│  │  │     ├─ myParticipated
+│  │  │     │  └─ page.tsx
 │  │  │     ├─ page.styles.ts
 │  │  │     └─ page.tsx
 │  │  ├─ parties
@@ -46,7 +54,11 @@ myking
 │  │  │  │  ├─ page.styles.ts
 │  │  │  │  └─ page.tsx
 │  │  │  ├─ page.styles.ts
-│  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ [courseId]
+│  │  │     └─ edit
+│  │  │        ├─ page.styles.ts
+│  │  │        └─ page.tsx
 │  │  ├─ layout.styles.ts
 │  │  ├─ layout.tsx
 │  │  ├─ mountain
@@ -57,7 +69,11 @@ myking
 │  │  │  ├─ page.tsx
 │  │  │  └─ [mountainId]
 │  │  │     └─ edit
+│  │  │        ├─ page.styles.ts
 │  │  │        └─ page.tsx
+│  │  ├─ party
+│  │  │  ├─ page.styles.ts
+│  │  │  └─ page.tsx
 │  │  └─ user
 │  │     ├─ page.styles.ts
 │  │     └─ page.tsx
@@ -66,20 +82,33 @@ myking
 │  │  │  ├─ course
 │  │  │  │  ├─ create
 │  │  │  │  │  └─ route.ts
-│  │  │  │  └─ route.ts
+│  │  │  │  ├─ route.ts
+│  │  │  │  └─ [courseId]
+│  │  │  │     └─ edit
+│  │  │  │        └─ route.ts
 │  │  │  ├─ mountain
+│  │  │  │  ├─ create
+│  │  │  │  │  └─ route.ts
 │  │  │  │  ├─ route.ts
 │  │  │  │  └─ [mountainId]
 │  │  │  │     └─ edit
 │  │  │  │        └─ route.ts
+│  │  │  ├─ party
+│  │  │  │  └─ route.ts
 │  │  │  └─ user
 │  │  │     └─ route.ts
 │  │  ├─ auth
 │  │  │  ├─ checkUser
 │  │  │  │  └─ route.ts
 │  │  │  └─ route.ts
+│  │  ├─ mountains
+│  │  │  └─ route.ts
 │  │  ├─ parties
 │  │  │  ├─ create
+│  │  │  │  └─ route.ts
+│  │  │  ├─ myCreated
+│  │  │  │  └─ route.ts
+│  │  │  ├─ participated
 │  │  │  │  └─ route.ts
 │  │  │  ├─ route.ts
 │  │  │  └─ [partyId]
@@ -87,11 +116,11 @@ myking
 │  │  ├─ search
 │  │  │  └─ route.ts
 │  │  └─ user
-│  │     └─ nickname
-│  │        ├─ change
-│  │        │  └─ route.ts
-│  │        └─ route.ts
+│  │     ├─ edit
+│  │     │  └─ route.ts
+│  │     └─ route.ts
 │  ├─ layout.tsx
+│  ├─ page.styles.ts
 │  └─ page.tsx
 ├─ application
 │  ├─ states
@@ -99,24 +128,38 @@ myking
 │  └─ usecases
 │     ├─ admin
 │     │  ├─ course
-│     │  │  ├─ AdminFindCourseUsecase.ts
 │     │  │  ├─ CreateCourseUsecase.ts
-│     │  │  └─ dto
-│     │  │     ├─ AdminCourseListDto.ts
-│     │  │     └─ CourseCreateDto.ts
+│     │  │  ├─ DeleteCourseUsecase.ts
+│     │  │  ├─ dto
+│     │  │  │  ├─ CourseCreateDto.ts
+│     │  │  │  ├─ CourseDetailDto.ts
+│     │  │  │  ├─ CourseListDto.ts
+│     │  │  │  ├─ CourseUpdateDto.ts
+│     │  │  │  └─ MountainListDto.ts
+│     │  │  ├─ FindCourseDetailUsecase.ts
+│     │  │  ├─ FindCourseUsecase.ts
+│     │  │  ├─ FindMountainaByIdUsecase.ts
+│     │  │  ├─ FindMountainUsecase.ts
+│     │  │  └─ UpdateCourseUsecase.ts
 │     │  ├─ mountain
 │     │  │  ├─ AdminFindMountainaByIdUsecase.ts
-│     │  │  ├─ AdminFindMountainNameUsecase.ts
 │     │  │  ├─ AdminFindMountainUsecase.ts
 │     │  │  ├─ CreateMountainUsecase.ts
 │     │  │  ├─ DeleteMountainUsecase.ts
 │     │  │  ├─ dto
 │     │  │  │  ├─ AdminMountainDto.ts
 │     │  │  │  ├─ AdminMountainListDto.ts
-│     │  │  │  ├─ AdminMountainNameDto.ts
 │     │  │  │  ├─ MountainCreateDto.ts
+│     │  │  │  ├─ MountainDetailDto.ts
+│     │  │  │  ├─ MountainListDto.ts
 │     │  │  │  └─ MountainUpdateDto.ts
+│     │  │  ├─ FindMountainDetailUsecase.ts
+│     │  │  ├─ FindMountainUsecase.ts
 │     │  │  └─ UpdateMountainUsecase.ts
+│     │  ├─ party
+│     │  │  ├─ dto
+│     │  │  │  └─ PartyListDto.ts
+│     │  │  └─ FindPartyUsecase.ts
 │     │  └─ user
 │     │     ├─ AdminDeleteUserUscases.ts
 │     │     ├─ AdminUserListDto.ts
@@ -125,7 +168,8 @@ myking
 │     ├─ mountainDetails
 │     │  ├─ dto
 │     │  │  ├─ GetMountainDetailsDto.ts
-│     │  │  └─ GetMountainRequestDto.ts
+│     │  │  ├─ GetMountainRequestDto.ts
+│     │  │  └─ MountainWithCoursesDto.ts
 │     │  └─ MountainDetailsUsecase.ts
 │     ├─ mountainSearch
 │     │  ├─ dto
@@ -139,9 +183,13 @@ myking
 │     ├─ partyLookup
 │     │  ├─ dto
 │     │  │  ├─ PartyDetailDto.ts
-│     │  │  └─ PartyListDto.ts
+│     │  │  ├─ PartyListDto.ts
+│     │  │  ├─ PartyMyCreatedDto.ts
+│     │  │  └─ PartyParticipatedDto.ts
 │     │  ├─ PartyDetailUsecase.ts
-│     │  └─ PartyListUsecase.ts
+│     │  ├─ PartyListUsecase.ts
+│     │  ├─ PartyMyCreatedUsecase.ts
+│     │  └─ PartyParticipatedUsecase.ts
 │     ├─ PartyMember
 │     │  ├─ DfPartyMemberCreateUsecase.ts
 │     │  └─ dto
@@ -161,6 +209,9 @@ myking
 │  ├─ admin
 │  │  ├─ sidebar.styles.ts
 │  │  └─ Sidebar.tsx
+│  ├─ bottomNav
+│  │  ├─ bottomNav.styles.ts
+│  │  └─ bottomNav.tsx
 │  ├─ button
 │  │  ├─ submitButton.styles.ts
 │  │  └─ submitButton.tsx
@@ -172,10 +223,15 @@ myking
 │  │     ├─ Filter.styles.ts
 │  │     └─ Filter.tsx
 │  └─ user
-│     ├─ AuthUtils.ts
 │     ├─ partyButton
 │     │  ├─ party.styles.ts
 │     │  └─ party.tsx
+│     ├─ profileImageUploader
+│     │  ├─ ProfileImageUploader.styles.ts
+│     │  └─ ProfileImageUploader.tsx
+│     ├─ profileNavBar
+│     │  ├─ profileNavBar.styles.ts
+│     │  └─ profileNavBar.tsx
 │     ├─ ProtectedRoutes.tsx
 │     └─ userLevel
 │        ├─ level.styles.ts
@@ -214,7 +270,11 @@ myking
 │  │  └─ app-icon-192x192.png
 │  ├─ images
 │  │  ├─ back_button.svg
+│  │  ├─ home.svg
+│  │  ├─ map.png
 │  │  ├─ member_default.svg
+│  │  ├─ myPage.svg
+│  │  ├─ parties.svg
 │  │  └─ right_arrow.svg
 │  ├─ logos
 │  │  └─ logo.png

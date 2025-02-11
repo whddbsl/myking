@@ -184,7 +184,7 @@ export default function Home() {
 
                 {/* 등산 메이트 모집 섹션: DB에서 가져온 파티 데이터를 표시 */}
                 <MateSectionHeader>
-                    <h2>등산 메이트 모집</h2>
+                    <h5>등산 메이트 모집</h5>
                     <MateMoreLink>더보기 &gt;</MateMoreLink>
                 </MateSectionHeader>
 

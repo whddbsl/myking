@@ -71,15 +71,3 @@ export const findPartyList = async (
     ); // 변환할 Dto를 담는 변수
     return partyList;
 };
-// export const findPartyListLookUp = async (repository: SbPartyRepository): Promise<PartyListLookUpDto[]> => {
-//     // 기존 findPartyList 호출
-//     const partyList: PartyListDto[] = await findPartyList(repository);
-
-//     // description 필드를 추가하여 PartyListLookUpDto로 변환
-//     const partyListWithDescription: PartyListLookUpDto[] = partyList.map((party) => ({
-//         ...party,
-//         description: party.description, // 기본값 또는 추가 데이터
-//     }));
-
-//     return partyListWithDescription;
-// };

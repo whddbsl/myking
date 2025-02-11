@@ -87,9 +87,26 @@ export const SectionSubtitle = styled.p`
 export const MountainCarousel = styled.div`
     display: flex;
     gap: 1rem;
-    overflow-x: hidden;
+
+    /* snap 사용 시 자동 스크롤이 필요하므로 auto로 변경 */
+    overflow-x: auto;
+
+    /* 스크롤 스냅 관련 설정 */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; /* 드래그 후 놓았을 때 부드럽게 스크롤 */
+
     padding-bottom: 1rem;
     user-select: none;
+    /* 스크롤바 숨기기 */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none; /* IE 및 Edge용 */
+    scrollbar-width: none; /* Firefox용 */
+    /* 각 카드가 스냅에 맞춰서 정렬되도록 */
+    & > * {
+        scroll-snap-align: start; /* 카드의 시작 지점이 스냅 */
+    }
 `;
 
 export const MountainCard = styled.div`
@@ -214,8 +231,71 @@ export const MateSectionHeader = styled.div`
     margin-bottom: 1rem;
 
     h2 {
-        font-size: 1.1rem;
         margin: 0;
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+        font-weight: bold;
+    }
+`;
+
+export const MateGrid = styled.div`
+    display: grid;
+    /* 2열 레이아웃 */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+
+    /* 만약 화면이 작을 때 1열로 줄이고 싶다면 반응형 미디어 쿼리 추가
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+    */
+`;
+
+export const MateCard = styled.div`
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer; /* 클릭 가능하도록 변경 */
+
+    .mountain {
+        font-size: 1.1rem; /* 산 이름 크기 증가 */
+        color: #269386;
+        font-weight: bold;
+        display: flex;
+        align-items: center; /* 아이콘과 텍스트 수직 정렬 */
+
+        &::before {
+            content: "";
+            display: inline-block;
+            width: 16px; /* 아이콘 너비 */
+            height: 16px; /* 아이콘 높이 */
+            margin-right: 6px; /* 아이콘과 텍스트 간격 */
+            background-image: url("/images/locationIcon.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    }
+
+    .description {
+        font-size: 0.85rem; /* 설명 글씨 크기 감소 */
+        margin: 8px 0;
+        color: #333;
+    }
+
+    .club-info {
+        font-size: 0.875rem;
+        color: #888;
+    }
+
+    /* hover 효과 추가 */
+    &:hover {
+        border-color: #269386; /* 메인 테마 색으로 변경 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 */
+        transition: border-color 0.3s ease, box-shadow 0.3s ease; /* 부드러운 전환 */
     }
 `;
 
@@ -225,30 +305,7 @@ export const MateMoreLink = styled.span`
 
     &:hover {
         text-decoration: underline;
-    }
-`;
-
-export const MateGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-`;
-
-export const MateCard = styled.div`
-    /* 카드 형태 */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fff;
-    /* 원하는 대로 스타일 조정 */
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    .description {
-        margin: 8px 0;
-        /* 중앙 정렬 등 원하면 추가 */
-        text-align: center;
+        color: #269386; /* hover 시 색상 변경 */
     }
 `;
 
