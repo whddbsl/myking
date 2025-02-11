@@ -149,3 +149,8 @@ export const AddButton = styled(Link)`
         transform: translateY(-1px);
     }
 `;
+
+export const UnstyledLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+`;

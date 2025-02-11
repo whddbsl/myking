@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AdminCourseListDto } from "@/application/usecases/admin/course/dto/AdminCourseListDto";
+
 import React from "react";
 import * as S from "./page.styles";
 import {
@@ -11,9 +11,10 @@ import {
     FiChevronUp,
     FiPlus,
 } from "react-icons/fi";
+import { CourseListDto } from "@/application/usecases/admin/course/dto/CourseListDto";
 
 const CoursePage = () => {
-    const [courses, setCourses] = useState<AdminCourseListDto[]>([]);
+    const [courses, setCourses] = useState<CourseListDto[]>([]);
     const [detailStates, setDetailStates] = useState<{
         [key: string]: boolean;
     }>({});
@@ -96,7 +97,11 @@ const CoursePage = () => {
                                             className="edit"
                                             aria-label="수정"
                                         >
-                                            <FiEdit2 size={18} />
+                                            <S.UnstyledLink
+                                                href={`/admin/course/${course.course_id}/edit`}
+                                            >
+                                                <FiEdit2 size={18} />
+                                            </S.UnstyledLink>
                                         </S.ActionButton>
                                         <S.ActionButton
                                             className="delete"
@@ -129,9 +134,7 @@ const CoursePage = () => {
                                         <S.Td colSpan={7}>
                                             <S.DetailContainer>
                                                 <S.DetailImage
-                                                    src={
-                                                        course.image_url
-                                                    }
+                                                    src={course.image_url}
                                                     alt={`${course.name} 이미지`}
                                                 />
                                                 <S.DetailText>
