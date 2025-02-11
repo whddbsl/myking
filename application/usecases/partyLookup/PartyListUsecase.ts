@@ -72,6 +72,7 @@ export const findPartyList = async (
 
             return {
                 party_id: party.party_id.toString(),
+                description: party.description,
                 creator_id: Number(user.user_id),
                 creator_nickname: user.nickname,
                 creator_image: user.profile_image,

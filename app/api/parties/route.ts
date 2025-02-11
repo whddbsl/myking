@@ -6,7 +6,6 @@ import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRe
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
-import { UserRepository } from "@/domain/repositories/UserRepository";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { getMountainList } from "@/application/usecases/partyLookup/MountainListUsecase";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
