@@ -1,7 +1,5 @@
 // mountain가져오는 get
 // 생성하는 post
-
-import { findMountainById } from "@/application/usecases/admin/mountain/AdminFindMountainaByIdUsecase";
 import { createParty } from "@/application/usecases/party/DfPartyCreateUsecase";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { FindUUidByKakaoUsecase } from "@/application/usecases/partyLookup/FindUuidByKakaoUsecase";
