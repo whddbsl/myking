@@ -79,13 +79,6 @@ export const ActionButton = styled.button`
     transition: all 0.2s;
     margin: 0 0.25rem;
 
-    &.edit {
-        color: #2563eb;
-        &:hover {
-            background-color: #dbeafe;
-        }
-    }
-
     &.delete {
         color: #dc2626;
         &:hover {
@@ -97,37 +90,6 @@ export const ActionButton = styled.button`
         color: #0f766e;
         &:hover {
             background-color: #ccfbf1;
-        }
-    }
-`;
-
-export const DetailContainer = styled.div`
-    display: flex;
-    gap: 2rem;
-    padding: 1.5rem;
-    background-color: #f8fafc;
-`;
-
-export const DetailImage = styled.img`
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 0.5rem;
-`;
-
-export const DetailText = styled.div`
-    flex: 1;
-
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-
-        li {
-            margin-bottom: 0.5rem;
-            color: #334155;
-            font-size: 1rem;
-            text-align: left;
         }
     }
 `;
@@ -153,4 +115,28 @@ export const AddButton = styled(Link)`
 export const UnstyledLink = styled(Link)`
     text-decoration: none;
     color: inherit;
+`;
+
+export const DetailContainer = styled.div`
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem;
+    background-color: #f8fafc;
+`;
+
+export const DetailText = styled.div`
+    flex: 1;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #334155;
+            font-size: 1rem;
+            text-align: left;
+        }
+    }
 `;

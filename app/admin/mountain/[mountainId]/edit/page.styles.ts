@@ -1,3 +1,4 @@
+// app/admin/mountain/[mountainId]/edit/page.styles.ts
 import styled from "styled-components";
 
 export const AdminContainer = styled.div`
@@ -133,6 +134,7 @@ export const CancelButton = styled(Button)`
     }
 `;
 
+
 export const ImagePreviewWrapper = styled.div`
     margin-bottom: 1rem;
 `;
@@ -171,24 +173,4 @@ export const Image = styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
-`;
-
-export const ReadOnlyField = styled.div`
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    background-color: #f3f4f6;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    color: #374151;
-    cursor: not-allowed;
-`;
-
-export const Select = styled.select`
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
 `;

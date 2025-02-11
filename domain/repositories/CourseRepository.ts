@@ -5,7 +5,10 @@ export interface CourseRepository {
     //산 ID로 코스 리스트 검색
     findByMountainId(mountainId: number): Promise<Course[]>; //반환값은 Course객체들의 배열
     getCourses(): Promise<Course[]>;
+    getCourseById(course_id: number): Promise<Course>;
     createCourse(course: Course): Promise<void>;
+    deleteCourse(course_id: number): Promise<void>;
+    updateCourse(course: Course): Promise<void>;
 
     //코스 ID로 코스 정보 검색(선택적)
     //findById(courseId: number): Promise<Course | null>; //검색 성공하면

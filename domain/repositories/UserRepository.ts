@@ -6,6 +6,8 @@ export interface UserRepository {
     findById(kakaoId: string): Promise<User>;
     getUsers(): Promise<User[]>;
     deleteUser(userId: string): Promise<void>;
+    updateNickname(kakaoId: string, newNickname: string): Promise<User | null>;
+    getUserByUuid(userId: string): Promise<User>;
     updateNickname(kakaoId: string, newNickname: string): Promise<User>;
     updateNicknameAndProfileImage(
         kakaoId: string,

@@ -1,9 +1,7 @@
-export interface MountainUpdateDto {
-    mountain_id: number;
+export interface MountainDetailDto {
     name: string;
+    image_url: string;
     region: string;
     description: string;
     altitude: number;
-    image_url: string;
 }
-

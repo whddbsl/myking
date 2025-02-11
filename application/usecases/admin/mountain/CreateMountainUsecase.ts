@@ -9,8 +9,6 @@ export const createNewMountain = async (
     await mountainRepository.createMountain({
         mountain_id: 0,
         ...mountain,
-        created_at: new Date(),
-        image_url: "",
-        altitude: 0,
+        created_at: new Date(),        
     });
 };

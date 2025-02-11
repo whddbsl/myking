@@ -1,6 +1,5 @@
 import { MountainRepository } from "@/domain/repositories/MountainRepository";
-import { Mountain } from "@/domain/entities/Mountain";
-import { AdminMountainListDto } from "./dto/AdminMountainListDto";
+import { MountainListDto } from "./dto/MountainListDto";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -15,15 +14,13 @@ function formatDate(date: Date): string {
 
 export const findAllMountains = async (
     repository: MountainRepository
-): Promise<AdminMountainListDto[]> => {
-    const mountains: Mountain[] = await repository.getMountains();
-
-    const mountainList: AdminMountainListDto[] = await Promise.all(
-        mountains.map(async (mountain) => ({
-            ...mountain,
-            created_at: formatDate(mountain.created_at),
-        }))
-    );
+): Promise<MountainListDto[]> => {
+    const mountainList: MountainListDto[] = (
+        await repository.getMountains()
+    ).map((mountain) => ({
+        ...mountain,
+        created_at: formatDate(mountain.created_at),
+    }));
 
     return mountainList;
 };

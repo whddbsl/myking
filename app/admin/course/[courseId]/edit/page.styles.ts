@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 
 export const AdminContainer = styled.div`
@@ -185,10 +186,4 @@ export const ReadOnlyField = styled.div`
     cursor: not-allowed;
 `;
 
-export const Select = styled.select`
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-`;
+
