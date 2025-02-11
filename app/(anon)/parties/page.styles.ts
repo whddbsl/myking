@@ -20,11 +20,22 @@ export const ProfileSection = styled.div`
     gap: 10px;
     padding: 15px;
 `;
-export const ProfileImage = styled.div`
+export const ProfileImageWrap = styled.div`
     width: 36px;
     height: 36px;
-    background: #ddd;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     border-radius: 50%;
+    overflow: hidden;
+`;
+export const ProfileImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #ddd;
 `;
 export const ProfileInfo = styled.div`
     display: flex;
