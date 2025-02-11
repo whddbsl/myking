@@ -71,7 +71,6 @@ export default function MyCreatedPage() {
                                     <h2>{party.timeLabel}</h2>
                                 </PC.ProfileInfo>
                                 <PC.ActionButtons>
-                                    <button>수정</button>
                                     <button style={{ color: "#7e7e7e" }}>
                                         삭제
                                     </button>
