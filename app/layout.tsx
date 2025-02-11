@@ -45,17 +45,6 @@ const GlobalStyle = createGlobalStyle`
     cursor: pointer; 
   }
 
-button {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    font-size: inherit; /* 상속된 폰트 크기를 사용 */
-    line-height: inherit; /* 상속된 줄 높이를 사용 */
-    background: none; /* 기본 배경 제거 */
-    border: none; /* 기본 테두리 제거 */
-    cursor: pointer; /* 포인터 커서 추가 */
-  }
-
   body {
     line-height: 1;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
