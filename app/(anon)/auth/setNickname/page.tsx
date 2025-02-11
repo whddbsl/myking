@@ -1,17 +1,22 @@
 "use client";
 
-import { Form, NicknameContainer, ProfileImageContainer } from "./page.styles";
+import { Form, NicknameContainer } from "./page.styles";
 import { useUserStore } from "@/application/states/userStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import SubmitButtonComponent from "@/components/button/submitButton";
+import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
 
 export default function SetNickname() {
     const router = useRouter();
     const supabase = createClientComponentClient();
     const { kakaoId, name, nickname, setUser } = useUserStore((state) => state);
     const [inputNickname, setInputNickname] = useState("");
+    const [profileImage, setProfileImage] = useState<string>(
+        "/images/member_default.svg"
+    );
+    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -21,7 +26,7 @@ export default function SetNickname() {
                         session.user.user_metadata.provider_id || "";
                     const name = session.user.user_metadata.name || "";
 
-                    setUser(kakaoId, name, nickname);
+                    setUser(kakaoId, name, nickname, profileImage);
                 }
             }
         );
@@ -37,22 +42,32 @@ export default function SetNickname() {
         setInputNickname(event.target.value);
     };
 
-    const handleSetNickname = async (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        setUser(kakaoId, name, inputNickname);
+        setUser(kakaoId, name, inputNickname, profileImage);
+
+        const formData = new FormData();
+
+        formData.append("kakao_id", kakaoId);
+        formData.append("name", name);
+        formData.append("nickname", inputNickname);
+        if (file) {
+            formData.append("file", file);
+        } else {
+            formData.append(
+                "file",
+                new File(
+                    [],
+                    `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/images/user/member_default.svg`
+                )
+            );
+        }
 
         try {
             const response = await fetch("/api/auth", {
                 method: "POST",
-                body: JSON.stringify({
-                    kakaoId,
-                    name,
-                    nickname: inputNickname,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                body: formData,
             });
 
             if (!response.ok) {
@@ -95,11 +110,12 @@ export default function SetNickname() {
     };
 
     return (
-        <Form onSubmit={handleSetNickname}>
-            <ProfileImageContainer>
-                <img src="/images/member_default.svg" alt="member_default" />
-                <h4>프로필 수정</h4>
-            </ProfileImageContainer>
+        <Form onSubmit={handleSubmit}>
+            <ProfileImageUploader
+                profileImage={profileImage}
+                setFile={setFile}
+                setProfileImage={setProfileImage}
+            />
             <NicknameContainer>
                 <h5>
                     닉네임 <span>*</span>

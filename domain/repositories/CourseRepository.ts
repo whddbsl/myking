@@ -9,6 +9,7 @@ export interface CourseRepository {
     createCourse(course: Course): Promise<void>;
     deleteCourse(course_id: number): Promise<void>;
     updateCourse(course: Course): Promise<void>;
+
     //코스 ID로 코스 정보 검색(선택적)
     //findById(courseId: number): Promise<Course | null>; //검색 성공하면
 }

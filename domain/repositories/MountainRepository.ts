@@ -18,4 +18,3 @@ export interface MountainRepository {
 }
 
 //interface는 typescript에서 클래스나 객체가 반드시 구현해야 하는 함수의 형태를 정의하는 역할을 함.
-

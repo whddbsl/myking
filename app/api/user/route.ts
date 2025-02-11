@@ -39,7 +39,15 @@ export async function GET(req: Request) {
         );
     }
     const userRepository: UserRepository = new SbUserRepository();
-    const user: UserFindDto | null = await findUser(userRepository, kakaoId);
+    const userDto: UserFindDto = { kakao_id: kakaoId };
+    const user: UserFindDto | null = await findUser(userRepository, userDto);
+
+    if (!user) {
+        return NextResponse.json(
+            { message: "사용자를 찾을 수 없습니다." },
+            { status: 404 }
+        );
+    }
 
     return NextResponse.json(user);
 }
