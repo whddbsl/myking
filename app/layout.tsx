@@ -1,8 +1,10 @@
+// app/layout.tsx
 "use client";
 
 import AuthProvider from "@/context/AuthProvider";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Head from "next/head";
+import styled from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   /* Reset CSS */
@@ -37,6 +39,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
+    background-color: #ededed; /* ★ 여기에 옅은 회색 설정 ★ */
   }
 
   main {
@@ -74,6 +77,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const Container = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #fff;
+`;
+
 const theme = {
     colors: {
         primary: "#269386",
@@ -92,7 +102,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <ThemeProvider theme={theme}>
                     <GlobalStyle />
-                    <AuthProvider>{children}</AuthProvider>
+                    <AuthProvider>
+                        <Container>{children}</Container>
+                    </AuthProvider>
                 </ThemeProvider>
             </body>
         </html>
