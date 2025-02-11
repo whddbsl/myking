@@ -32,7 +32,7 @@ export class SbUserRepository implements UserRepository {
         return data as User;
     }
 
-    async findById(kakaoId: string): Promise<User | null> {
+    async findById(kakaoId: string): Promise<User> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("user")
@@ -42,11 +42,25 @@ export class SbUserRepository implements UserRepository {
 
         if (error) {
             console.error("Failed to fetch user: ", error.message);
-            return null;
+        }
+
+        return data;
+    }
+    async getUserByUuid(userId: string): Promise<User> {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("user")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (error) {
+            console.error("Failed to fetch user: ", error.message);
         }
 
         return data as User;
     }
+
     async getUsers(): Promise<User[]> {
         const supabase = await createClient();
         const { data: users, error } = await supabase.from("user").select();

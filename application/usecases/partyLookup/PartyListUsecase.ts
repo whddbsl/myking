@@ -1,6 +1,8 @@
+import { UserRepository } from "./../../../domain/repositories/UserRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
 import { Party } from "../../../domain/entities/Party";
 import { PartyListDto } from "./dto/PartyListDto";
-import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
+import { PartyRepository } from "@/domain/repositories/PartyRepository";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -56,26 +58,38 @@ function currentState(
 
 // 레포지토리에서 가져오기
 export const findPartyList = async (
-    repository: SbPartyRepository // domain에서 정의한 인터페이스 => 구현체 repository의 타입 (여기서의 repository는 변수)
+    partyRepository: PartyRepository, // domain에서 정의한 인터페이스 => 구현체 repository의 타입 (여기서의 repository는 변수)
+    mountainRepository: MountainRepository,
+    userRepository: UserRepository
 ): Promise<PartyListDto[]> => {
-    const parties: Party[] = await repository.getParty(); //repository에서 가져온 데이터를 담는 변수
+    const parties: Party[] = await partyRepository.getParty(); //repository에서 가져온 데이터를 담는 변수
     const partyList: PartyListDto[] = await Promise.all(
-        parties.map((party) => ({
-            party_id: party.party_id.toString(),
-            creator_id: party.creator_id,
-            mountain_id: party.mountain_id,
-            max_members: party.max_members,
-            filter_state: currentState(
-                party.current_members,
-                party.max_members,
-                party.end_date
-            ),
-            filter_gender: party.filter_gender,
-            filter_age: party.filter_age,
-            meeting_date: formatDate(party.meeting_date),
-            end_date: calcDday(party.end_date),
-            timeLabel: calcTimeLabel(party.created_at),
-        }))
-    ); // 변환할 Dto를 담는 변수
+        parties.map(async (party: Party) => {
+            const mountain = await mountainRepository.getMountainById(
+                party.mountain_id.toString()
+            );
+            const user = await userRepository.getUserByUuid(party.creator_id);
+
+            return {
+                party_id: party.party_id.toString(),
+                creator_id: Number(user.user_id),
+                creator_nickname: user.nickname,
+                creator_image: user.profile_image,
+                mountain_id: party.mountain_id,
+                mountain_name: mountain.name,
+                max_members: party.max_members,
+                filter_state: currentState(
+                    party.current_members,
+                    party.max_members,
+                    party.end_date
+                ),
+                filter_gender: party.filter_gender,
+                filter_age: party.filter_age,
+                meeting_date: formatDate(party.meeting_date),
+                end_date: calcDday(party.end_date),
+                timeLabel: calcTimeLabel(party.created_at),
+            };
+        })
+    );
     return partyList;
 };
