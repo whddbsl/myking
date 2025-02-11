@@ -32,7 +32,7 @@ export class SbUserRepository implements UserRepository {
         return true;
     }
 
-    async findById(kakaoId: string): Promise<User> {
+    async findById(kakaoId: string): Promise<User | null> {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("user")
@@ -41,7 +41,9 @@ export class SbUserRepository implements UserRepository {
             .single();
 
         if (error || !data) {
-            throw new Error(`User not found with kakao_id: ${kakaoId}`);
+            // throw new Error(`User not found with kakao_id: ${kakaoId}`);
+            console.error(`User not found with kakao_id: ${kakaoId}`);
+            return null;
         }
 
         return data;
