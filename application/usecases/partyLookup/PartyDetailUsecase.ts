@@ -1,6 +1,9 @@
+import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { Party } from "../../../domain/entities/Party";
 import { PartyDetailDto } from "./dto/PartyDetailDto";
-import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { UserRepository } from "@/domain/repositories/UserRepository";
+import { PartyMemberRepository } from "@/domain/repositories/PartyMemberRepository";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -39,27 +42,53 @@ function calcTimeLabel(date: Date): string {
     }
 }
 
+function currentState(
+    current_members: number,
+    max_members: number,
+    end_date: Date
+): "모집중" | "마감" {
+    const today = new Date();
+
+    const diffTime: number = end_date.getTime() - today.getTime();
+
+    if (current_members === max_members || diffTime < 0) {
+        return "마감";
+    } else {
+        return "모집중";
+    }
+}
+
 // 레포지토리에서 가져오기
 export const findPartyDetail = async (
-    // user repository 받아오기 - user_id로 이름, 사진을 가져오는 함수 만들기 getNameByUserId()
-    repository: SbPartyRepository, // domain에서 정의한 인터페이스 => 구현체 repository의 타입 (여기서의 repository는 변수)
+    partyRepository: PartyRepository, // domain에서 정의한 인터페이스 => 구현체 repository의 타입 (여기서의 repository는 변수)
+    mountainRepository: MountainRepository,
+    userRepository: UserRepository,
+    partyMemberRepository: PartyMemberRepository,
     partyId: string
 ): Promise<PartyDetailDto> => {
-    const party: Party = await repository.getPartyById(partyId); //repository에서 가져온 데이터를 담는 변수
-    // promise all (위에 코드가 실행되고 나서 밑에게 실행되어야 함, 이거 안쓰면 creator_id가 undifined 아마도)
-    //const creator_id = party.creator_id; //creator_id의 이미지와 이름 가져오기 위해 변수에 저장
-
-    //const user: User = await UserRepository.getNameImageByUserId(party.creator_id); // user에 image와 name이 담김
+    const party: Party = await partyRepository.getPartyById(partyId);
+    const [mountain, user, member] = await Promise.all([
+        mountainRepository.getMountainById(party.mountain_id.toString()),
+        userRepository.getUserByUuid(party.creator_id),
+        partyMemberRepository.getMembersByPartyId(party.party_id.toString()),
+    ]);
 
     const partyDetail: PartyDetailDto = {
-        party_id: party.party_id.toString(), //string 으로 변환
-        // creator_name: user.name, //party.creator_id, // 아이디로 이름을 변환하는 함수 만들어서 party.creator_id를 매개변수로 넣음
-        // creator_image: user.image,
+        party_id: party.party_id, //string 으로 변환
+        user_id: member.map((m) => m.user_id),
+        creator_id: user.user_id,
+        creator_nickname: user.nickname,
+        creator_image: user.profile_image,
         mountain_id: party.mountain_id,
+        mountain_name: mountain.name,
         description: party.description,
         max_members: party.max_members,
         current_members: party.current_members,
-        filter_state: party.filter_state,
+        filter_state: currentState(
+            party.current_members,
+            party.max_members,
+            party.end_date
+        ), // "마감" 일 때 비활성화용
         filter_gender: party.filter_gender,
         filter_age: party.filter_age,
         meeting_date: formatDate(party.meeting_date),
