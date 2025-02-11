@@ -1,4 +1,3 @@
-// app/layout.tsx
 "use client";
 
 import AuthProvider from "@/context/AuthProvider";
@@ -96,13 +95,23 @@ const Container = styled.div`
     background-color: #fff;
 `;
 
+const BottomNavContainer = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+`;
+
 const theme = {
     colors: {
         primary: "#269386",
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const pathname = usePathname();
     return (
         <html lang="en">
@@ -121,7 +130,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </ThemeProvider>
                 {!pathname.includes("/auth") && (
                     <footer>
-                        <BottomNav />
+                        <BottomNavContainer>
+                            <BottomNav />
+                        </BottomNavContainer>
                     </footer>
                 )}
             </body>

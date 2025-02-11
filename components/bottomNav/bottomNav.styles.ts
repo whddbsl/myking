@@ -7,8 +7,8 @@ interface NavItemProps {
 export const NavContainer = styled.nav`
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
+    max-width: 500px;
     display: flex;
     justify-content: space-around;
     background: #fff;
