@@ -1,6 +1,6 @@
 export interface PartyListDto {
     party_id: string;
-    creator_id: number;
+    creator_id: string;
     mountain_id: number;
     max_members: number;
     meeting_date: string;
@@ -9,4 +9,5 @@ export interface PartyListDto {
     filter_gender: "여성" | "남성" | "성별무관";
     filter_age: string[];
     timeLabel: string;
+    description: string;
 }
