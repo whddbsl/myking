@@ -3,12 +3,16 @@ import * as PC from "./page.styles";
 import Filter from "../../../components/party/filter/Filter";
 import { useState, useEffect, useRef } from "react";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
-import Link from "next/link";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
 
 const PartyPage: React.FC = () => {
-    const { filters } = useFilterStore();
+    const { filters, resetFilters } = useFilterStore();
+
+    useEffect(() => {
+        // 페이지가 마운트될 때 상태 초기화
+        resetFilters();
+    }, [resetFilters]);
 
     const [isOpen, setIsOpen] = useState(false);
     const [partyList, setPartyList] = useState<PartyListDto[]>([]);
@@ -39,7 +43,7 @@ const PartyPage: React.FC = () => {
         const query = new URLSearchParams({
             mountain_id: filters.mountain_id.toString(),
             filter_state: filters.filter_state,
-            filter_gender: filters.filter_gender,
+            filter_gender: filters.filter_gender.join(","),
             filter_age: filters.filter_age.join(","),
         }).toString();
 
@@ -130,9 +134,7 @@ const PartyPage: React.FC = () => {
                 </PC.Cards>
             )}
 
-            <PC.CreateButton>
-                <Link href={`/parties/create`}>작성하기</Link>
-            </PC.CreateButton>
+            <PC.CreateButton href={`/parties/create`}>작성하기</PC.CreateButton>
         </div>
     );
 };

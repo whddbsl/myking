@@ -1,5 +1,4 @@
-// Filter.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
 import * as F from "./Filter.styles";
@@ -11,16 +10,20 @@ interface FilterProps {
 }
 
 const Filter = ({ mountainList, onClose }: FilterProps) => {
-    // 전역 필터 상태(확인 전 값)와 업데이트 액션을 zustand에서 가져옵니다.
+    const { resetFilters } = useFilterStore();
     const globalFilters = useFilterStore((state) => state.filters);
     const updateFilter = useFilterStore((state) => state.updateFilter);
 
     // 로컬 상태를 만들어서 사용자가 변경하는 값들을 저장합니다.
     const [localFilters, setLocalFilters] = useState(globalFilters);
+    console.log(localFilters);
+    // 전역 필터 상태가 변경될 때마다 로컬 상태도 업데이트
+    useEffect(() => {
+        setLocalFilters(globalFilters);
+    }, [globalFilters]);
 
     // 산 선택 핸들러: 로컬 상태에 변경을 반영합니다.
     const handleMountainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        // e.target.value는 string이므로 숫자로 변환합니다.
         const selectedMountainId = Number(e.target.value);
         setLocalFilters({
             ...localFilters,
@@ -37,10 +40,13 @@ const Filter = ({ mountainList, onClose }: FilterProps) => {
     };
 
     // 성별 선택 핸들러: 로컬 상태 업데이트
-    const handleGenderChange = (gender: "여성" | "남성" | "성별무관") => {
+    const handleGenderChange = (gender: string) => {
+        const newGender = localFilters.filter_gender.includes(gender)
+            ? localFilters.filter_gender.filter((a) => a !== gender)
+            : [...localFilters.filter_gender, gender];
         setLocalFilters({
             ...localFilters,
-            filter_gender: gender,
+            filter_gender: newGender,
         });
     };
 
@@ -62,6 +68,17 @@ const Filter = ({ mountainList, onClose }: FilterProps) => {
         updateFilter("filter_gender", localFilters.filter_gender);
         updateFilter("filter_age", localFilters.filter_age);
         onClose();
+    };
+
+    // 초기화 버튼 핸들러 (resetFilters를 호출하면 useEffect를 통해 로컬 상태도 업데이트됩니다)
+    const handleReset = () => {
+        resetFilters();
+        setLocalFilters({
+            mountain_id: 0,
+            filter_state: "",
+            filter_gender: [],
+            filter_age: [],
+        });
     };
 
     return (
@@ -109,15 +126,13 @@ const Filter = ({ mountainList, onClose }: FilterProps) => {
             <div>
                 <h1>성별</h1>
                 <div>
-                    {["남성", "여성", "성별무관"].map((gender) => (
+                    {["남성", "여성"].map((gender) => (
                         <F.FilterSelect
                             key={gender}
-                            selected={localFilters.filter_gender === gender}
-                            onClick={() =>
-                                handleGenderChange(
-                                    gender as "여성" | "남성" | "성별무관"
-                                )
-                            }
+                            selected={localFilters.filter_gender.includes(
+                                gender
+                            )}
+                            onClick={() => handleGenderChange(gender)}
                         >
                             {gender}
                         </F.FilterSelect>
@@ -143,7 +158,8 @@ const Filter = ({ mountainList, onClose }: FilterProps) => {
                 </div>
             </div>
 
-            {/* 확인 버튼 클릭 시 전역 상태 업데이트 후 모달(또는 필터 UI) 종료 */}
+            {/* 초기화 및 확인 버튼 */}
+            <button onClick={handleReset}>초기화</button>
             <button onClick={handleConfirm}>확인</button>
         </div>
     );
