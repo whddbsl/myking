@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Container } from "../myCreated/page.styles";
 import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     img {
@@ -18,11 +19,15 @@ const CustomProfileImage = styled(PC.ProfileImage)`
 
 export default function MyParticipatedPage() {
     const [partyList, setPartyList] = useState<PartyMyParticipatedDto[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchList = async () => {
             const token = getToken();
-            if (!token) return;
+            if (!token) {
+                setIsLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch("/api/parties/participated", {
@@ -42,11 +47,17 @@ export default function MyParticipatedPage() {
                 setPartyList(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchList();
     }, []);
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <div>

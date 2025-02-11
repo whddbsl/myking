@@ -7,17 +7,22 @@ import PartyButton from "@/components/user/partyButton/party";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/application/states/userStore";
 import { getToken } from "@/utils/getToken";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 export default function Profile() {
     const router = useRouter();
     const { setUser } = useUserStore();
     const [nickname, setNickname] = useState<string>("");
     const [imgSrc, setImgSrc] = useState<string>("/images/member_default.svg");
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchUser = async () => {
             const token = getToken();
-            if (!token) return;
+            if (!token) {
+                setIsLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch("/api/user", {
@@ -44,10 +49,16 @@ export default function Profile() {
                 setImgSrc(data.profile_image);
             } catch (error: any) {
                 console.error("사용자 정보 가져오기 실패: ", error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchUser();
     }, []);
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <>

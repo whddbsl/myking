@@ -7,6 +7,7 @@ import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyM
 import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
 import { Container } from "./page.styles";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     img {
@@ -20,11 +21,15 @@ const CustomProfileImage = styled(PC.ProfileImage)`
 export default function MyCreatedPage() {
     const [partyList, setPartyList] = useState<PartyMyCreatedDto[]>([]);
     const { nickname, profileImage } = useUserStore();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchList = async () => {
             const token = getToken();
-            if (!token) return;
+            if (!token) {
+                setIsLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch("/api/parties/myCreated", {
@@ -44,6 +49,8 @@ export default function MyCreatedPage() {
                 setPartyList(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchList();
@@ -78,6 +85,10 @@ export default function MyCreatedPage() {
             console.error("파티 삭제 실패: ", error);
         }
     };
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <div>
