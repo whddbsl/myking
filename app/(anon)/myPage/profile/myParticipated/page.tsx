@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Container } from "../myCreated/page.styles";
 import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     img {
@@ -16,13 +17,28 @@ const CustomProfileImage = styled(PC.ProfileImage)`
     }
 `;
 
+interface StateProps {
+    state: string;
+}
+
+const CustomState = styled(PC.State)<StateProps>`
+    background-color: ${(props) =>
+        props.state === "모집중" ? "#e55555" : "#b0b0b0"};
+    cursor: ${(props) => (props.state === "모집중" ? "pointer" : "default")};
+    pointer-events: ${(props) => (props.state === "모집중" ? "auto" : "none")};
+`;
+
 export default function MyParticipatedPage() {
     const [partyList, setPartyList] = useState<PartyMyParticipatedDto[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchList = async () => {
             const token = getToken();
-            if (!token) return;
+            if (!token) {
+                setIsLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch("/api/parties/participated", {
@@ -42,11 +58,17 @@ export default function MyParticipatedPage() {
                 setPartyList(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchList();
     }, []);
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <div>
@@ -91,10 +113,15 @@ export default function MyParticipatedPage() {
                                     <h1>모집마감일</h1>
                                     <h2>D-{party.end_date}</h2>
                                 </PC.EndDate>
-                                <PC.State state={party.filter_state}>
+                                <CustomState
+                                    state={party.filter_state}
+                                    onClick={() =>
+                                        console.log(party.filter_state)
+                                    }
+                                >
                                     {party.current_members} /{" "}
-                                    {party.max_members}
-                                </PC.State>
+                                    {party.max_members} 취소하기
+                                </CustomState>
                             </PC.Footer>
                         </PC.Card>
                     ))}

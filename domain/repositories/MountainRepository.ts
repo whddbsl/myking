@@ -5,9 +5,6 @@ export interface MountainRepository {
     //산의 상세정보를 ID로 조회
     getMountainDetailsById(mountainId: number): Promise<Mountain>;
 
-    //모든 산 목록 조회
-    //getAllMountains(): Promise<Mountain[]>;
-
     //산 이름 검색
     searchByName(query: string): Promise<SearchMountainDto[]>;
     getMountains(): Promise<Mountain[]>;

@@ -12,7 +12,7 @@ export const Container = styled.main`
 
 export const LogoContainer = styled.div`
     display: flex;
-    margin-top: 42vh;
+    margin-top: 32vh;
     flex-direction: column;
 
     h4 {

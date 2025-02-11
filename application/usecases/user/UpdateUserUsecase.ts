@@ -25,9 +25,15 @@ export const changeProfile = async (
     ) {
         try {
             await repository.updateNicknameAndProfileImage(
-                user.kakao_id,
-                user.new_nickname,
-                user.profile_image
+                {
+                    kakao_id: user.kakao_id,
+                    nickname: user.current_nickname,
+                    profile_image: user.profile_image,
+                    user_id: "",
+                    name: "",
+                    created_at: new Date(),
+                },
+                user.new_nickname
             );
         } catch (error: any) {
             throw new Error(`닉네임과 프로필 사진 변경 실패: ${error.message}`);
@@ -37,7 +43,17 @@ export const changeProfile = async (
     // 닉네임만 변경하는 경우
     else if (user.new_nickname && user.new_nickname !== user.current_nickname) {
         try {
-            await repository.updateNickname(user.kakao_id, user.new_nickname);
+            await repository.updateNickname(
+                {
+                    kakao_id: user.kakao_id,
+                    nickname: user.current_nickname,
+                    profile_image: user.profile_image,
+                    user_id: "",
+                    name: "",
+                    created_at: new Date(),
+                },
+                user.new_nickname
+            );
         } catch (error: any) {
             throw new Error(`닉네임 변경 실패: ${error.message}`);
         }
@@ -46,10 +62,14 @@ export const changeProfile = async (
     // 프로필 이미지만 변경하는 경우
     else if (user.profile_image) {
         try {
-            await repository.updateProfileImage(
-                user.kakao_id,
-                user.profile_image
-            );
+            await repository.updateProfileImage({
+                kakao_id: user.kakao_id,
+                nickname: user.current_nickname,
+                profile_image: user.profile_image,
+                user_id: "",
+                name: "",
+                created_at: new Date(),
+            });
         } catch (error: any) {
             throw new Error(`프로필 사진 변경 실패: ${error.message}`);
         }

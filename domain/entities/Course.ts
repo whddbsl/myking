@@ -5,7 +5,7 @@ export interface Course {
     description: string;
     difficulty: "초급" | "중급" | "상급";
     distance: number;
-    popularity: number;
+    popularity: boolean;
     latitude: number;
     longitude: number;
     duration: number;

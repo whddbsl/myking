@@ -12,4 +12,5 @@ export interface PartyListDto {
     filter_gender: string[];
     filter_age: string[];
     timeLabel: string;
+    description: string;
 }

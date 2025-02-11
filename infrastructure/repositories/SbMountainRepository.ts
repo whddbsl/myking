@@ -9,7 +9,7 @@ export class SbMountainRepository implements MountainRepository {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("mountain")
-            .select("mountain_id, name, region, altitude, description, image_url")
+            .select("mountain_id, name, region, altitude, description, image_url,created_at")
             .eq("mountain_id", mountainId)
             .single();
 

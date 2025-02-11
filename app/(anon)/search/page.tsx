@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { SearchMountainDto } from "@/application/usecases/mountainSearch/dto/SearchMountainDto";
+import ProtectedRoute from "@/components/user/ProtectedRoutes";
 
-// 전체 화면 컨테이너
+// ---------------- styled-components ----------------
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -13,7 +14,6 @@ const Container = styled.div`
     padding: 2rem;
 `;
 
-// 페이지 제목
 const Title = styled.h1`
     font-size: 1.75rem;
     margin-bottom: 1rem;
@@ -21,7 +21,13 @@ const Title = styled.h1`
     color: #333;
 `;
 
-// 검색창 박스
+const NavLinks = styled.ul`
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+`;
+
 const SearchBox = styled.div`
     display: flex;
     align-items: center;
@@ -29,7 +35,6 @@ const SearchBox = styled.div`
     margin-bottom: 1rem;
 `;
 
-// 검색어 입력
 const SearchInput = styled.input`
     padding: 0.5rem 0.75rem;
     border: 1px solid #ccc;
@@ -41,7 +46,6 @@ const SearchInput = styled.input`
     }
 `;
 
-// 검색 버튼
 const SearchButton = styled.button`
     background-color: #269386;
     color: #fff;
@@ -55,19 +59,16 @@ const SearchButton = styled.button`
     }
 `;
 
-// 에러 메시지
 const ErrorMessage = styled.p`
     color: red;
     margin: 0.5rem;
 `;
 
-// 검색 결과 목록 컨테이너
 const ResultsContainer = styled.div`
     width: 100%;
     max-width: 600px;
 `;
 
-// 단일 산 박스
 const MountainBox = styled.div`
     border: 1px solid #ccc;
     margin: 0.75rem 0;
@@ -93,14 +94,18 @@ const MountainBox = styled.div`
     }
 `;
 
-export default function MountainSearchPage() {
+// ---------------- 메인 페이지 컴포넌트 ----------------
+export default function Home() {
+    // 검색어/결과/에러 상태
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<SearchMountainDto[]>([]);
     const [error, setError] = useState("");
 
+    // 검색 버튼 클릭 시 API 호출
     const handleSearch = async () => {
         setError("");
         try {
+            // /api/search 라우트에 쿼리 전달 (예시)
             const response = await fetch(`/api/search?query=${query}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch search results");
@@ -117,35 +122,48 @@ export default function MountainSearchPage() {
     };
 
     return (
-        <Container>
-            <Title>가고싶은 산을 검색해보세요</Title>
-            <SearchBox>
-                <SearchInput
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="산 이름을 입력하세요"
-                />
-                <SearchButton onClick={handleSearch}>검색</SearchButton>
-            </SearchBox>
-            {error && <ErrorMessage>{error}</ErrorMessage>}
+        <ProtectedRoute>
+            <Container>
+                {/* 네비게이션 예시 */}
+                <NavLinks>
+                    <li>
+                        <Link href="/parties">등산 메이트 모집</Link>
+                    </li>
+                    <li>
+                        <Link href="/myPage/profile">마이페이지</Link>
+                    </li>
+                </NavLinks>
 
-            <ResultsContainer>
-                {results.map((mountain, index) => (
-                    <Link
-                        key={index}
-                        href={`/mountains/${mountain.mountain_id}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                        <MountainBox>
-                            <h2>{mountain.name}</h2>
-                            <p>위치: {mountain.region}</p>
-                            <p>고도: {mountain.altitude}m</p>
-                            <p>{mountain.description}</p>
-                        </MountainBox>
-                    </Link>
-                ))}
-            </ResultsContainer>
-        </Container>
+                {/* 검색창 */}
+                <SearchBox>
+                    <SearchInput
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="가고 싶은 산 이름을 입력하세요"
+                    />
+                    <SearchButton onClick={handleSearch}>검색</SearchButton>
+                </SearchBox>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
+
+                {/* 검색 결과 */}
+                <ResultsContainer>
+                    {results.map((mountain, index) => (
+                        <Link
+                            key={index}
+                            href={`/mountains/${mountain.mountain_id}`}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                            <MountainBox>
+                                <h2>{mountain.name}</h2>
+                                <p>위치: {mountain.region}</p>
+                                <p>고도: {mountain.altitude}m</p>
+                                <p>{mountain.description}</p>
+                            </MountainBox>
+                        </Link>
+                    ))}
+                </ResultsContainer>
+            </Container>
+        </ProtectedRoute>
     );
 }

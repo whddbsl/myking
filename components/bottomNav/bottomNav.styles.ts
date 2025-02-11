@@ -7,13 +7,14 @@ interface NavItemProps {
 export const NavContainer = styled.nav`
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
+    max-width: 500px;
     display: flex;
     justify-content: space-around;
     background: #fff;
     padding: 12px 0;
     border: 1px solid #f2f2f2;
+    height: 63px;
 `;
 
 export const NavItem = styled.div<NavItemProps>`
