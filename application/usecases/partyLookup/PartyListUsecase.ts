@@ -40,7 +40,7 @@ function calcTimeLabel(date: Date): string {
     }
 }
 
-function currentState(
+/* function currentState(
     current_members: number,
     max_members: number,
     end_date: Date
@@ -54,7 +54,7 @@ function currentState(
     } else {
         return "모집중";
     }
-}
+} */
 
 // 레포지토리에서 가져오기
 export const findPartyList = async (
@@ -78,11 +78,7 @@ export const findPartyList = async (
                 mountain_id: party.mountain_id,
                 mountain_name: mountain.name,
                 max_members: party.max_members,
-                filter_state: currentState(
-                    party.current_members,
-                    party.max_members,
-                    party.end_date
-                ),
+                filter_state: party.filter_state,
                 filter_gender: party.filter_gender,
                 filter_age: party.filter_age,
                 meeting_date: formatDate(party.meeting_date),

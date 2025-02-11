@@ -14,8 +14,8 @@ export const updateParty = async (
         max_members: 0,
         meeting_date: new Date(),
         end_date: new Date(),
-        filter_state: "",
-        filter_gender: "성별무관",
+        filter_state: "모집중",
+        filter_gender: [],
         filter_age: [],
         created_at: new Date(),
     });

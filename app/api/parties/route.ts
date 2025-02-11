@@ -14,9 +14,13 @@ import { getMountainList } from "@/application/usecases/partyLookup/MountainList
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const mountain_id = Number(url.searchParams.get("mountain_id")) || 0;
-    const filter_state = url.searchParams.get("filter_state") || "모집중";
-    const filter_gender = url.searchParams.get("filter_gender") || "성별무관";
-    const filter_age = url.searchParams.get("filter_age")?.split(",") || [];
+    const filter_state = url.searchParams.get("filter_state") || "";
+
+    // const filter_age = url.searchParams.get("filter_age")?.split(",") || [];
+    const filter_gender =
+        url.searchParams.get("filter_gender")?.split(",").filter(Boolean) || [];
+    const filter_age =
+        url.searchParams.get("filter_age")?.split(",").filter(Boolean) || [];
 
     const partyRepository: PartyRepository = new SbPartyRepository();
     const mountainRepository: MountainRepository = new SbMountainRepository();
@@ -39,15 +43,15 @@ export async function GET(req: Request) {
 
         // 모집 상태 필터: 기본값("모집중")인 경우는 검사하지 않고, 그 외엔 party의 모집 상태가 일치해야 합니다.
         const stateMatch =
-            filter_state === "모집중"
-                ? true
-                : party.filter_state === filter_state;
+            filter_state === "" ? true : party.filter_state === filter_state;
 
         // 성별 필터: 기본값("성별무관")인 경우는 검사하지 않고, 그 외엔 party의 성별이 일치해야 합니다.
         const genderMatch =
-            filter_gender === "성별무관"
+            filter_gender.length === 0
                 ? true
-                : party.filter_gender === filter_gender;
+                : filter_gender.some((gender) =>
+                      party.filter_gender.includes(gender)
+                  );
 
         // 나이 필터: 배열이 비어있으면 검사하지 않고, 그 외엔 party의 나이 목록 중 하나라도 선택된 값과 일치해야 합니다.
         const ageMatch =

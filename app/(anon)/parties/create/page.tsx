@@ -21,13 +21,14 @@ const PartyCreatePage: React.FC = () => {
         max_members: 2,
         meeting_date: "",
         end_date: "",
-        filter_gender: "성별무관",
+        filter_gender: [],
         filter_age: [],
     });
 
-    const [selectedGender, setSelectedGender] = useState<string>("");
+    const [selectedGender, setSelectedGender] = useState<string[]>([]);
     const [selectedAges, setSelectedAges] = useState<string[]>([]);
     const [count, setCount] = useState(party.max_members);
+    const [isDisabled, setIsdisabled] = useState(false);
 
     // 산 정보 조회
     //토큰으로 kakadID 가져오기 -> route로 전달
@@ -59,7 +60,9 @@ const PartyCreatePage: React.FC = () => {
     }, [currentId]);
 
     // 날짜 선택
-    const today = new Date().toISOString().split("T")[0];
+    const nextday = new Date();
+    nextday.setDate(nextday.getDate() + 1);
+    const nextdayString = nextday.toISOString().split("T")[0];
 
     const handleMeetingDateClick = () => {
         if (!party.end_date) {
@@ -103,23 +106,68 @@ const PartyCreatePage: React.FC = () => {
     const increase = () => setValidatedCount(count + 1);
 
     // 성별 선택 핸들러
-    const handleGenderChange = (gender: "남성" | "여성" | "성별무관") => {
-        setParty({ ...party, filter_gender: gender });
-        setSelectedGender(gender);
+    const handleGenderSelection = (gender: string) => {
+        setParty((prev) => {
+            const updatedGenders = prev.filter_gender.includes(gender)
+                ? prev.filter_gender.filter((a) => a !== gender) // 선택 해제
+                : [...prev.filter_gender, gender].sort(); // 선택 추가 후 정렬
+
+            return {
+                ...prev,
+                filter_gender: updatedGenders,
+            };
+        });
+
+        setSelectedGender((prev) => {
+            const updatedGenders = prev.includes(gender)
+                ? prev.filter((a) => a !== gender) // 선택 해제
+                : [...prev, gender].sort(); // 선택 추가 후 정렬
+
+            return updatedGenders;
+        });
     };
 
     // 나이 선택 핸들러 (배열 업데이트)
     const handleAgeSelection = (age: string) => {
-        setParty((prev) => ({
-            ...prev,
-            filter_age: prev.filter_age.includes(age)
+        setParty((prev) => {
+            const updatedAges = prev.filter_age.includes(age)
                 ? prev.filter_age.filter((a) => a !== age) // 선택 해제
-                : [...prev.filter_age, age], // 선택 추가
-        }));
-        setSelectedAges((prev) =>
-            prev.includes(age) ? prev.filter((a) => a !== age) : [...prev, age]
-        );
+                : [...prev.filter_age, age].sort(); // 선택 추가 후 정렬
+
+            return {
+                ...prev,
+                filter_age: updatedAges,
+            };
+        });
+
+        setSelectedAges((prev) => {
+            const updatedAges = prev.includes(age)
+                ? prev.filter((a) => a !== age) // 선택 해제
+                : [...prev, age].sort(); // 선택 추가 후 정렬
+
+            return updatedAges;
+        });
     };
+
+    useEffect(() => {
+        const isMountainSelected = !!party.mountain_id;
+        const isEndDateSet = !!party.end_date;
+        const isMeetingDateSet = !!party.meeting_date;
+        const isDescriptionSet = !!party.description.trim();
+        const isAgeSelected = party.filter_age.length > 0;
+        const isGenderSelected = party.filter_gender.length > 0;
+
+        setIsdisabled(
+            !(
+                isMountainSelected &&
+                isEndDateSet &&
+                isMeetingDateSet &&
+                isDescriptionSet &&
+                isAgeSelected &&
+                isGenderSelected
+            )
+        );
+    }, [party]);
 
     // 파티 생성
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -170,7 +218,7 @@ const PartyCreatePage: React.FC = () => {
                                 type="date"
                                 name="end_date"
                                 value={party.end_date}
-                                min={today}
+                                min={nextdayString}
                                 onChange={handleChange}
                                 required
                             />
@@ -181,7 +229,7 @@ const PartyCreatePage: React.FC = () => {
                                 type="date"
                                 name="meeting_date"
                                 value={party.meeting_date}
-                                min={party.end_date || today}
+                                min={party.end_date || nextdayString}
                                 onChange={handleChange}
                                 onClick={handleMeetingDateClick} // 클릭 시 알림 표시
                                 readOnly={!party.end_date}
@@ -221,17 +269,14 @@ const PartyCreatePage: React.FC = () => {
                         <div>
                             <h1>성별</h1>
                             <div>
-                                {["남성", "여성", "성별무관"].map((gender) => (
+                                {["남성", "여성"].map((gender) => (
                                     <P.FilterSelect
                                         key={gender}
-                                        selected={selectedGender === gender}
+                                        selected={selectedGender.includes(
+                                            gender
+                                        )}
                                         onClick={() =>
-                                            handleGenderChange(
-                                                gender as
-                                                    | "남성"
-                                                    | "여성"
-                                                    | "성별무관"
-                                            )
+                                            handleGenderSelection(gender)
                                         }
                                     >
                                         {gender}
@@ -262,7 +307,9 @@ const PartyCreatePage: React.FC = () => {
                     </P.Filter>
                 </div>
                 <P.SubmitButton>
-                    <button type="submit">작성완료</button>
+                    <button type="submit" disabled={isDisabled}>
+                        작성완료
+                    </button>
                 </P.SubmitButton>
             </P.Form>
         </P.Container>

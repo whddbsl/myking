@@ -42,22 +42,6 @@ function calcTimeLabel(date: Date): string {
     }
 }
 
-function currentState(
-    current_members: number,
-    max_members: number,
-    end_date: Date
-): "모집중" | "마감" {
-    const today = new Date();
-
-    const diffTime: number = end_date.getTime() - today.getTime();
-
-    if (current_members === max_members || diffTime < 0) {
-        return "마감";
-    } else {
-        return "모집중";
-    }
-}
-
 // 레포지토리에서 가져오기
 export const findPartyDetail = async (
     partyRepository: PartyRepository, // domain에서 정의한 인터페이스 => 구현체 repository의 타입 (여기서의 repository는 변수)
@@ -84,11 +68,7 @@ export const findPartyDetail = async (
         description: party.description,
         max_members: party.max_members,
         current_members: party.current_members,
-        filter_state: currentState(
-            party.current_members,
-            party.max_members,
-            party.end_date
-        ), // "마감" 일 때 비활성화용
+        filter_state: party.filter_state, // "마감" 일 때 비활성화용
         filter_gender: party.filter_gender,
         filter_age: party.filter_age,
         meeting_date: formatDate(party.meeting_date),

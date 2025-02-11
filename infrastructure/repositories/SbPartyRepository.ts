@@ -26,28 +26,6 @@ export class SbPartyRepository implements PartyRepository {
         }));
     } // 엔티티 형태로 반환
 
-    async getFilterParty(): Promise<Party[]> {
-        const supabase = await createClient();
-        const { data: party, error } = await supabase
-            .from("party")
-            .select("*")
-            .eq("mountain_name", "한라산")
-            .eq("status", "모집중")
-            .or("gender.eq.남성,gender.eq.여성,gender.eq.성별무관") // ✅ 성별 조건 OR 적용
-            .or("age_group.eq.20대,age_group.eq.30대"); // ✅ 연령대 조건 OR 적용
-
-        if (error) {
-            throw new Error(error.message);
-        }
-        return party.map((party) => ({
-            // party의 created_at이 string으로 받아지기 떄문에 Date로 바꿔줌
-            ...party,
-            created_at: new Date(party.created_at),
-            meeting_date: new Date(party.meeting_date),
-            end_date: new Date(party.end_date),
-        }));
-    }
-
     async getPartyById(partyId: string): Promise<Party> {
         const supabase = await createClient();
         const { data, error } = await supabase
@@ -81,7 +59,7 @@ export class SbPartyRepository implements PartyRepository {
                     //current_members: party.current_members,
                     meeting_date: party.meeting_date.toISOString(),
                     end_date: party.end_date.toISOString(),
-                    //filter_state: party.filter_state,
+                    filter_state: "모집중",
                     filter_gender: party.filter_gender,
                     filter_age: party.filter_age,
                 },
