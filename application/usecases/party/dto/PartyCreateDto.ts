@@ -5,6 +5,6 @@ export interface PartyCreateDto {
     max_members: number;
     meeting_date: string;
     end_date: string;
-    filter_gender: "여성" | "남성" | "성별무관";
+    filter_gender: string[];
     filter_age: string[];
 }

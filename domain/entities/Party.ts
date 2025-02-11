@@ -7,8 +7,8 @@ export interface Party {
     current_members: number;
     meeting_date: Date;
     end_date: Date;
-    filter_state: string;
-    filter_gender: "여성" | "남성" | "성별무관";
+    filter_state: "모집중" | "마감";
+    filter_gender: string[];
     filter_age: string[];
     created_at: Date;
 }
