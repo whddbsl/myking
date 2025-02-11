@@ -1,18 +1,13 @@
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { Party } from "../../domain/entities/Party";
 import { createClient } from "@/utils/supabase/server";
-import {
-    PartyMyParticipatedDto,
-    UserDto,
-} from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
+import { PartyMyParticipatedDto, UserDto } from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
 
 //implements -> SbPartyRepository는 PartyRepository를 따른다
 export class SbPartyRepository implements PartyRepository {
     async getParty(): Promise<Party[]> {
         const supabase = await createClient();
-        const { data: party, error } = await supabase
-            .from("party")
-            .select(/* `*, mountain: mountains(name)` */); // party 테이블을 party라는 이름으로 불러올 data
+        const { data: party, error } = await supabase.from("party").select(/* `*, mountain: mountains(name)` */); // party 테이블을 party라는 이름으로 불러올 data
         if (error) {
             throw new Error(error.message);
         }
@@ -85,10 +80,7 @@ export class SbPartyRepository implements PartyRepository {
             throw new Error(userError.message);
         }
 
-        const { data, error } = await supabase
-            .from("party")
-            .select("*")
-            .eq("creator_id", user?.user_id);
+        const { data, error } = await supabase.from("party").select("*").eq("creator_id", user?.user_id);
 
         if (error) {
             throw new Error(error.message);
@@ -102,9 +94,7 @@ export class SbPartyRepository implements PartyRepository {
         }));
     }
 
-    async getMyParticipatedParty(
-        kakaoId: string
-    ): Promise<PartyMyParticipatedDto[]> {
+    async getMyParticipatedParty(kakaoId: string): Promise<PartyMyParticipatedDto[]> {
         const supabase = await createClient();
         const { data: userData, error: userError } = await supabase
             .from("user")
@@ -129,12 +119,11 @@ export class SbPartyRepository implements PartyRepository {
 
         const partyIds = partyList.map((member) => member.party_id);
 
-        const { data: participatedData, error: participatedError } =
-            await supabase
-                .from("party")
-                .select("*")
-                .in("party_id", partyIds)
-                .neq("creator_id", userId);
+        const { data: participatedData, error: participatedError } = await supabase
+            .from("party")
+            .select("*")
+            .in("party_id", partyIds)
+            .neq("creator_id", userId);
 
         if (!participatedData || participatedError) {
             throw new Error(participatedError.message);
