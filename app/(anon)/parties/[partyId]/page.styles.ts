@@ -84,10 +84,14 @@ export const Meeting = styled.div`
         }
     }
 `;
+export const Description = styled.div`
+    margin: 10px 0 25px;
+`;
 export const Tag = styled.div`
     display: flex;
     gap: 3px;
     margin-bottom: 10px;
+    color: #555555;
 `;
 export const Footer = styled.footer`
     display: flex;

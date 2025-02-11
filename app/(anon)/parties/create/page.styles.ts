@@ -11,7 +11,7 @@ export const Form = styled.form`
     display: flex;
     flex-direction: column;
     flex: 1;
-    //overflow-y: auto;
+    margin-bottom: 5rem;
 `;
 
 export const DescArea = styled.textarea`
@@ -132,6 +132,8 @@ export const SubmitButton = styled.div`
     background: #fff;
     border-top: 1px solid #f2f2f2;
 
+    margin-bottom: 63px;
+
     button {
         width: 100%;
         padding: 15px;
@@ -142,5 +144,10 @@ export const SubmitButton = styled.div`
 
         font-size: 17px;
         color: #fff;
+
+        &:disabled {
+            background-color: #b0b0b0;
+            cursor: not-allowed;
+        }
     }
 `;

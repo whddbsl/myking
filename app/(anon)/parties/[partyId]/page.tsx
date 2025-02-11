@@ -91,6 +91,7 @@ const PartyDetailPage: React.FC = () => {
                         <span>{partyDetail?.mountain_name}</span>
                         <span>{partyDetail?.meeting_date}</span>
                     </PD.Meeting>
+                    <PD.Description>{partyDetail?.description}</PD.Description>
                     <PD.Tag>
                         <span>#{partyDetail?.max_members}명</span>
                         <span>#{partyDetail?.filter_gender}</span>
