@@ -49,6 +49,36 @@ export default function MyCreatedPage() {
         fetchList();
     }, []);
 
+    const handleDelete = async (partyId: string) => {
+        const confirmDelete = confirm("이 글을 삭제하시겠습니까?");
+        if (!confirmDelete) return;
+
+        const token = getToken();
+        if (!token) return;
+
+        try {
+            const response = await fetch(`/api/parties`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ partyId }),
+            });
+
+            if (!response.ok) {
+                throw new Error("파티 삭제에 실패했습니다.");
+            }
+
+            // 삭제 성공 시 파티 목록에서 해당 파티 제거
+            setPartyList((prevList) =>
+                prevList.filter((party) => party.party_id !== partyId)
+            );
+        } catch (error: any) {
+            console.error("파티 삭제 실패: ", error);
+        }
+    };
+
     return (
         <div>
             {partyList.length === 0 ? (
@@ -71,7 +101,12 @@ export default function MyCreatedPage() {
                                     <h2>{party.timeLabel}</h2>
                                 </PC.ProfileInfo>
                                 <PC.ActionButtons>
-                                    <button style={{ color: "#7e7e7e" }}>
+                                    <button
+                                        style={{ color: "#7e7e7e" }}
+                                        onClick={() =>
+                                            handleDelete(party.party_id)
+                                        }
+                                    >
                                         삭제
                                     </button>
                                 </PC.ActionButtons>
