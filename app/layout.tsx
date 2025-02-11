@@ -6,7 +6,7 @@ import Head from "next/head";
 import BottomNav from "@/components/bottomNav/bottomNav";
 import { usePathname } from "next/navigation";
 import styled from "styled-components";
-import { useState } from "react";
+
 const GlobalStyle = createGlobalStyle`
   /* Reset CSS */
   html, body, div, span, applet, object, iframe,
@@ -115,7 +115,9 @@ export default function RootLayout({
 }) {
     const pathname = usePathname();
     const showBottomNav =
-        !pathname.includes("/auth") && !pathname.includes("/admin");
+        !pathname.includes("/auth") &&
+        !pathname.includes("/admin") &&
+        !pathname.includes("/create");
     return (
         <html lang="en">
             <head>
