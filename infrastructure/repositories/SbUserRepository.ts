@@ -72,19 +72,19 @@ export class SbUserRepository implements UserRepository {
         }
     }
 
-    async updateNickname(kakaoId: string, newNickname: string): Promise<User> {
+    async updateNickname(user: User, newNickname: string): Promise<User> {
         const supabase = await createClient();
 
         const { data, error } = await supabase
             .from("user")
             .update({ nickname: newNickname }, { count: "exact" })
-            .eq("kakao_id", kakaoId)
+            .eq("kakao_id", user.kakao_id)
             .select("*")
             .single();
 
         if (error || !data) {
             throw new Error(
-                `Failed to update nickname for kakao_id: ${kakaoId}`
+                `Failed to update nickname for kakao_id: ${user.kakao_id}`
             );
         }
 
@@ -92,23 +92,26 @@ export class SbUserRepository implements UserRepository {
         return data;
     }
 
+    // user dto만 가져와서 필요한 데이터만 변경
     async updateNicknameAndProfileImage(
-        kakaoId: string,
-        newNickname: string,
-        profileImage: string
+        user: User,
+        newNickname: string
     ): Promise<User> {
         const supabase = await createClient();
 
         const { data, error } = await supabase
             .from("user")
-            .update({ nickname: newNickname, profile_image: profileImage })
-            .eq("kakao_id", kakaoId)
+            .update({
+                nickname: newNickname,
+                profile_image: user.profile_image,
+            })
+            .eq("kakao_id", user.kakao_id)
             .select("*")
             .single();
 
         if (error || !data) {
             throw new Error(
-                `Failed to update nickname and profile image for kakao_id: ${kakaoId}`
+                `Failed to update nickname and profile image for kakao_id: ${user.kakao_id}`
             );
         }
 
@@ -116,16 +119,13 @@ export class SbUserRepository implements UserRepository {
         return data;
     }
 
-    async updateProfileImage(
-        kakaoId: string,
-        profileImage: string
-    ): Promise<User> {
+    async updateProfileImage(user: User): Promise<User> {
         const supabase = await createClient();
 
         const { data, error } = await supabase
             .from("user")
-            .update({ profile_image: profileImage })
-            .eq("kakao_id", kakaoId)
+            .update({ profile_image: user.profile_image })
+            .eq("kakao_id", user.kakao_id)
             .select("*")
             .single();
 
@@ -135,7 +135,7 @@ export class SbUserRepository implements UserRepository {
 
         if (!data) {
             throw new Error(
-                `Failed to update profile image for kakao_id: ${kakaoId}`
+                `Failed to update profile image for kakao_id: ${user.kakao_id}`
             );
         }
 

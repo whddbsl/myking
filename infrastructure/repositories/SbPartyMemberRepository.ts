@@ -35,4 +35,8 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
 
         return data as PartyMember[];
     }
+
+    async deltePartyMember(partyId: string, userId: string): Promise<void> {
+        const supabase = await createClient();
+    }
 }
