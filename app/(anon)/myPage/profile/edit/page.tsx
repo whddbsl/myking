@@ -11,6 +11,7 @@ import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ErrorMessage } from "../page.styles";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const CustomProfileImageUploader = styled(ProfileImageUploader)`
     margin-top: 10px;
@@ -25,6 +26,7 @@ export default function ProfileEdit() {
     const [file, setFile] = useState<File | null>(null);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [imgSrc, setImgSrc] = useState<string>("/images/member_default.svg");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -57,14 +59,19 @@ export default function ProfileEdit() {
 
     const handleEditProfile = async (event: React.FormEvent) => {
         event.preventDefault();
+        setIsLoading(true);
 
         if (newNickname === currentNickname && !file) {
             alert("변경된 내용이 없습니다.");
+            setIsLoading(false);
             return;
         }
 
         const token = getToken();
-        if (!token) return;
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
 
         const formData = new FormData();
         formData.append("current_nickname", currentNickname);
@@ -109,8 +116,14 @@ export default function ProfileEdit() {
         } catch (error: any) {
             console.error("프로필 변경 중 오류 발생: ", error);
             setErrorMessage(error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <>
