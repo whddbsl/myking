@@ -17,6 +17,17 @@ const CustomProfileImage = styled(PC.ProfileImage)`
     }
 `;
 
+interface StateProps {
+    state: string;
+}
+
+const CustomState = styled(PC.State)<StateProps>`
+    background-color: ${(props) =>
+        props.state === "모집중" ? "#e55555" : "#b0b0b0"};
+    cursor: ${(props) => (props.state === "모집중" ? "pointer" : "default")};
+    pointer-events: ${(props) => (props.state === "모집중" ? "auto" : "none")};
+`;
+
 export default function MyParticipatedPage() {
     const [partyList, setPartyList] = useState<PartyMyParticipatedDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -102,10 +113,15 @@ export default function MyParticipatedPage() {
                                     <h1>모집마감일</h1>
                                     <h2>D-{party.end_date}</h2>
                                 </PC.EndDate>
-                                <PC.State state={party.filter_state}>
+                                <CustomState
+                                    state={party.filter_state}
+                                    onClick={() =>
+                                        console.log(party.filter_state)
+                                    }
+                                >
                                     {party.current_members} /{" "}
-                                    {party.max_members}
-                                </PC.State>
+                                    {party.max_members} 취소하기
+                                </CustomState>
                             </PC.Footer>
                         </PC.Card>
                     ))}
