@@ -10,6 +10,7 @@ export const Cards = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 10rem;
 `;
 export const Card = styled.div`
     border: 1px solid #eaeaea;
@@ -20,11 +21,22 @@ export const ProfileSection = styled.div`
     gap: 10px;
     padding: 15px;
 `;
-export const ProfileImage = styled.div`
+export const ProfileImageWrap = styled.div`
     width: 36px;
     height: 36px;
-    background: #ddd;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     border-radius: 50%;
+    overflow: hidden;
+`;
+export const ProfileImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #ddd;
 `;
 export const ProfileInfo = styled.div`
     display: flex;
@@ -113,14 +125,14 @@ export const LinkWrapper = styled(Link)`
     font-size: 16px;
 `;
 
-export const CreateButton = styled.button`
+export const CreateButton = styled(Link)`
     position: fixed; /* 화면 내 고정 */
     bottom: 80px; /* 화면 아래에서 20px */
     left: 50%; /* 화면 오른쪽에서 20px */
     transform: translateX(-50%);
     z-index: 1000; /* 다른 요소보다 앞에 배치 */
 
-    padding: 12px 24px; /* 버튼 크기 */
+    padding: 14px 24px; /* 버튼 크기 */
 
     background-color: #444; /* 버튼 배경색 */
     box-shadow: 0 1px 15px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
@@ -128,6 +140,7 @@ export const CreateButton = styled.button`
 
     color: #efefef; /* 텍스트 색상 */
     font-size: 16px;
+    text-decoration: none;
 `;
 
 export const ActionButtons = styled.div`
