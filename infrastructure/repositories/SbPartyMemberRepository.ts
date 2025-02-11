@@ -25,8 +25,8 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
         const { data, error } = await supabase
             .from("party_member")
             .select()
-            .eq("party_id", partyId);
-
+            .eq("party_id", partyId); // party_id, user_id, created_at
+        //userid만 반환하는 usecase 필요
         if (error) {
             throw new Error(
                 `Failed to fetch members for party ${partyId}: ${error.message}`
@@ -34,9 +34,5 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
         }
 
         return data as PartyMember[];
-    }
-
-    async deltePartyMember(partyId: string, userId: string): Promise<void> {
-        const supabase = await createClient();
-    }
+    } // partymember 테이블에서 partyid가 같은 member를 가져옴
 }
