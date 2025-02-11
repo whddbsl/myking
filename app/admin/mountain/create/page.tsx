@@ -51,7 +51,7 @@ const MountainCreatePage = () => {
                 );
             }
 
-            const response = await fetch("/api/admin/mountain", {
+            const response = await fetch("/api/admin/mountain/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -145,10 +145,7 @@ const MountainCreatePage = () => {
                         />
                         {imagePreview && (
                             <S.ImagePreview>
-                                <S.Image
-                                    src={imagePreview}
-                                    alt="미리보기"
-                                />
+                                <S.Image src={imagePreview} alt="미리보기" />
                             </S.ImagePreview>
                         )}
                     </S.FormGroup>
