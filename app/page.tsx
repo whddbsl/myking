@@ -3,14 +3,48 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import {
+    PageContainer,
+    Header,
+    Logo,
+    SearchBanner,
+    BannerTitle,
+    SearchBarWrapper,
+    SearchInput,
+    MainSection,
+    SectionTitle,
+    SectionSubtitle,
+    MountainCarousel,
+    MountainCard,
+    MountainImage,
+    MountainInfo,
+    MountainRegion,
+    MountainName,
+    MountainHashtags,
+    CourseList,
+    CourseItem,
+    CourseDetailContainer,
+    DifficultySpan,
+    PopularBadge,
+    DetailLink,
+    MateSectionHeader,
+    MateMoreLink,
+    MateGrid,
+    MateCard,
+    Footer,
+    ErrorMessage,
+} from "./page.styles";
 import { MountainWithCoursesDto } from "@/application/usecases/mountainDetails/dto/MountainWithCoursesDto";
+// PartyListDto는 application/usecases/partyLookUp/dto 에 정의되어 있습니다.
+import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
 
 export default function Home() {
     const router = useRouter();
 
     const [mountains, setMountains] = useState<MountainWithCoursesDto[]>([]);
     const [error, setError] = useState("");
+    // 파티 데이터를 위한 상태 추가
+    const [parties, setParties] = useState<PartyListDto[]>([]);
 
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -20,6 +54,7 @@ export default function Home() {
 
     useEffect(() => {
         fetchMountains();
+        fetchParties();
     }, []);
 
     const fetchMountains = async () => {
@@ -32,6 +67,21 @@ export default function Home() {
             setMountains(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : "알 수 없는 오류");
+        }
+    };
+
+    // 파티 데이터 API를 호출하여 상태에 저장 (API 엔드포인트는 서버에서 Supabase를 통해 파티 데이터를 가져오도록 구현)
+    const fetchParties = async () => {
+        try {
+            const res = await fetch("/api/parties");
+            if (!res.ok) {
+                throw new Error("파티 정보를 가져오지 못했습니다.");
+            }
+            const data: PartyListDto[] = await res.json();
+            console.log("Fetched parties:", data); // 데이터를 콘솔에 출력
+            setParties(data);
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -55,7 +105,6 @@ export default function Home() {
     const handleMouseUp = () => setIsDragging(false);
     const handleMouseLeave = () => setIsDragging(false);
 
-    // 검색창 클릭 시 검색 페이지로 이동
     const handleSearchClick = () => {
         router.push("/search");
     };
@@ -106,8 +155,8 @@ export default function Home() {
 
                                     <CourseList>
                                         {mt.courses
-                                            .sort((a, b) => a.course_id - b.course_id) // 먼저 정렬
-                                            .slice(0, 3) // 이후 상위 3개 코스 선택
+                                            .sort((a, b) => a.course_id - b.course_id)
+                                            .slice(0, 3)
                                             .map((course) => (
                                                 <CourseItem key={course.course_id}>
                                                     <div className="course-name">{course.name}</div>
@@ -133,36 +182,45 @@ export default function Home() {
                         ))}
                 </MountainCarousel>
 
+                {/* 등산 메이트 모집 섹션: DB에서 가져온 파티 데이터를 표시 */}
                 <MateSectionHeader>
                     <h2>등산 메이트 모집</h2>
                     <MateMoreLink>더보기 &gt;</MateMoreLink>
                 </MateSectionHeader>
+
                 <MateGrid>
-                    <MateCard>
-                        <span className="mountain">소백산</span>
-                        <p>1월 한달 동안 정기적으로 등산하실 분 모집합니다.</p>
-                        <div className="club-info">우리동네 등산왕</div>
-                    </MateCard>
-                    <MateCard>
-                        <span className="mountain">소백산</span>
-                        <p>1월 한달 동안 정기적으로 등산하실 분 모집합니다.</p>
-                        <div className="club-info">우리동네 등산왕</div>
-                    </MateCard>
-                    <MateCard>
-                        <span className="mountain">소백산</span>
-                        <p>1월 한달 동안 정기적으로 등산하실 분 모집합니다.</p>
-                        <div className="club-info">우리동네 등산왕</div>
-                    </MateCard>
-                    <MateCard>
-                        <span className="mountain">소백산</span>
-                        <p>1월 한달 동안 정기적으로 등산하실 분 모집합니다.</p>
-                        <div className="club-info">우리동네 등산왕</div>
-                    </MateCard>
+                    {/* 최대 4개만 보여주기 */}
+                    {parties.slice(0, 4).map((party) => {
+                        // party.mountain_id로 산 목록에서 해당 산 찾아오기
+                        const matchedMountain = mountains.find(
+                            (mountain) => mountain.mountain_id === party.mountain_id
+                        );
+
+                        return (
+                            <MateCard key={party.party_id}>
+                                {/* 산 이름이 있으면 표시, 없으면 fallback */}
+                                <span className="mountain">
+                                    {matchedMountain ? matchedMountain.name : `산 번호: ${party.mountain_id}`}
+                                </span>
+
+                                {/* timeLabel 예: "1월 한달 간 정기적으로 등산하실 분 모집합니다." */}
+                                <p>{party.description}</p>
+
+                                {/* 가운데에 배치할 파티 설명 */}
+                                <p className="description">{party.description}</p>
+
+                                {/* 상태, 인원 등 */}
+                                <div className="club-info">
+                                    상태: {party.filter_state} / 모집 인원: {party.max_members}명
+                                </div>
+                            </MateCard>
+                        );
+                    })}
                 </MateGrid>
             </MainSection>
 
             <Footer>
-                <div>주소: 서울특별시 중구 테헤란로 324 몇쟁이 사자처럼</div>
+                <div>주소: 서울특별시 중구 테헤란로 324 멋쟁이 사자처럼</div>
                 <div>사업자등록번호: 264-88-01106</div>
                 <div>대표자: Chill Guys</div>
                 <div>문의 / 제안: likelion@myking.com</div>
@@ -171,268 +229,3 @@ export default function Home() {
         </PageContainer>
     );
 }
-
-/* -------- styled-components -------- */
-const PageContainer = styled.div`
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #269386;
-`;
-
-const ErrorMessage = styled.div`
-    color: red;
-    margin-bottom: 1rem;
-    font-weight: bold;
-`;
-
-const Header = styled.header`
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background-color: white;
-`;
-
-const Logo = styled.img`
-    width: 120px;
-    height: auto;
-`;
-
-const SearchBanner = styled.section`
-    background-color: #269386;
-    padding: 2rem 1rem;
-    text-align: center;
-    border-radius: 20px 20px 0 0;
-`;
-
-const BannerTitle = styled.h2`
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: #fff;
-`;
-
-const SearchBarWrapper = styled.div`
-    display: inline-flex;
-    max-width: 600px;
-    width: 100%;
-    border-radius: 32px;
-    background-color: #fff;
-    padding: 0.75rem 1rem;
-    align-items: center;
-    cursor: pointer;
-    border: 2.5px solid #ddd;
-    transition: border-color 0.3s ease;
-
-    &:hover {
-        border-color: #207d73;
-    }
-`;
-
-const SearchInput = styled.input`
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    cursor: pointer;
-`;
-
-const MainSection = styled.main`
-    flex: 1;
-    padding: 1.5rem;
-    width: 100%;
-    margin: 0 auto;
-    border-radius: 20px 20px 0 0;
-    background-color: white;
-`;
-
-const SectionTitle = styled.h3`
-    font-size: 1.25rem;
-    margin-bottom: 0.25rem;
-    font-weight: bold;
-`;
-
-const SectionSubtitle = styled.p`
-    color: #666;
-    margin-bottom: 1rem;
-`;
-
-const MountainCarousel = styled.div`
-    display: flex;
-    gap: 1rem;
-    overflow-x: hidden;
-    padding-bottom: 1rem;
-    user-select: none;
-`;
-
-const MountainCard = styled.div`
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    min-width: 420px;
-    @media (max-width: 768px) {
-        flex-direction: column;
-        min-width: 420px;
-        max-width: 500px;
-    }
-`;
-
-/**
- * 내부 요소가 위->아래로 배치되고,
- * DetailLink는 margin-top: auto로 항상 하단에 고정됩니다.
- */
-const MountainInfo = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-`;
-
-const MountainImage = styled.div`
-    flex: 0 0 40%;
-    background-size: cover;
-    background-position: center;
-    min-height: 200px;
-
-    @media (max-width: 768px) {
-        width: 100%;
-    }
-`;
-
-const MountainRegion = styled.div`
-    font-size: 0.875rem;
-    color: #888;
-`;
-
-const MountainName = styled.h4`
-    font-size: 1.2rem;
-    margin: 0.25rem 0;
-`;
-
-const MountainHashtags = styled.div`
-    color: #269386;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-`;
-
-const CourseList = styled.div``;
-
-const CourseItem = styled.div`
-    border: 1px solid #eee;
-    padding: 0.5rem;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-    .course-name {
-        font-weight: bold;
-    }
-`;
-
-const CourseDetailContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.875rem;
-    color: #666;
-`;
-
-interface DifficultySpanProps {
-    difficulty: string;
-}
-
-const DifficultySpan = styled.span<DifficultySpanProps>`
-    color: ${({ difficulty }) => {
-        switch (difficulty) {
-            case "상급":
-                return "#e74c3c"; // 빨간색
-            case "중급":
-                return "#f39c12"; // 주황색
-            case "초급":
-                return "#8fcf7d"; // 연두색
-            default:
-                return "#000"; // 기본 검정색
-        }
-    }};
-`;
-
-const PopularBadge = styled.span`
-    background-color: #8bc34a;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    margin-left: auto;
-`;
-
-const DetailLink = styled(Link)`
-    display: block;
-    width: 100%;
-    margin-top: auto;
-    padding: 0.75rem 0;
-    background-color: #269386;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    font-weight: 500;
-    text-decoration: none;
-
-    &:hover {
-        background-color: #1f7b6d;
-    }
-`;
-
-const MateSectionHeader = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    h2 {
-        font-size: 1.1rem;
-        margin: 0;
-    }
-`;
-
-const MateMoreLink = styled.span`
-    color: #888;
-    cursor: pointer;
-    &:hover {
-        text-decoration: underline;
-    }
-`;
-
-const MateGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-`;
-
-const MateCard = styled.div`
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 1rem;
-    background-color: #fafafa;
-
-    .mountain {
-        color: #269386;
-        font-weight: bold;
-    }
-    p {
-        margin: 0.5rem 0;
-    }
-    .club-info {
-        color: #666;
-        font-size: 0.875rem;
-    }
-`;
-
-const Footer = styled.footer`
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    div + div {
-        margin-top: 0.25rem;
-    }
-`;

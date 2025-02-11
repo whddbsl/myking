@@ -1,7 +1,6 @@
 import { Party } from "../../../domain/entities/Party";
 import { PartyListDto } from "./dto/PartyListDto";
 import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
-
 function formatDate(date: Date): string {
     console.log(typeof date);
     const year = date.getFullYear();
@@ -38,11 +37,7 @@ function calcTimeLabel(date: Date): string {
     }
 }
 
-function currentState(
-    current_members: number,
-    max_members: number,
-    end_date: Date
-): "모집중" | "마감" {
+function currentState(current_members: number, max_members: number, end_date: Date): "모집중" | "마감" {
     const today = new Date();
 
     const diffTime: number = end_date.getTime() - today.getTime();
@@ -65,17 +60,26 @@ export const findPartyList = async (
             creator_id: party.creator_id,
             mountain_id: party.mountain_id,
             max_members: party.max_members,
-            filter_state: currentState(
-                party.current_members,
-                party.max_members,
-                party.end_date
-            ),
+            filter_state: currentState(party.current_members, party.max_members, party.end_date),
             filter_gender: party.filter_gender,
             filter_age: party.filter_age,
             meeting_date: formatDate(party.meeting_date),
             end_date: calcDday(party.end_date),
             timeLabel: calcTimeLabel(party.created_at),
+            description: party.description,
         }))
     ); // 변환할 Dto를 담는 변수
     return partyList;
 };
+// export const findPartyListLookUp = async (repository: SbPartyRepository): Promise<PartyListLookUpDto[]> => {
+//     // 기존 findPartyList 호출
+//     const partyList: PartyListDto[] = await findPartyList(repository);
+
+//     // description 필드를 추가하여 PartyListLookUpDto로 변환
+//     const partyListWithDescription: PartyListLookUpDto[] = partyList.map((party) => ({
+//         ...party,
+//         description: party.description, // 기본값 또는 추가 데이터
+//     }));
+
+//     return partyListWithDescription;
+// };
