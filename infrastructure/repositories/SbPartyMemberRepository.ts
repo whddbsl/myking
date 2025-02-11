@@ -23,7 +23,7 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
     async getMembersByPartyId(partyId: string): Promise<PartyMember[]> {
         const supabase = await createClient();
         const { data, error } = await supabase
-            .from("party_members")
+            .from("party_member")
             .select()
             .eq("party_id", partyId);
 

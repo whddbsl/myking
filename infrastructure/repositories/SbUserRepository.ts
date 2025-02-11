@@ -97,4 +97,19 @@ export class SbUserRepository implements UserRepository {
         console.log("닉네임 업데이트 성공: ", newNickname);
         return data as User;
     }
+
+    async getUserByUuid(userId: string): Promise<User> {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("user")
+            .select("*")
+            .eq("user_id", userId)
+            .single();
+
+        if (error) {
+            console.error("Failed to fetch user: ", error.message);
+        }
+
+        return data as User;
+    }
 }
