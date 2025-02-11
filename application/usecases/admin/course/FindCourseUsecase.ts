@@ -3,8 +3,9 @@ import { CourseRepository } from "@/domain/repositories/CourseRepository";
 import { Course } from "@/domain/entities/Course";
 
 import { MountainRepository } from "@/domain/repositories/MountainRepository";
-import { AdminCourseListDto } from "./dto/AdminCourseListDto";
-import { findMountainById } from "../mountain/AdminFindMountainaByIdUsecase";
+import { CourseListDto } from "./dto/CourseListDto";
+import { findMountainById } from "./FindMountainaByIdUsecase";
+import { MountainListDto } from "./dto/MountainListDto";
 
 function formatDate(date: Date): string {
     console.log(typeof date);
@@ -18,19 +19,20 @@ function formatDate(date: Date): string {
 }
 
 export const findAllCourses = async (
-    repository: CourseRepository,
+    courseRepository: CourseRepository,
     mountainRepository: MountainRepository
-): Promise<AdminCourseListDto[]> => {
-    const courses: Course[] = await repository.getCourses();
-    const courseList: AdminCourseListDto[] = await Promise.all(
+): Promise<CourseListDto[]> => {
+    const courses: Course[] = await courseRepository.getCourses();
+    const courseList: CourseListDto[] = await Promise.all(
         courses.map(async (course) => {
-            const mountain_name = await findMountainById(
+            const mountainList: MountainListDto = await findMountainById(
                 mountainRepository,
                 course.mountain_id.toString()
             );
             return {
                 ...course,
-                mountain_name: mountain_name.name,
+                mountain_name: mountainList.name,
+                mountain_id: mountainList.mountain_id,
                 created_at: formatDate(course.created_at),
             };
         })

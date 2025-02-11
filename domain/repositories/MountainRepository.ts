@@ -7,7 +7,10 @@ export interface MountainRepository {
 
     //산 이름 검색
     searchByName(query: string): Promise<SearchMountainDto[]>;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1ab4be9e7f3bd11e50418683ff7c6f9ac5784259
     getMountains(): Promise<Mountain[]>;
     deleteMountain(mountainId: string): Promise<void>;
     createMountain(mountain: Mountain): Promise<void>;

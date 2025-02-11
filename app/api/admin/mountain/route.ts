@@ -23,12 +23,15 @@ export async function DELETE(request: Request) {
 }
 
 export async function POST(request: Request) {
-    const { name, region, description } = await request.json();
+    const { name, region, description, altitude, image_url } =
+        await request.json();
     const mountainRepository: MountainRepository = new SbMountainRepository();
     await createNewMountain(mountainRepository, {
         name,
         region,
         description,
+        altitude,
+        image_url,
     });
     return NextResponse.json({ message: "Mountain created successfully" });
 }

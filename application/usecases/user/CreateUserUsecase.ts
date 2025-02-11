@@ -19,7 +19,7 @@ export const createUser = async (
             kakao_id: user.kakao_id,
             name: user.name,
             nickname: user.nickname,
-            profile_image: "image.png",
+            profile_image: user.profile_image,
             created_at: new Date(),
         });
     } catch (error: any) {

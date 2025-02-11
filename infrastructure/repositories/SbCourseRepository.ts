@@ -1,8 +1,6 @@
-import { CourseCreateDto } from "@/application/usecases/admin/course/dto/CourseCreateDto";
 import { Course } from "@/domain/entities/Course";
-import { createClient } from "@/utils/supabase/server";
 import { CourseRepository } from "@/domain/repositories/CourseRepository";
-
+import { createClient } from "@/utils/supabase/server";
 export class SbCourseRepository implements CourseRepository {
     async getCourses(): Promise<Course[]> {
         const supabase = await createClient();
@@ -18,7 +16,20 @@ export class SbCourseRepository implements CourseRepository {
             created_at: new Date(course.created_at),
         }));
     }
-    async createCourse(course: CourseCreateDto): Promise<void> {
+    async getCourseById(course_id: number): Promise<Course> {
+        const supabase = await createClient();
+        const { data: course, error } = await supabase
+            .from("course")
+            .select()
+            .eq("course_id", course_id)
+            .single();
+        if (error) {
+            throw new Error(error.message);
+        }
+        return course;
+    }
+
+    async createCourse(course: Course): Promise<void> {
         const supabase = await createClient();
         const { error } = await supabase.from("course").insert([
             {
@@ -68,5 +79,36 @@ export class SbCourseRepository implements CourseRepository {
             duration: c.duration,
             created_at: c.created_at,
         }));
+    }
+    async deleteCourse(course_id: number): Promise<void> {
+        const supabase = await createClient();
+        const { error } = await supabase
+            .from("course")
+            .delete()
+            .eq("course_id", course_id);
+        if (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async updateCourse(course: Course): Promise<void> {
+        const supabase = await createClient();
+        const { error } = await supabase
+            .from("course")
+            .update({
+                name: course.name,
+                description: course.description,
+                difficulty: course.difficulty,
+                distance: course.distance,
+                popularity: course.popularity,
+                latitude: course.latitude,
+                longitude: course.longitude,
+                duration: course.duration,
+                image_url: course.image_url,
+            })
+            .eq("course_id", course.course_id);
+        if (error) {
+            throw new Error(error.message);
+        }
     }
 }
