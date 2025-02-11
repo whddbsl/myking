@@ -1,7 +1,8 @@
 import { UserUpdateDto } from "@/application/usecases/user/dto/UserUpdateDto";
-import { changeNickname } from "@/application/usecases/user/UpdateUserUsecase";
+import { changeProfile } from "@/application/usecases/user/UpdateUserUsecase";
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
+import { SupabaseStorageService } from "@/infrastructure/services/SupabaseStorageService";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -35,24 +36,33 @@ export async function PATCH(req: NextRequest) {
             );
         }
 
-        const { newNickname } = await req.json();
+        const formData = await req.formData();
+        const file = formData.get("file") as File;
+        const newNickname = formData.get("new_nickname") as string;
+        const currentNickname = formData.get("current_nickname") as string;
+        let profileImage: string = "";
 
-        if (!newNickname) {
-            return NextResponse.json(
-                { message: "새로운 닉네임이 필요합니다." },
-                { status: 400 }
+        const storageService = new SupabaseStorageService();
+
+        if (file && file.size > 0) {
+            profileImage = await storageService.uploadProfileImage(
+                file,
+                kakaoId
             );
         }
 
         const userRepository: UserRepository = new SbUserRepository();
         const userDto: UserUpdateDto = {
             kakao_id: kakaoId,
+            current_nickname: currentNickname,
             new_nickname: newNickname,
+            profile_image: profileImage,
         };
-        await changeNickname(userRepository, userDto);
+
+        await changeProfile(userRepository, userDto);
 
         return NextResponse.json(
-            { message: "닉네임이 성공적으로 변경되었습니다." },
+            { message: "프로필이 성공적으로 변경되었습니다." },
             { status: 200 }
         );
     } catch (error: any) {

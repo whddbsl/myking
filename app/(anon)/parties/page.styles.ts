@@ -140,3 +140,15 @@ export const CreateButton = styled.button`
     color: #efefef; /* 텍스트 색상 */
     font-size: 16px;
 `;
+
+export const ActionButtons = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+
+    button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+    }
+`;

@@ -16,27 +16,6 @@ export const Form = styled.form`
     height: 100%;
 `;
 
-export const ProfileImageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 15vh;
-
-    & > img {
-        width: 90px;
-        height: 90px;
-        padding: 8px;
-    }
-
-    & > h4 {
-        color: #a5a5a5;
-        padding: 8px;
-        font-weight: 300;
-        font-size: 14px;
-    }
-`;
-
 export const NicknameContainer = styled.div`
     font-size: 14px;
     color: #808080;

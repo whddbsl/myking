@@ -21,7 +21,6 @@ export const findAllMountains = async (
     const mountainList: AdminMountainListDto[] = await Promise.all(
         mountains.map(async (mountain) => ({
             ...mountain,
-            mountain_id: mountain.mountain_id.toString(),
             created_at: formatDate(mountain.created_at),
         }))
     );

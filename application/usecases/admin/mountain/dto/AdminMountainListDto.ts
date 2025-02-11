@@ -1,7 +1,9 @@
 export interface AdminMountainListDto {
-  mountain_id: string;
-  name: string;
-  region: string;
-  description: string;
-  created_at: string;
+    mountain_id: number;
+    name: string;
+    image_url: string;
+    region: string;
+    description: string;
+    altitude: number;
+    created_at: string;
 }

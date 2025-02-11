@@ -23,13 +23,5 @@ export default function ProtectedRoute({
         }
     }, [isLoggedIn, hasHydrated, router]);
 
-    // if (!hasHydrated) {
-    //     return null;
-    // }
-
-    // if (!isLoggedIn) {
-    //     return null;
-    // }
-
     return <>{children}</>;
 }

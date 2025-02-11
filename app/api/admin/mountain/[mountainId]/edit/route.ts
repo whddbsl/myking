@@ -27,6 +27,8 @@ export async function PUT(req: NextRequest) {
         name: mountain.name,
         region: mountain.region,
         description: mountain.description,
+        altitude: mountain.altitude,
+        image_url: mountain.image_url,
     });
     return NextResponse.json({ message: "Mountain updated successfully" });
 }
