@@ -81,12 +81,12 @@ export default function MyParticipatedPage() {
                     {partyList.map((party) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
-                                <CustomProfileImage>
-                                    <img
+                                <PC.ProfileImageWrap>
+                                    <CustomProfileImage
                                         src={party.user.profile_image}
                                         alt="profile_image"
                                     />
-                                </CustomProfileImage>
+                                </PC.ProfileImageWrap>
                                 <PC.ProfileInfo>
                                     <h1>{party.user.nickname}</h1>
                                     <h2>{party.timeLabel}</h2>

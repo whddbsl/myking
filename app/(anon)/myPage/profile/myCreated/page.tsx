@@ -101,12 +101,12 @@ export default function MyCreatedPage() {
                     {partyList.map((party) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
-                                <CustomProfileImage>
-                                    <img
+                                <PC.ProfileImageWrap>
+                                    <CustomProfileImage
                                         src={profileImage}
                                         alt="profile_image"
                                     />
-                                </CustomProfileImage>
+                                </PC.ProfileImageWrap>
                                 <PC.ProfileInfo>
                                     <h1>{nickname}</h1>
                                     <h2>{party.timeLabel}</h2>
