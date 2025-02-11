@@ -1,6 +1,5 @@
-export interface Course {
+export interface CourseUpdateDto {
     course_id: number;
-    mountain_id: number;
     name: string;
     description: string;
     difficulty: "초급" | "중급" | "상급";
@@ -10,5 +9,4 @@ export interface Course {
     longitude: number;
     duration: number;
     image_url: string;
-    created_at: Date;
 }

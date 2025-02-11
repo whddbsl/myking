@@ -1,6 +1,9 @@
 import { createNewCourse } from "@/application/usecases/admin/course/CreateCourseUsecase";
+import { findAllMountains } from "@/application/usecases/admin/mountain/AdminFindMountainUsecase";
 import { CourseRepository } from "@/domain/repositories/CourseRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
 import { SbCourseRepository } from "@/infrastructure/repositories/SbCourseRepository";
+import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRepository";
 import { SupabaseStorageService } from "@/infrastructure/services/SupabaseStorageService";
 import { NextResponse } from "next/server";
 
@@ -47,3 +50,11 @@ export async function POST(request: Request) {
         );
     }
 }
+
+
+export async function GET() {
+    const mountainRepository: MountainRepository = new SbMountainRepository();
+    const mountains = await findAllMountains(mountainRepository);
+    return NextResponse.json(mountains);
+}
+

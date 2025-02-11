@@ -1,6 +1,7 @@
-import { deleteCourse } from "@/application/usecases/admin/course/AdminDeleteCourseUsecase";
-import { findAllCourses } from "@/application/usecases/admin/course/AdminFindCourseUsecase";
-import { AdminCourseListDto } from "@/application/usecases/admin/course/dto/AdminCourseListDto";
+
+import { deleteCourse } from "@/application/usecases/admin/course/DeleteCourseUsecase";
+import { CourseListDto } from "@/application/usecases/admin/course/dto/CourseListDto";
+import { findAllCourses } from "@/application/usecases/admin/course/FindCourseUsecase";
 import { CourseRepository } from "@/domain/repositories/CourseRepository";
 import { MountainRepository } from "@/domain/repositories/MountainRepository";
 import { SbCourseRepository } from "@/infrastructure/repositories/SbCourseRepository";
@@ -10,7 +11,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const courseRepository: CourseRepository = new SbCourseRepository();
     const mountainRepository: MountainRepository = new SbMountainRepository();
-    const courses: AdminCourseListDto[] = await findAllCourses(
+    const courses: CourseListDto[] = await findAllCourses(
         courseRepository,
         mountainRepository
     );
@@ -18,8 +19,8 @@ export async function GET() {
 }
 
 export async function DELETE(request: Request) {
-    const { course_id } = await request.json();
+    const { courseId } = await request.json();
     const courseRepository: CourseRepository = new SbCourseRepository();
-    await deleteCourse(courseRepository, course_id);
+    await deleteCourse(courseRepository, courseId);
     return NextResponse.json({ message: "Course deleted successfully" });
 }
