@@ -4,12 +4,18 @@ import { useState, useEffect } from "react";
 import * as P from "./page.styles";
 import { useRouter } from "next/navigation";
 import { PartyCreateDto } from "@/application/usecases/party/dto/PartyCreateDto";
-import { AdminMountainListDto } from "@/application/usecases/admin/mountain/dto/AdminMountainListDto";
+import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
+import { getToken } from "@/utils/getToken";
+import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
 
 const PartyCreatePage: React.FC = () => {
     const router = useRouter();
+    const [mountains, setMountains] = useState<MountainListDto[]>([]);
+    const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
+        user_id: "",
+    });
     const [party, setParty] = useState<PartyCreateDto>({
-        creator_id: "6219a949-5559-4a73-8ed0-34f065366dc0", // TODO: 로그인된 사용자 ID로 변경
+        creator_id: "", // TODO: 로그인된 사용자 ID로 변경
         mountain_id: 0,
         description: "",
         max_members: 2,
@@ -18,23 +24,39 @@ const PartyCreatePage: React.FC = () => {
         filter_gender: "성별무관",
         filter_age: [],
     });
-    const [mountains, setMountains] = useState<AdminMountainListDto[]>([]); // 다시바꿔라
+
     const [selectedGender, setSelectedGender] = useState<string>("");
     const [selectedAges, setSelectedAges] = useState<string[]>([]);
     const [count, setCount] = useState(party.max_members);
 
     // 산 정보 조회
+    //토큰으로 kakadID 가져오기 -> route로 전달
     useEffect(() => {
-        fetch("/api/admin/mountain")
+        const token = getToken();
+        fetch("/api/parties/create", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        })
             .then((response) => response.json())
             .then((data) => {
-                const filteredData = data.map((item: AdminMountainListDto) => ({
-                    mountain_id: item.mountain_id,
-                    name: item.name,
-                }));
-                setMountains(filteredData);
+                setMountains(data.mountainList);
+                setCurrentId(data.current_id);
             });
     }, []);
+
+    console.log(currentId.user_id);
+
+    useEffect(() => {
+        if (currentId) {
+            setParty((prevParty) => ({
+                ...prevParty,
+                creator_id: currentId.user_id,
+            }));
+        }
+    }, [currentId]);
 
     // 날짜 선택
     const today = new Date().toISOString().split("T")[0];
@@ -137,7 +159,7 @@ const PartyCreatePage: React.FC = () => {
                                         key={mountain.mountain_id}
                                         value={mountain.mountain_id}
                                     >
-                                        {mountain.name}
+                                        {mountain.mountain_name}
                                     </option>
                                 ))}
                             </select>
@@ -180,7 +202,9 @@ const PartyCreatePage: React.FC = () => {
                         <div>
                             <h1>인원</h1>
                             <P.MaxMemberCounter>
-                                <button onClick={decrease}>-</button>
+                                <button type="button" onClick={decrease}>
+                                    -
+                                </button>
                                 <input
                                     type="number"
                                     name="max_members"
@@ -189,7 +213,9 @@ const PartyCreatePage: React.FC = () => {
                                     max={maxCount}
                                     readOnly
                                 />
-                                <button onClick={increase}>+</button>
+                                <button type="button" onClick={increase}>
+                                    +
+                                </button>
                             </P.MaxMemberCounter>
                         </div>
                         <div>
