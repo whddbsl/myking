@@ -1,4 +1,3 @@
-// app/layout.tsx
 "use client";
 
 import AuthProvider from "@/context/AuthProvider";
@@ -7,6 +6,7 @@ import Head from "next/head";
 import BottomNav from "@/components/bottomNav/bottomNav";
 import { usePathname } from "next/navigation";
 import styled from "styled-components";
+
 const GlobalStyle = createGlobalStyle`
   /* Reset CSS */
   html, body, div, span, applet, object, iframe,
@@ -96,14 +96,28 @@ const Container = styled.div`
     background-color: #fff;
 `;
 
+const BottomNavContainer = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+`;
+
 const theme = {
     colors: {
         primary: "#269386",
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     const pathname = usePathname();
+    const showBottomNav =
+        !pathname.includes("/auth") &&
+        !pathname.includes("/admin") &&
+        !pathname.includes("/create");
     return (
         <html lang="en">
             <head>
@@ -119,9 +133,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <Container>{children}</Container>
                     </AuthProvider>
                 </ThemeProvider>
-                {!pathname.includes("/auth") && (
+                {showBottomNav && (
                     <footer>
-                        <BottomNav />
+                        <BottomNavContainer>
+                            <BottomNav />
+                        </BottomNavContainer>
                     </footer>
                 )}
             </body>

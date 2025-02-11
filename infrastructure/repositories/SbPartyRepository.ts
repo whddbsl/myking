@@ -153,4 +153,42 @@ export class SbPartyRepository implements PartyRepository {
             user: creatorMap[partyList.creator_id],
         }));
     }
+
+    async deleteParty(partyId: string): Promise<void> {
+        const supabase = await createClient();
+
+        try {
+            // party_member 테이블에서 party_id가 일치하는 모든 행 삭제
+            console.log("Deleting from party_member");
+            const { error: deletePartyMemberError } = await supabase
+                .from("party_member")
+                .delete()
+                .eq("party_id", partyId);
+
+            if (deletePartyMemberError) {
+                console.error(
+                    "Delete party_member error: ",
+                    deletePartyMemberError
+                );
+                throw new Error(deletePartyMemberError.message);
+            }
+
+            // party 테이블에서 party_id가 일치하는 행 삭제
+            console.log("Deleting from party");
+            const { error: deletePartyError } = await supabase
+                .from("party")
+                .delete()
+                .eq("party_id", partyId);
+
+            if (deletePartyError) {
+                console.error("Delete party error: ", deletePartyError);
+                throw new Error(deletePartyError.message);
+            }
+
+            console.log("Party and related members deleted successfully");
+        } catch (error) {
+            console.error("Error deleting party and related members: ", error);
+            throw error;
+        }
+    }
 }

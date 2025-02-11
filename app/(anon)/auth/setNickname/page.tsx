@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import SubmitButtonComponent from "@/components/button/submitButton";
 import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 export default function SetNickname() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function SetNickname() {
         "/images/member_default.svg"
     );
     const [file, setFile] = useState<File | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -44,6 +46,7 @@ export default function SetNickname() {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setIsLoading(true);
 
         setUser(kakaoId, name, inputNickname, profileImage);
 
@@ -106,8 +109,14 @@ export default function SetNickname() {
         } catch (error: any) {
             console.error("닉네임 설정 중 오류 발생", error);
             alert("닉네임 설정 중 문제가 발생했습니다. 다시 시도해주세요");
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <Form onSubmit={handleSubmit}>

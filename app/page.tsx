@@ -118,7 +118,10 @@ export default function Home() {
             <SearchBanner>
                 <BannerTitle>가고싶은 산을 검색해보세요</BannerTitle>
                 <SearchBarWrapper onClick={handleSearchClick}>
-                    <SearchInput placeholder="이번 주는 어떤 산으로 가볼까요?" readOnly />
+                    <SearchInput
+                        placeholder="이번 주는 어떤 산으로 가볼까요?"
+                        readOnly
+                    />
                 </SearchBarWrapper>
             </SearchBanner>
 
@@ -143,40 +146,78 @@ export default function Home() {
                             <MountainCard key={mt.mountain_id}>
                                 <MountainImage
                                     style={{
-                                        backgroundImage: `url(${mt.image_url || "/images/sample_mountain.jpg"})`,
+                                        backgroundImage: `url(${
+                                            mt.image_url ||
+                                            "/images/sample_mountain.jpg"
+                                        })`,
                                     }}
                                 />
                                 <MountainInfo>
-                                    <MountainRegion>{mt.region || "지역 미정"}</MountainRegion>
+                                    <MountainRegion>
+                                        {mt.region || "지역 미정"}
+                                    </MountainRegion>
                                     <MountainName>{mt.name}</MountainName>
                                     <MountainHashtags>
-                                        {mt.altitude ? `#${mt.altitude}m` : "#정보없음"}
+                                        {mt.altitude
+                                            ? `#${mt.altitude}m`
+                                            : "#정보없음"}
                                     </MountainHashtags>
 
                                     <CourseList>
                                         {mt.courses
-                                            .sort((a, b) => a.course_id - b.course_id)
+                                            .sort(
+                                                (a, b) =>
+                                                    a.course_id - b.course_id
+                                            )
                                             .slice(0, 3)
                                             .map((course) => (
-                                                <CourseItem key={course.course_id}>
-                                                    <div className="course-name">{course.name}</div>
+                                                <CourseItem
+                                                    key={course.course_id}
+                                                >
+                                                    <div className="course-name">
+                                                        {course.name}
+                                                    </div>
                                                     <CourseDetailContainer>
-                                                        <DifficultySpan difficulty={course.difficulty || ""}>
-                                                            {course.difficulty || "난이도?"}
+                                                        <DifficultySpan
+                                                            difficulty={
+                                                                course.difficulty ||
+                                                                ""
+                                                            }
+                                                        >
+                                                            {course.difficulty ||
+                                                                "난이도?"}
                                                         </DifficultySpan>
-                                                        <span className="divider">•</span>
-                                                        <span className="time">
-                                                            {course.duration || "소요시간?"}시간
+                                                        <span className="divider">
+                                                            •
                                                         </span>
-                                                        <span className="divider">•</span>
-                                                        <span className="distance">{course.distance || "거리?"}km</span>
-                                                        {course.popularity && <PopularBadge>인기</PopularBadge>}
+                                                        <span className="time">
+                                                            {course.duration ||
+                                                                "소요시간?"}
+                                                            시간
+                                                        </span>
+                                                        <span className="divider">
+                                                            •
+                                                        </span>
+                                                        <span className="distance">
+                                                            {course.distance ||
+                                                                "거리?"}
+                                                            km
+                                                        </span>
+                                                        {course.popularity && (
+                                                            <PopularBadge>
+                                                                인기
+                                                            </PopularBadge>
+                                                        )}
                                                     </CourseDetailContainer>
                                                 </CourseItem>
                                             ))}
                                     </CourseList>
 
-                                    <DetailLink href={`/mountains/${mt.mountain_id}`}>산/코스 자세히 보기</DetailLink>
+                                    <DetailLink
+                                        href={`/mountains/${mt.mountain_id}`}
+                                    >
+                                        산/코스 자세히 보기
+                                    </DetailLink>
                                 </MountainInfo>
                             </MountainCard>
                         ))}
@@ -193,25 +234,31 @@ export default function Home() {
                     {parties.slice(0, 4).map((party) => {
                         // party.mountain_id로 산 목록에서 해당 산 찾아오기
                         const matchedMountain = mountains.find(
-                            (mountain) => mountain.mountain_id === party.mountain_id
+                            (mountain) =>
+                                mountain.mountain_id === party.mountain_id
                         );
 
                         return (
                             <MateCard key={party.party_id}>
                                 {/* 산 이름이 있으면 표시, 없으면 fallback */}
                                 <span className="mountain">
-                                    {matchedMountain ? matchedMountain.name : `산 번호: ${party.mountain_id}`}
+                                    {matchedMountain
+                                        ? matchedMountain.name
+                                        : `산 번호: ${party.mountain_id}`}
                                 </span>
 
                                 {/* timeLabel 예: "1월 한달 간 정기적으로 등산하실 분 모집합니다." */}
                                 <p>{party.description}</p>
 
                                 {/* 가운데에 배치할 파티 설명 */}
-                                <p className="description">{party.description}</p>
+                                <p className="description">
+                                    {party.description}
+                                </p>
 
                                 {/* 상태, 인원 등 */}
                                 <div className="club-info">
-                                    상태: {party.filter_state} / 모집 인원: {party.max_members}명
+                                    상태: {party.filter_state} / 모집 인원:{" "}
+                                    {party.max_members}명
                                 </div>
                             </MateCard>
                         );
