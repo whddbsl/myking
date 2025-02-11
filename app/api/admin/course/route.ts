@@ -19,8 +19,9 @@ export async function GET() {
 }
 
 export async function DELETE(request: Request) {
-    const { courseId } = await request.json();
+    const { course_id } = await request.json();
     const courseRepository: CourseRepository = new SbCourseRepository();
-    await deleteCourse(courseRepository, courseId);
+    await deleteCourse(courseRepository, course_id);
     return NextResponse.json({ message: "Course deleted successfully" });
 }
+  
