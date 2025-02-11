@@ -39,15 +39,16 @@ export const BannerTitle = styled.h2`
     color: #fff;
 `;
 
+// 검색바 감싸는 래퍼
 export const SearchBarWrapper = styled.div`
-    display: inline-flex;
-    max-width: 600px;
-    width: 100%;
-    border-radius: 32px;
-    background-color: #fff;
-    padding: 0.75rem 1rem;
+    display: flex;
     align-items: center;
-    cursor: pointer;
+    background-color: #fff;
+    border-radius: 32px;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     border: 2.5px solid #ddd;
     transition: border-color 0.3s ease;
 
@@ -56,14 +57,32 @@ export const SearchBarWrapper = styled.div`
     }
 `;
 
+// 검색 입력 필드
 export const SearchInput = styled.input`
     flex: 1;
     border: none;
     outline: none;
+    background-color: transparent;
     font-size: 1rem;
+    padding: 0.5rem 0; /* 상하 간격 조정 */
+    color: #333;
+
+    &::placeholder {
+        color: #aaa;
+    }
+`;
+// 검색 아이콘 감싸는 래퍼
+export const SearchIconWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-image: url("/images/searchIcon.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
     cursor: pointer;
 `;
-
 export const MainSection = styled.main`
     flex: 1;
     padding: 1.5rem;
