@@ -34,7 +34,7 @@ export default function ProfileEdit() {
             if (!token) return;
 
             try {
-                const response = await fetch("/api/user", {
+                const response = await fetch("/api/myPage/profile", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ export default function ProfileEdit() {
         }
 
         try {
-            const response = await fetch("/api/user/edit", {
+            const response = await fetch("/api/myPage/profile/edit", {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,
