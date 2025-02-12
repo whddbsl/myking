@@ -34,7 +34,7 @@ export default function ProfileEdit() {
             if (!token) return;
 
             try {
-                const response = await fetch("/api/user", {
+                const response = await fetch("/api/myPage/profile", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ export default function ProfileEdit() {
         }
 
         try {
-            const response = await fetch("/api/user/edit", {
+            const response = await fetch("/api/myPage/profile/edit", {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -121,41 +121,42 @@ export default function ProfileEdit() {
         }
     };
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <>
-            <Form onSubmit={handleEditProfile}>
-                <CustomProfileImageUploader
-                    profileImage={imgSrc}
-                    setFile={setFile}
-                    setProfileImage={setImgSrc}
-                />
-                <NicknameContainer>
-                    <h5>
-                        닉네임 <span>*</span>
-                    </h5>
-                    <input
-                        type="text"
-                        value={newNickname}
-                        onChange={(event) => setNewNickname(event.target.value)}
-                        placeholder="닉네임 입력"
-                        maxLength={20}
-                        minLength={2}
-                        required
+            {isLoading && <LoadingSpinner />}
+            <div style={{ padding: "16px" }}>
+                <Form onSubmit={handleEditProfile}>
+                    <CustomProfileImageUploader
+                        profileImage={imgSrc}
+                        setFile={setFile}
+                        setProfileImage={setImgSrc}
                     />
-                    {errorMessage && (
-                        <ErrorMessage>{errorMessage}</ErrorMessage>
-                    )}
-                </NicknameContainer>
-                <NicknameContainer>
-                    <h5>이름</h5>
-                    <input type="text" value={name} disabled />
-                </NicknameContainer>
-                <SubmitButtonComponent text="수정 완료" />
-            </Form>
+                    <NicknameContainer>
+                        <h5>
+                            닉네임 <span>*</span>
+                        </h5>
+                        <input
+                            type="text"
+                            value={newNickname}
+                            onChange={(event) =>
+                                setNewNickname(event.target.value)
+                            }
+                            placeholder="닉네임 입력"
+                            maxLength={20}
+                            minLength={2}
+                            required
+                        />
+                        {errorMessage && (
+                            <ErrorMessage>{errorMessage}</ErrorMessage>
+                        )}
+                    </NicknameContainer>
+                    <NicknameContainer>
+                        <h5>이름</h5>
+                        <input type="text" value={name} disabled />
+                    </NicknameContainer>
+                    <SubmitButtonComponent text="수정 완료" />
+                </Form>
+            </div>
         </>
     );
 }

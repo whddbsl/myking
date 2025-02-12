@@ -6,9 +6,12 @@ import { PartyDetailDto } from "@/application/usecases/partyLookup/dto/PartyDeta
 import { getToken } from "@/utils/getToken";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const PartyDetailPage: React.FC = () => {
     const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const [partyDetail, setPartyDetail] = useState<PartyDetailDto | null>(null);
     const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
@@ -32,7 +35,8 @@ const PartyDetailPage: React.FC = () => {
                 setPartyDetail(data.partyDetail); // partyDetail 저장
                 setCurrentId(data.current_id); // current_id 저장
                 console.log(data);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, [partyId]);
     console.log(currentId.user_id);
     console.log(partyDetail);
@@ -87,64 +91,73 @@ const PartyDetailPage: React.FC = () => {
 
     return (
         <PD.PartyDetailComponent>
-            <PD.Card>
-                <PD.ProfileSection>
-                    <PD.ProfileImageWrap>
-                        <PD.ProfileImage
-                            src={partyDetail?.creator_image}
-                            alt="프로필사진"
-                        />
-                    </PD.ProfileImageWrap>
-                    <PD.ProfileInfo>
-                        <h1>{partyDetail?.creator_nickname}</h1>
-                        <h2>{partyDetail?.timeLabel}</h2>
-                    </PD.ProfileInfo>
-                </PD.ProfileSection>
-                <PD.InfoSection>
-                    <PD.Meeting>
-                        <span>{partyDetail?.mountain_name}</span>
-                        <span>{partyDetail?.meeting_date}</span>
-                    </PD.Meeting>
-                    <PD.Description>{partyDetail?.description}</PD.Description>
-                    <PD.Tag>
-                        <span>#{partyDetail?.max_members}명</span>
-                        <span>
-                            #
-                            {partyDetail?.filter_gender.map((gender) => (
-                                <span key={gender}>#{gender}</span>
-                            ))}
-                        </span>
-                        {partyDetail?.filter_age.map((age) => (
-                            <span key={age}>#{age}</span>
-                        ))}
-                    </PD.Tag>
-                </PD.InfoSection>
-                <PD.Footer>
-                    <PD.EndDate>
-                        <h1>모집마감일</h1>
-                        <h2>D-{partyDetail?.end_date}</h2>
-                    </PD.EndDate>
-                    <PD.Paticipation
-                        onClick={handleAddPartyMember}
-                        disabled={isdisabled}
-                    >
+            {isLoading ? (
+                <LoadingSpinner />
+            ) : (
+                <>
+                    <PD.Card>
+                        <PD.ProfileSection>
+                            <PD.ProfileImageWrap>
+                                <PD.ProfileImage
+                                    src={partyDetail?.creator_image}
+                                    alt="프로필사진"
+                                />
+                            </PD.ProfileImageWrap>
+                            <PD.ProfileInfo>
+                                <h1>{partyDetail?.creator_nickname}</h1>
+                                <h2>{partyDetail?.timeLabel}</h2>
+                            </PD.ProfileInfo>
+                        </PD.ProfileSection>
+                        <PD.InfoSection>
+                            <PD.Meeting>
+                                <span>{partyDetail?.mountain_name}</span>
+                                <span>{partyDetail?.meeting_date}</span>
+                            </PD.Meeting>
+                            <PD.Description>
+                                {partyDetail?.description}
+                            </PD.Description>
+                            <PD.Tag>
+                                <span>#{partyDetail?.max_members}명</span>
+                                <span>
+                                    {partyDetail?.filter_gender.map(
+                                        (gender) => (
+                                            <span key={gender}>#{gender}</span>
+                                        )
+                                    )}
+                                </span>
+                                {partyDetail?.filter_age.map((age) => (
+                                    <span key={age}>#{age}</span>
+                                ))}
+                            </PD.Tag>
+                        </PD.InfoSection>
+                        <PD.Footer>
+                            <PD.EndDate>
+                                <h1>모집마감일</h1>
+                                <h2>D-{partyDetail?.end_date}</h2>
+                            </PD.EndDate>
+                            <PD.Paticipation
+                                onClick={handleAddPartyMember}
+                                disabled={isdisabled}
+                            >
+                                <div>
+                                    <span>참가하기 </span>
+                                    <span>
+                                        {partyDetail?.current_members}/
+                                        {partyDetail?.max_members}
+                                    </span>
+                                </div>
+                            </PD.Paticipation>
+                        </PD.Footer>
+                    </PD.Card>
+                    {/* <PD.MemberInfo>
+                        <h1>현재 참가자</h1>
                         <div>
-                            <span>참가하기 </span>
-                            <span>
-                                {partyDetail?.current_members}/
-                                {partyDetail?.max_members}
-                            </span>
+                            아직 참가자가 없어요.
+                            <br />첫 참가자가 되어주세요!
                         </div>
-                    </PD.Paticipation>
-                </PD.Footer>
-            </PD.Card>
-            <PD.MemberInfo>
-                <h1>현재 참가자</h1>
-                <div>
-                    아직 참가자가 없어요.
-                    <br />첫 참가자가 되어주세요!
-                </div>
-            </PD.MemberInfo>
+                    </PD.MemberInfo> */}
+                </>
+            )}
         </PD.PartyDetailComponent>
     );
 };

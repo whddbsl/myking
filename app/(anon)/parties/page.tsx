@@ -6,9 +6,12 @@ import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDt
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
 import { LiaSlidersHSolid } from "react-icons/lia";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
 
 const PartyPage: React.FC = () => {
     const { filters, resetFilters } = useFilterStore();
+
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // 페이지가 마운트될 때 상태 초기화
@@ -29,7 +32,8 @@ const PartyPage: React.FC = () => {
             .then((data) => {
                 setPartyList(data.partyList);
                 setMountainList(data.mountainList);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, []);
 
     // 필터 값이 변경되면 필터링된 데이터를 가져옵니다.
@@ -39,6 +43,7 @@ const PartyPage: React.FC = () => {
             isFirstRender.current = false;
             return;
         }
+        setIsLoading(true);
 
         // 필터 값들을 쿼리 스트링으로 변환합니다.
         const query = new URLSearchParams({
@@ -53,7 +58,8 @@ const PartyPage: React.FC = () => {
             .then((data) => {
                 setPartyList(data.partyList);
                 setMountainList(data.mountainList);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, [filters]);
 
     // 현재 선택된 산 이름
@@ -102,10 +108,12 @@ const PartyPage: React.FC = () => {
                 />
             )}
 
-            {partyList.length === 0 ? (
-                <div style={{ margin: "20px", textAlign: "center" }}>
+            {isLoading ? (
+                <LoadingSpinner />
+            ) : partyList.length === 0 ? (
+                <PC.NoPartyMessage>
                     조건에 맞는 파티가 없습니다
-                </div>
+                </PC.NoPartyMessage>
             ) : (
                 <PC.Cards>
                     {partyList.map((party) => (
