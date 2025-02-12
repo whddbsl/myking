@@ -5,12 +5,48 @@ interface StateProps {
     state: "모집중" | "마감"; // 상태 값의 타입 정의
 }
 
+export const FilterContainer = styled.div`
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    span {
+        margin-left: 5px;
+    }
+`;
+
+export const FilterButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+    border: none;
+    border-radius: 8px;
+`;
+
+export const FilterTagContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+`;
+
+export const FilterTag = styled.div`
+    background-color: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #333;
+`;
+
 export const Cards = styled.div`
     padding: 0 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 10rem;
+    padding-bottom: 10rem;
 `;
 export const Card = styled.div`
     border: 1px solid #eaeaea;
