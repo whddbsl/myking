@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import SubmitButtonComponent from "@/components/button/submitButton";
 import ProfileImageUploader from "@/components/user/profileImageUploader/ProfileImageUploader";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 export default function SetNickname() {
     const router = useRouter();

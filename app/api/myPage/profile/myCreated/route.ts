@@ -1,8 +1,12 @@
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
+import { findMountainById } from "@/application/usecases/admin/course/FindMountainaByIdUsecase";
 import { deleteParty } from "@/application/usecases/party/DeletePartyUsecase";
 import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyMyCreatedDto";
 import { findMyCreatedPartyList } from "@/application/usecases/partyLookup/PartyMyCreatedUsecase";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { UserRepository } from "@/domain/repositories/UserRepository";
+import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRepository";
 import { SbPartyRepository } from "@/infrastructure/repositories/SbPartyRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -33,14 +37,26 @@ export async function GET(req: NextRequest) {
     }
 
     const kakaoId = userData.user.user_metadata.provider_id;
-    const repository: PartyRepository = new SbPartyRepository();
+    const partyRepository: PartyRepository = new SbPartyRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
 
     try {
         const myCreatedList: PartyMyCreatedDto[] = await findMyCreatedPartyList(
-            repository,
+            partyRepository,
             kakaoId
         );
-        return NextResponse.json(myCreatedList, { status: 200 });
+        const mountainDetails: MountainListDto[] = await Promise.all(
+            myCreatedList.map(async (party) => {
+                return findMountainById(
+                    mountainRepository,
+                    party.mountain_id.toString()
+                );
+            })
+        );
+        return NextResponse.json(
+            { myCreatedList, mountainDetails },
+            { status: 200 }
+        );
     } catch (error: any) {
         console.error("내가 생성한 파티 목록 조회 중 오류 발생: ", error);
         return NextResponse.json(

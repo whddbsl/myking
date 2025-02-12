@@ -5,12 +5,15 @@ import Link from "next/link";
 export const AdminContainer = styled.div`
     min-height: 100vh;
     background-color: #f8fafc;
-    padding: 2rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 `;
 
 export const ContentWrapper = styled.div`
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%
 `;
 
 export const Header = styled.div`
@@ -84,7 +87,7 @@ export const Tr = styled.tr`
 `;
 
 export const Td = styled.td`
-    padding: 0.6rem;
+    padding: 0.5rem;
     color: #334155;
     font-size: 0.875rem;
     vertical-align: middle;
@@ -92,8 +95,8 @@ export const Td = styled.td`
 `;
 
 export const TdDescription = styled(Td)`
-    max-width: 400px;
-    width: 400px;
+    max-width: 380px;
+    width: 380px;
     vertical-align: middle;
     text-align: left;
 `;
