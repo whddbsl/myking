@@ -5,8 +5,11 @@ import { useParams } from "next/navigation";
 import { PartyDetailDto } from "@/application/usecases/partyLookup/dto/PartyDetailDto";
 import { getToken } from "@/utils/getToken";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
+import { useRouter } from "next/navigation";
 
 const PartyDetailPage: React.FC = () => {
+    const router = useRouter();
+
     const [partyDetail, setPartyDetail] = useState<PartyDetailDto | null>(null);
     const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
         user_id: "",
@@ -48,27 +51,38 @@ const PartyDetailPage: React.FC = () => {
         }
     }, [partyDetail, currentId]);
 
-    const handleAddPartyMember = () => {
-        fetch(`/api/parties/${partyId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                current_members: partyDetail?.current_members,
-            }),
-        });
-        fetch(`/api/parties/${partyId}`, {
-            method: "POST",
-            headers: {
-                // 담아서 보내는 데이터의 형태가 json
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                user_id: currentId.user_id,
-            }), // 추후 user_id도 담아서 보내기
-        });
-        console.log(partyDetail?.user_id);
+    const handleAddPartyMember = async () => {
+        try {
+            const putResponse = await fetch(`/api/parties/${partyId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    current_members: partyDetail?.current_members,
+                }),
+            });
+            const postResponse = await fetch(`/api/parties/${partyId}`, {
+                method: "POST",
+                headers: {
+                    // 담아서 보내는 데이터의 형태가 json
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: currentId.user_id,
+                }), // 추후 user_id도 담아서 보내기
+            });
+
+            if (putResponse.ok && postResponse.ok) {
+                alert(
+                    "참가가 완료되었습니다.\n마이페이지 > 내가 참여한 파티에서 확인하세요."
+                );
+                router.push("/parties");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -94,7 +108,12 @@ const PartyDetailPage: React.FC = () => {
                     <PD.Description>{partyDetail?.description}</PD.Description>
                     <PD.Tag>
                         <span>#{partyDetail?.max_members}명</span>
-                        <span>#{partyDetail?.filter_gender}</span>
+                        <span>
+                            #
+                            {partyDetail?.filter_gender.map((gender) => (
+                                <span key={gender}>#{gender}</span>
+                            ))}
+                        </span>
                         {partyDetail?.filter_age.map((age) => (
                             <span key={age}>#{age}</span>
                         ))}
