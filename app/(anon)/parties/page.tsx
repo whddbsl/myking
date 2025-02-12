@@ -5,9 +5,13 @@ import { useState, useEffect, useRef } from "react";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
+import { LiaSlidersHSolid } from "react-icons/lia";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const PartyPage: React.FC = () => {
     const { filters, resetFilters } = useFilterStore();
+
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // 페이지가 마운트될 때 상태 초기화
@@ -28,7 +32,8 @@ const PartyPage: React.FC = () => {
             .then((data) => {
                 setPartyList(data.partyList);
                 setMountainList(data.mountainList);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, []);
 
     // 필터 값이 변경되면 필터링된 데이터를 가져옵니다.
@@ -38,6 +43,7 @@ const PartyPage: React.FC = () => {
             isFirstRender.current = false;
             return;
         }
+        setIsLoading(true);
 
         // 필터 값들을 쿼리 스트링으로 변환합니다.
         const query = new URLSearchParams({
@@ -52,7 +58,8 @@ const PartyPage: React.FC = () => {
             .then((data) => {
                 setPartyList(data.partyList);
                 setMountainList(data.mountainList);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, [filters]);
 
     // 현재 선택된 산 이름
@@ -60,32 +67,53 @@ const PartyPage: React.FC = () => {
         (mountain) => mountain.mountain_id === filters.mountain_id
     )?.mountain_name;
 
-    const handleFilterOpen = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const closeModal = () => {
-        setIsOpen(false);
-    };
-
     return (
         <div>
-            <div>
-                <button onClick={handleFilterOpen}>필터</button>
-                {filters.mountain_id !== 0 && <div>{selectedMountain}</div>}
-                <div>{filters.filter_state}</div>
-                <div>{filters.filter_gender}</div>
-                <div>{filters.filter_age.join(", ")}</div>
-            </div>
-
+            <PC.FilterContainer>
+                <PC.FilterButton onClick={() => setIsOpen(true)}>
+                    <LiaSlidersHSolid /> <span>필터</span>
+                </PC.FilterButton>
+                {(filters.mountain_id !== 0 ||
+                    filters.filter_state ||
+                    (filters.filter_gender &&
+                        filters.filter_gender.length > 0) ||
+                    (filters.filter_age && filters.filter_age.length > 0)) && (
+                    <PC.FilterTagContainer>
+                        {filters.mountain_id !== 0 && (
+                            <PC.FilterTag>{selectedMountain}</PC.FilterTag>
+                        )}
+                        {filters.filter_state && (
+                            <PC.FilterTag>{filters.filter_state}</PC.FilterTag>
+                        )}
+                        {filters.filter_gender &&
+                            filters.filter_gender.length > 0 && (
+                                <PC.FilterTag>
+                                    {filters.filter_gender.join(", ")}
+                                </PC.FilterTag>
+                            )}
+                        {filters.filter_age &&
+                            filters.filter_age.length > 0 && (
+                                <PC.FilterTag>
+                                    {filters.filter_age.join(", ")}
+                                </PC.FilterTag>
+                            )}
+                    </PC.FilterTagContainer>
+                )}
+            </PC.FilterContainer>
             {isOpen && (
-                <Filter mountainList={mountainList} onClose={closeModal} />
+                <Filter
+                    mountainList={mountainList}
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                />
             )}
 
-            {partyList.length === 0 ? (
-                <div style={{ margin: "20px", textAlign: "center" }}>
+            {isLoading ? (
+                <LoadingSpinner />
+            ) : partyList.length === 0 ? (
+                <PC.NoPartyMessage>
                     조건에 맞는 파티가 없습니다
-                </div>
+                </PC.NoPartyMessage>
             ) : (
                 <PC.Cards>
                     {partyList.map((party) => (
@@ -110,7 +138,15 @@ const PartyPage: React.FC = () => {
                                     </PC.Meeting>
                                     <PC.Tag>
                                         <span>#{party.max_members}명</span>
-                                        <span>#{party.filter_gender}</span>
+                                        <span>
+                                            {party.filter_gender.map(
+                                                (gender) => (
+                                                    <span key={gender}>
+                                                        #{gender}
+                                                    </span>
+                                                )
+                                            )}
+                                        </span>
                                         {party.filter_age.map((age) => (
                                             <span key={age}>#{age}</span>
                                         ))}

@@ -6,10 +6,11 @@ import * as F from "./Filter.styles";
 // 컴포넌트 Props 타입 정의
 interface FilterProps {
     mountainList: MountainListDto[];
+    isOpen: boolean;
     onClose: () => void;
 }
 
-const Filter = ({ mountainList, onClose }: FilterProps) => {
+const Filter = ({ mountainList, isOpen, onClose }: FilterProps) => {
     const { resetFilters } = useFilterStore();
     const globalFilters = useFilterStore((state) => state.filters);
     const updateFilter = useFilterStore((state) => state.updateFilter);
@@ -82,86 +83,105 @@ const Filter = ({ mountainList, onClose }: FilterProps) => {
     };
 
     return (
-        <div>
-            {/* 산 선택 영역 */}
-            <F.Mountain>
-                <p>산</p>
-                <select
-                    name="mountain_id"
-                    value={localFilters.mountain_id ?? ""}
-                    onChange={handleMountainChange}
-                    required
-                >
-                    <option value="">산 선택하기</option>
-                    {mountainList.map((mountain) => (
-                        <option
-                            key={mountain.mountain_id}
-                            value={mountain.mountain_id}
-                        >
-                            {mountain.mountain_name}
-                        </option>
-                    ))}
-                </select>
-            </F.Mountain>
+        <F.Overlay $isOpen={isOpen} onClick={onClose}>
+            <F.BottomSheet
+                $isOpen={isOpen}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <F.Header>
+                    <h2>필터</h2>
+                    <button onClick={onClose}>✕</button>
+                </F.Header>
 
-            {/* 모집 상태 선택 영역 */}
-            <div>
-                <p>모집상태</p>
-                <div>
-                    {["모집중", "마감"].map((state) => (
-                        <F.FilterSelect
-                            key={state}
-                            selected={localFilters.filter_state === state}
-                            onClick={() =>
-                                handleStateChange(state as "모집중" | "마감")
-                            }
+                <F.Content>
+                    {/* 산 선택 */}
+                    <F.Mountain>
+                        <p>산</p>
+                        <select
+                            name="mountain_id"
+                            value={localFilters.mountain_id ?? ""}
+                            onChange={handleMountainChange}
+                            required
                         >
-                            {state}
-                        </F.FilterSelect>
-                    ))}
-                </div>
-            </div>
+                            <option value="">산 선택하기</option>
+                            {mountainList.map((mountain) => (
+                                <option
+                                    key={mountain.mountain_id}
+                                    value={mountain.mountain_id}
+                                >
+                                    {mountain.mountain_name}
+                                </option>
+                            ))}
+                        </select>
+                    </F.Mountain>
 
-            {/* 성별 선택 영역 */}
-            <div>
-                <h1>성별</h1>
-                <div>
-                    {["남성", "여성"].map((gender) => (
-                        <F.FilterSelect
-                            key={gender}
-                            selected={localFilters.filter_gender.includes(
-                                gender
+                    {/* 모집 상태 선택 */}
+                    <F.FilterGroup>
+                        <h1>모집상태</h1>
+                        <div>
+                            {["모집중", "마감"].map((state) => (
+                                <F.FilterSelect
+                                    key={state}
+                                    selected={
+                                        localFilters.filter_state === state
+                                    }
+                                    onClick={() =>
+                                        handleStateChange(
+                                            state as "모집중" | "마감"
+                                        )
+                                    }
+                                >
+                                    {state}
+                                </F.FilterSelect>
+                            ))}
+                        </div>
+                    </F.FilterGroup>
+
+                    {/* 성별 선택 */}
+                    <F.FilterGroup>
+                        <h1>성별</h1>
+                        <div>
+                            {["남성", "여성"].map((gender) => (
+                                <F.FilterSelect
+                                    key={gender}
+                                    selected={localFilters.filter_gender.includes(
+                                        gender
+                                    )}
+                                    onClick={() => handleGenderChange(gender)}
+                                >
+                                    {gender}
+                                </F.FilterSelect>
+                            ))}
+                        </div>
+                    </F.FilterGroup>
+
+                    {/* 나이 선택 */}
+                    <F.FilterGroup>
+                        <h1>나이</h1>
+                        <div>
+                            {["20대", "30대", "40대", "50대", "60대 이상"].map(
+                                (age) => (
+                                    <F.FilterSelect
+                                        key={age}
+                                        onClick={() => handleAgeSelection(age)}
+                                        selected={localFilters.filter_age.includes(
+                                            age
+                                        )}
+                                    >
+                                        {age}
+                                    </F.FilterSelect>
+                                )
                             )}
-                            onClick={() => handleGenderChange(gender)}
-                        >
-                            {gender}
-                        </F.FilterSelect>
-                    ))}
-                </div>
-            </div>
+                        </div>
+                    </F.FilterGroup>
+                </F.Content>
 
-            {/* 나이 선택 영역 */}
-            <div>
-                <h1>나이</h1>
-                <div>
-                    {["20대", "30대", "40대", "50대", "60대 이상"].map(
-                        (age) => (
-                            <F.FilterSelect
-                                key={age}
-                                onClick={() => handleAgeSelection(age)}
-                                selected={localFilters.filter_age.includes(age)}
-                            >
-                                {age}
-                            </F.FilterSelect>
-                        )
-                    )}
-                </div>
-            </div>
-
-            {/* 초기화 및 확인 버튼 */}
-            <button onClick={handleReset}>초기화</button>
-            <button onClick={handleConfirm}>확인</button>
-        </div>
+                <F.ButtonGroup>
+                    <button onClick={handleReset}>초기화</button>
+                    <button onClick={handleConfirm}>확인</button>
+                </F.ButtonGroup>
+            </F.BottomSheet>
+        </F.Overlay>
     );
 };
 

@@ -84,7 +84,7 @@ export const Meeting = styled.div`
         }
     }
 `;
-export const Description = styled.div`
+export const Description = styled.pre`
     margin: 10px 0 25px;
 `;
 export const Tag = styled.div`

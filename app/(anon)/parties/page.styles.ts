@@ -5,12 +5,67 @@ interface StateProps {
     state: "모집중" | "마감"; // 상태 값의 타입 정의
 }
 
+export const FilterContainer = styled.div`
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    span {
+        margin-left: 5px;
+    }
+`;
+
+export const FilterButton = styled.button`
+    margin-right: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    font-size: 16px;
+    color: #333;
+    background-color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    width: 100px;
+
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+`;
+
+export const FilterTagContainer = styled.div`
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    /* 스크롤바 숨기기 */
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+    }
+`;
+
+export const FilterTag = styled.div`
+    background-color: #f1f3f5;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #333;
+    flex-shrink: 0; /* 요소 크기 축소 방지 */
+`;
+
 export const Cards = styled.div`
     padding: 0 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 10rem;
+    padding-bottom: 10rem;
 `;
 export const Card = styled.div`
     border: 1px solid #eaeaea;
@@ -153,4 +208,12 @@ export const ActionButtons = styled.div`
         background-color: transparent;
         cursor: pointer;
     }
+`;
+
+export const NoPartyMessage = styled.div`
+    margin: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #888;
 `;

@@ -1,22 +1,36 @@
 "use client";
-import styled from "styled-components";
+import HeaderComponent from "@/components/header/header";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
-export const Header = styled.header`
-    padding: 16px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    h1 {
-        font-size: 18px;
+const PartyLayout: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
+    const rawPathname = usePathname();
+    const [pathname, setPathname] = useState("");
+
+    useEffect(() => {
+        setPathname(rawPathname);
+    }, [rawPathname]);
+
+    let title: string = "등산메이트";
+    let showBackButton: boolean = false;
+
+    const isDynamicRoute = /^\/parties\/\d+$/.test(pathname); // /parties/숫자 형식 확인
+
+    if (isDynamicRoute) {
+        title = "상세보기";
+        showBackButton = true;
+    } else if (pathname.includes("create")) {
+        title = "작성하기";
+        showBackButton = true;
     }
-`;
 
-const PartyLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <div>
-            <Header>
-                <h1>등산 메이트</h1>
-            </Header>
+            <HeaderComponent title={title} showBackButton={showBackButton} />
             <div>{children}</div>
         </div>
     );
