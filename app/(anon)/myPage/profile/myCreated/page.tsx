@@ -120,22 +120,24 @@ export default function MyCreatedPage() {
                                     </button>
                                 </PC.ActionButtons>
                             </PC.ProfileSection>
-                            <PC.InfoSection>
-                                <PC.Meeting>
-                                    <span>
-                                        {mountainList[index]?.name ||
-                                            "알 수 없음"}
-                                    </span>
-                                    <span>{party.meeting_date}</span>
-                                </PC.Meeting>
-                                <PC.Tag>
-                                    <span>#{party.max_members}명</span>
-                                    <span>#{party.filter_gender}</span>
-                                    {party.filter_age.map((age) => (
-                                        <span key={age}>#{age}</span>
-                                    ))}
-                                </PC.Tag>
-                            </PC.InfoSection>
+                            <PC.LinkWrapper href={`/parties/${party.party_id}`}>
+                                <PC.InfoSection>
+                                    <PC.Meeting>
+                                        <span>
+                                            {mountainList[index]?.name ||
+                                                "알 수 없음"}
+                                        </span>
+                                        <span>{party.meeting_date}</span>
+                                    </PC.Meeting>
+                                    <PC.Tag>
+                                        <span>#{party.max_members}명</span>
+                                        <span>#{party.filter_gender}</span>
+                                        {party.filter_age.map((age) => (
+                                            <span key={age}>#{age}</span>
+                                        ))}
+                                    </PC.Tag>
+                                </PC.InfoSection>
+                            </PC.LinkWrapper>
 
                             <PC.Footer>
                                 <PC.EndDate>

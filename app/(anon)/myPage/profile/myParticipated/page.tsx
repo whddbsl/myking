@@ -22,12 +22,12 @@ interface StateProps {
 }
 
 const CustomState = styled(PC.State)<StateProps>`
-    background-color: #e55555;
-    /* background-color: ${(props) =>
-        props.state === "모집중" ? "#e55555" : "#b0b0b0"};
-    cursor: ${(props) => (props.state === "모집중" ? "pointer" : "default")};
+    /* background-color: #e55555; */
+    background-color: ${(props) =>
+        props.state !== "기간 마감" ? "#e55555" : "#b0b0b0"};
+    cursor: ${(props) => (props.state !== "기간 마감" ? "pointer" : "default")};
     pointer-events: ${(props) =>
-        props.state === "모집중" ? "auto" : "none"}; */
+        props.state !== "기간 마감" ? "auto" : "none"};
 `;
 
 export default function MyParticipatedPage() {
@@ -67,6 +67,7 @@ export default function MyParticipatedPage() {
                 setPartyList(data.myParticipatedList);
                 setCurrentId(data.currentId.user_id);
                 setMountainList(data.mountainDetails);
+                console.log(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
             } finally {
@@ -144,59 +145,69 @@ export default function MyParticipatedPage() {
                 </Container>
             ) : (
                 <PC.Cards>
-                    {partyList.map((party, index) => (
-                        <PC.Card key={party.party_id}>
-                            <PC.ProfileSection>
-                                <PC.ProfileImageWrap>
-                                    <CustomProfileImage
-                                        src={party.user.profile_image}
-                                        alt="profile_image"
-                                    />
-                                </PC.ProfileImageWrap>
-                                <PC.ProfileInfo>
-                                    <h1>{party.user.nickname}</h1>
-                                    <h2>{party.timeLabel}</h2>
-                                </PC.ProfileInfo>
-                            </PC.ProfileSection>
-                            <PC.LinkWrapper href={`/parties/${party.party_id}`}>
-                                <PC.InfoSection>
-                                    <PC.Meeting>
-                                        <span>
-                                            {mountainList[index]?.name ||
-                                                "알 수 없음"}
-                                        </span>
-                                        <span>{party.meeting_date}</span>
-                                    </PC.Meeting>
-                                    <PC.Tag>
-                                        <span>#{party.max_members}명</span>
-                                        <span>#{party.filter_gender}</span>
-                                        {party.filter_age.map((age) => (
-                                            <span key={age}>#{age}</span>
-                                        ))}
-                                    </PC.Tag>
-                                </PC.InfoSection>
-                            </PC.LinkWrapper>
-
-                            <PC.Footer>
-                                <PC.EndDate>
-                                    <h1>모집마감일</h1>
-                                    <h2>D-{party.end_date}</h2>
-                                </PC.EndDate>
-                                <CustomState
-                                    state={party.filter_state}
-                                    onClick={() =>
-                                        handleDeleteMember(
-                                            party.current_members,
-                                            Number(party.party_id)
-                                        )
-                                    }
+                    {partyList.map((party, index) => {
+                        const endDate = new Date(party.end_day);
+                        const isExpired = endDate < new Date();
+                        return (
+                            <PC.Card key={party.party_id}>
+                                <PC.ProfileSection>
+                                    <PC.ProfileImageWrap>
+                                        <CustomProfileImage
+                                            src={party.user.profile_image}
+                                            alt="profile_image"
+                                        />
+                                    </PC.ProfileImageWrap>
+                                    <PC.ProfileInfo>
+                                        <h1>{party.user.nickname}</h1>
+                                        <h2>{party.timeLabel}</h2>
+                                    </PC.ProfileInfo>
+                                </PC.ProfileSection>
+                                <PC.LinkWrapper
+                                    href={`/parties/${party.party_id}`}
                                 >
-                                    {party.current_members} /{" "}
-                                    {party.max_members} 취소하기
-                                </CustomState>
-                            </PC.Footer>
-                        </PC.Card>
-                    ))}
+                                    <PC.InfoSection>
+                                        <PC.Meeting>
+                                            <span>
+                                                {mountainList[index]?.name ||
+                                                    "알 수 없음"}
+                                            </span>
+                                            <span>{party.meeting_date}</span>
+                                        </PC.Meeting>
+                                        <PC.Tag>
+                                            <span>#{party.max_members}명</span>
+                                            <span>#{party.filter_gender}</span>
+                                            {party.filter_age.map((age) => (
+                                                <span key={age}>#{age}</span>
+                                            ))}
+                                        </PC.Tag>
+                                    </PC.InfoSection>
+                                </PC.LinkWrapper>
+
+                                <PC.Footer>
+                                    <PC.EndDate>
+                                        <h1>모집마감일</h1>
+                                        <h2>D-{party.end_date}</h2>
+                                    </PC.EndDate>
+                                    <CustomState
+                                        state={
+                                            isExpired
+                                                ? "기간 마감"
+                                                : party.filter_state
+                                        }
+                                        onClick={() =>
+                                            handleDeleteMember(
+                                                party.current_members,
+                                                Number(party.party_id)
+                                            )
+                                        }
+                                    >
+                                        {party.current_members} /{" "}
+                                        {party.max_members} 취소하기
+                                    </CustomState>
+                                </PC.Footer>
+                            </PC.Card>
+                        );
+                    })}
                 </PC.Cards>
             )}
         </div>
