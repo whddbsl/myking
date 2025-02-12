@@ -4,4 +4,3 @@ export const AdminLayoutContainer = styled.div`
   display: flex;
   width: 100vw;
 `;
-  

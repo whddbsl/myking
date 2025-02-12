@@ -182,7 +182,7 @@ const CreateCoursePage: React.FC = () => {
                     </S.FormGroup>
 
                     <S.FormGroup>
-                        <S.Label htmlFor="duration">소요시간 (분)</S.Label>
+                        <S.Label htmlFor="duration">소요시간</S.Label>
                         <S.Input
                             id="duration"
                             type="number"
