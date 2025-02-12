@@ -73,9 +73,5 @@ export default function AuthCallback() {
         handleAuthCallback();
     }, [router, setUser, resetUser]);
 
-    return (
-        <ProtectedRoute>
-            {isLoading ? <LoadingSpinner /> : <div>로그인 처리중...</div>}
-        </ProtectedRoute>
-    );
+    return <ProtectedRoute>{isLoading && <LoadingSpinner />}</ProtectedRoute>;
 }

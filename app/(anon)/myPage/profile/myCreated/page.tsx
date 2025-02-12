@@ -95,7 +95,7 @@ export default function MyCreatedPage() {
                     <div>아직 작성한 글이 없습니다.</div>
                 </Container>
             ) : (
-                <PC.Cards>
+                <PC.Cards style={{ padding: "16px" }}>
                     {partyList.map((party, index) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>

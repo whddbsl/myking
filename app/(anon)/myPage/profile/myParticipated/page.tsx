@@ -145,7 +145,7 @@ export default function MyParticipatedPage() {
                     <div>아직 참여한 내역이 없습니다.</div>
                 </Container>
             ) : (
-                <PC.Cards>
+                <PC.Cards style={{ padding: "16px" }}>
                     {partyList.map((party, index) => {
                         const endDate = new Date(party.end_day);
                         const isExpired = endDate < new Date();

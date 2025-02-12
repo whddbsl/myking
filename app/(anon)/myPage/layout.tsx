@@ -54,7 +54,8 @@ export default function ProfileLayout({
                         <ProfileNavBar />
                     </NavBarContainer>
                 )}
-            <ProfileMain>{children}</ProfileMain>
+            {/* <ProfileMain>{children}</ProfileMain> */}
+            {children}
         </ProtectedRoute>
     );
 }
