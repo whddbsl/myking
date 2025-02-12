@@ -7,7 +7,7 @@ import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyM
 import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
 import { Container } from "./page.styles";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -84,12 +84,9 @@ export default function MyCreatedPage() {
         }
     };
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <div>
+            {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 작성한 글이 없습니다.</div>
@@ -99,10 +96,12 @@ export default function MyCreatedPage() {
                     {partyList.map((party) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
-                                <CustomProfileImage
-                                    src={profileImage}
-                                    alt="profile_image"
-                                />
+                                <PC.ProfileImageWrap>
+                                    <CustomProfileImage
+                                        src={profileImage}
+                                        alt="profile_image"
+                                    />
+                                </PC.ProfileImageWrap>
                                 <PC.ProfileInfo>
                                     <h1>{nickname}</h1>
                                     <h2>{party.timeLabel}</h2>

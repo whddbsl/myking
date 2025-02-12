@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/application/states/userStore";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import ProtectedRoute from "@/components/user/ProtectedRoutes";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 export default function AuthCallback() {
     const { setUser, resetUser } = useUserStore((state) => state);

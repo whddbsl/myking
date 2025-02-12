@@ -6,6 +6,7 @@ export const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #269386;
+    padding-bottom: 63px;
 `;
 
 export const ErrorMessage = styled.div`
