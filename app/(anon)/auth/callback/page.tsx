@@ -52,6 +52,12 @@ export default function AuthCallback() {
 
                 if (result.exists) {
                     router.push("/");
+                    setUser(
+                        data.session?.user.user_metadata.provider_id,
+                        data.session?.user.user_metadata.name,
+                        result.nickname,
+                        result.profileImage
+                    );
                 } else {
                     router.push("/auth/setNickname");
                 }
