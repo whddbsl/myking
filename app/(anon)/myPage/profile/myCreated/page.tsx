@@ -8,6 +8,7 @@ import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
 import { Container } from "./page.styles";
 import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -18,6 +19,7 @@ const CustomProfileImage = styled(PC.ProfileImage)`
 
 export default function MyCreatedPage() {
     const [partyList, setPartyList] = useState<PartyMyCreatedDto[]>([]);
+    const [mountainList, setMountainList] = useState<MountainListDto[]>([]);
     const { nickname, profileImage } = useUserStore();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -44,7 +46,8 @@ export default function MyCreatedPage() {
                 }
 
                 const data = await response.json();
-                setPartyList(data);
+                setPartyList(data.myCreatedList);
+                setMountainList(data.mountainDetails);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
             } finally {
@@ -93,7 +96,7 @@ export default function MyCreatedPage() {
                 </Container>
             ) : (
                 <PC.Cards>
-                    {partyList.map((party) => (
+                    {partyList.map((party, index) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
                                 <PC.ProfileImageWrap>
@@ -119,7 +122,10 @@ export default function MyCreatedPage() {
                             </PC.ProfileSection>
                             <PC.InfoSection>
                                 <PC.Meeting>
-                                    <span>산이름</span>
+                                    <span>
+                                        {mountainList[index]?.name ||
+                                            "알 수 없음"}
+                                    </span>
                                     <span>{party.meeting_date}</span>
                                 </PC.Meeting>
                                 <PC.Tag>

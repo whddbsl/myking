@@ -8,6 +8,7 @@ import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
 import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -35,6 +36,7 @@ export default function MyParticipatedPage() {
     const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
         user_id: "",
     });
+    const [mountainList, setMountainList] = useState<MountainListDto[]>([]);
 
     useEffect(() => {
         const fetchList = async () => {
@@ -64,7 +66,7 @@ export default function MyParticipatedPage() {
                 const data = await response.json();
                 setPartyList(data.myParticipatedList);
                 setCurrentId(data.currentId.user_id);
-                console.log(data);
+                setMountainList(data.mountainDetails);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
             } finally {
@@ -142,7 +144,7 @@ export default function MyParticipatedPage() {
                 </Container>
             ) : (
                 <PC.Cards>
-                    {partyList.map((party) => (
+                    {partyList.map((party, index) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
                                 <PC.ProfileImageWrap>
@@ -159,7 +161,10 @@ export default function MyParticipatedPage() {
                             <PC.LinkWrapper href={`/parties/${party.party_id}`}>
                                 <PC.InfoSection>
                                     <PC.Meeting>
-                                        <span>산이름</span>
+                                        <span>
+                                            {mountainList[index]?.name ||
+                                                "알 수 없음"}
+                                        </span>
                                         <span>{party.meeting_date}</span>
                                     </PC.Meeting>
                                     <PC.Tag>
