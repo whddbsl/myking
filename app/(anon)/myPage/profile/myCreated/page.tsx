@@ -7,7 +7,7 @@ import { PartyMyCreatedDto } from "@/application/usecases/partyLookup/dto/PartyM
 import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
 import { Container } from "./page.styles";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -84,12 +84,9 @@ export default function MyCreatedPage() {
         }
     };
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <div>
+            {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 작성한 글이 없습니다.</div>

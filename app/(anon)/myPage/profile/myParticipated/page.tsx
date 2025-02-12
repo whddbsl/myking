@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Container } from "../myCreated/page.styles";
 import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
@@ -75,10 +75,6 @@ export default function MyParticipatedPage() {
         fetchList();
     }, []);
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     console.log("id", currentId);
 
     const handleDeleteMember = async (
@@ -139,6 +135,7 @@ export default function MyParticipatedPage() {
 
     return (
         <div>
+            {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 참여한 내역이 없습니다.</div>

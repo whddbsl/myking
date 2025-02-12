@@ -7,7 +7,7 @@ import PartyButton from "@/components/user/partyButton/party";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/application/states/userStore";
 import { getToken } from "@/utils/getToken";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 export default function Profile() {
     const router = useRouter();
@@ -56,12 +56,9 @@ export default function Profile() {
         fetchUser();
     }, []);
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <>
+            {isLoading && <LoadingSpinner />}
             <PC.ProfileContainer>
                 <div>
                     <PC.ProfileImage
