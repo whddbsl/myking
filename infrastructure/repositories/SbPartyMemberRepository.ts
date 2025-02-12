@@ -23,10 +23,10 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
     async getMembersByPartyId(partyId: string): Promise<PartyMember[]> {
         const supabase = await createClient();
         const { data, error } = await supabase
-            .from("party_members")
+            .from("party_member")
             .select()
-            .eq("party_id", partyId);
-
+            .eq("party_id", partyId); // party_id, user_id, created_at
+        //userid만 반환하는 usecase 필요
         if (error) {
             throw new Error(
                 `Failed to fetch members for party ${partyId}: ${error.message}`
@@ -34,5 +34,19 @@ export class SbPartyMemberRepository implements PartyMemberRepository {
         }
 
         return data as PartyMember[];
+    } // partymember 테이블에서 partyid가 같은 member를 가져옴
+
+    async deletePartyMember(partyId: string, userId: string): Promise<void> {
+        const supabase = await createClient();
+
+        const { error } = await supabase
+            .from("party_member") // 참가자 목록 테이블
+            .delete()
+            .eq("party_id", partyId)
+            .eq("user_id", userId); // 해당 파티의 특정 사용자 삭제
+
+        if (error) {
+            throw new Error(error.message);
+        }
     }
 }

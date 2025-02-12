@@ -14,12 +14,7 @@ export default function SignUp() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "kakao",
                 options: {
-                    redirectTo: "http://localhost:3000/auth/callback",
-                    // redirectTo: `https://${
-                    //     process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID
-                    // }.supabase.co/auth/v1/callback?next=${encodeURIComponent(
-                    //     process.env.NEXT_PUBLIC_BASE_URL + "/auth/callback"
-                    // )}`,
+                    redirectTo: "http://172.31.98.20:3000/auth/callback",
                 },
             });
 
@@ -36,7 +31,7 @@ export default function SignUp() {
     };
 
     return (
-        <ProtectedRoute>
+        <>
             <Container>
                 <LogoContainer>
                     <h4>나만의 하이킹 메이트</h4>
@@ -45,6 +40,6 @@ export default function SignUp() {
 
                 <KakaoButton onClick={handleSignIn}>카카오 로그인</KakaoButton>
             </Container>
-        </ProtectedRoute>
+        </>
     );
 }

@@ -43,18 +43,14 @@ const AdminSidebar = () => {
                             코스 관리
                         </MenuItem>
                     </UnstyledLink>
-                    <MenuItem
-                        $isSelected={selectedMenu === "파티 관리"}
-                        onClick={() => handleMenuClick("파티 관리")}
-                    >
-                        파티 관리
-                    </MenuItem>
-                    <MenuItem
-                        $isSelected={selectedMenu === "파티 멤버 관리"}
-                        onClick={() => handleMenuClick("파티 멤버 관리")}
-                    >
-                        파티 멤버 관리
-                    </MenuItem>
+                    <UnstyledLink href="/admin/party">
+                        <MenuItem
+                            $isSelected={selectedMenu === "파티 관리"}
+                            onClick={() => handleMenuClick("파티 관리")}
+                        >
+                            파티 관리
+                        </MenuItem>
+                    </UnstyledLink>
                 </ul>
             </SidebarContainer>
         </>

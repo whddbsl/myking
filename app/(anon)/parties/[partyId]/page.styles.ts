@@ -16,13 +16,24 @@ export const Card = styled.div`
 export const ProfileSection = styled.div`
     display: flex;
     gap: 10px;
-    padding: 16px;
+    padding: 15px;
 `;
-export const ProfileImage = styled.div`
+export const ProfileImageWrap = styled.div`
     width: 36px;
     height: 36px;
-    background: #ddd;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     border-radius: 50%;
+    overflow: hidden;
+`;
+export const ProfileImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #ddd;
 `;
 export const ProfileInfo = styled.div`
     display: flex;
@@ -73,10 +84,14 @@ export const Meeting = styled.div`
         }
     }
 `;
+export const Description = styled.pre`
+    margin: 10px 0 25px;
+`;
 export const Tag = styled.div`
     display: flex;
     gap: 3px;
     margin-bottom: 10px;
+    color: #555555;
 `;
 export const Footer = styled.footer`
     display: flex;
@@ -96,13 +111,19 @@ export const EndDate = styled.div`
         margin-top: 5px;
     }
 `;
-export const Paticipation = styled.div`
+export const Paticipation = styled.button`
     display: flex;
     gap: 7px;
     background-color: #269386;
     color: #fff;
     padding: 15px;
     border-radius: 10px;
+    border: none;
+
+    &:disabled {
+        background-color: #b0b0b0;
+        cursor: not-allowed;
+    }
 `;
 export const MemberInfo = styled.div`
     background-color: #fff;

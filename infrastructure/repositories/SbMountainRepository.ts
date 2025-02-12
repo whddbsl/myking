@@ -9,7 +9,7 @@ export class SbMountainRepository implements MountainRepository {
         const supabase = await createClient();
         const { data, error } = await supabase
             .from("mountain")
-            .select("mountain_id, name, region, altitude, description, image_url")
+            .select("mountain_id, name, region, altitude, description, image_url,created_at")
             .eq("mountain_id", mountainId)
             .single();
 
@@ -102,6 +102,8 @@ export class SbMountainRepository implements MountainRepository {
                     name: mountain.name,
                     region: mountain.region,
                     description: mountain.description,
+                    altitude: mountain.altitude,
+                    image_url: mountain.image_url,
                 },
             ])
             .select();
@@ -115,10 +117,11 @@ export class SbMountainRepository implements MountainRepository {
         const { error } = await supabase
             .from("mountain")
             .update({
-                mountain_id: mountain.mountain_id,
                 name: mountain.name,
                 region: mountain.region,
                 description: mountain.description,
+                altitude: mountain.altitude,
+                image_url: mountain.image_url,
             })
             .eq("mountain_id", mountain.mountain_id);
         if (error) {

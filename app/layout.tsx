@@ -3,6 +3,9 @@
 import AuthProvider from "@/context/AuthProvider";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Head from "next/head";
+import BottomNav from "@/components/bottomNav/bottomNav";
+import { usePathname } from "next/navigation";
+import styled from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   /* Reset CSS */
@@ -31,12 +34,24 @@ const GlobalStyle = createGlobalStyle`
   footer, header, hgroup, menu, nav, section {
     display: block;
   }
+  
+  button {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    font-size: inherit; 
+    line-height: inherit; 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+  }
 
   body {
     line-height: 1;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
+    background-color: #ededed; /* ★ 여기에 옅은 회색 설정 ★ */
   }
 
   main {
@@ -74,13 +89,36 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const Container = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #fff;
+`;
+
+const BottomNavContainer = styled.div`
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+`;
+
 const theme = {
     colors: {
         primary: "#269386",
     },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const pathname = usePathname();
+    const showBottomNav =
+        !pathname.includes("/auth") &&
+        !pathname.includes("/admin") &&
+        !pathname.includes("/create");
+    const applyContainer = !pathname.includes("/admin");
     return (
         <html lang="en">
             <head>
@@ -92,8 +130,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <ThemeProvider theme={theme}>
                     <GlobalStyle />
-                    <AuthProvider>{children}</AuthProvider>
+                    <AuthProvider>
+                        {applyContainer ? (
+                            <Container>{children}</Container>
+                        ) : (
+                            <>{children}</>
+                        )}
+                    </AuthProvider>
                 </ThemeProvider>
+                {showBottomNav && (
+                    <footer>
+                        <BottomNavContainer>
+                            <BottomNav />
+                        </BottomNavContainer>
+                    </footer>
+                )}
             </body>
         </html>
     );
