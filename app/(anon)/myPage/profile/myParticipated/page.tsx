@@ -137,8 +137,9 @@ export default function MyParticipatedPage() {
     };
 
     return (
-        <div>
+        <>
             {isLoading && <LoadingSpinner />}
+            {partyList === null && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 참여한 내역이 없습니다.</div>
@@ -148,6 +149,7 @@ export default function MyParticipatedPage() {
                     {partyList.map((party, index) => {
                         const endDate = new Date(party.end_day);
                         const isExpired = endDate < new Date();
+
                         return (
                             <PC.Card key={party.party_id}>
                                 <PC.ProfileSection>
@@ -194,15 +196,16 @@ export default function MyParticipatedPage() {
                                                 ? "기간 마감"
                                                 : party.filter_state
                                         }
-                                        onClick={() =>
-                                            handleDeleteMember(
-                                                party.current_members,
-                                                Number(party.party_id)
-                                            )
-                                        }
+                                        onClick={() => {
+                                            if (!isExpired) {
+                                                handleDeleteMember(
+                                                    party.current_members,
+                                                    Number(party.party_id)
+                                                );
+                                            }
+                                        }}
                                     >
-                                        {party.current_members} /{" "}
-                                        {party.max_members} 취소하기
+                                        취소하기
                                     </CustomState>
                                 </PC.Footer>
                             </PC.Card>
@@ -210,6 +213,6 @@ export default function MyParticipatedPage() {
                     })}
                 </PC.Cards>
             )}
-        </div>
+        </>
     );
 }

@@ -88,7 +88,7 @@ export default function MyCreatedPage() {
     };
 
     return (
-        <div>
+        <>
             {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
@@ -153,6 +153,6 @@ export default function MyCreatedPage() {
                     ))}
                 </PC.Cards>
             )}
-        </div>
+        </>
     );
 }
