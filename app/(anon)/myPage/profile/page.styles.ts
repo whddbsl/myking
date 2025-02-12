@@ -15,13 +15,13 @@ export const ProfileContainer = styled.div`
         align-items: center;
     }
 
-    #profile-image {
+    /* img {
         width: 55px;
         height: 55px;
         padding: 8px;
         border-radius: 50%;
         object-fit: cover;
-    }
+    } */
 
     #nickname-container {
         div {
@@ -33,6 +33,14 @@ export const ProfileContainer = styled.div`
     }
 `;
 
+export const ProfileImage = styled.img`
+    width: 55px;
+    height: 55px;
+    padding: 8px;
+    border-radius: 50%;
+    object-fit: cover;
+`;
+export const ArrowImage = styled.img``;
 export const H4 = styled.h4`
     padding: 8px 16px;
     font-weight: bold;
