@@ -11,7 +11,7 @@ export const createParty = async (
         end_date: new Date(party.end_date),
         party_id: 0,
         current_members: 0,
-        filter_state: "",
+        filter_state: "모집중",
         created_at: new Date(),
     });
 };
