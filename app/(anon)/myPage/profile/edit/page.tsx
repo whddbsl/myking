@@ -11,7 +11,7 @@ import { getToken } from "@/utils/getToken";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ErrorMessage } from "../page.styles";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const CustomProfileImageUploader = styled(ProfileImageUploader)`
     margin-top: 10px;
@@ -34,7 +34,7 @@ export default function ProfileEdit() {
             if (!token) return;
 
             try {
-                const response = await fetch("/api/user", {
+                const response = await fetch("/api/myPage/profile", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ export default function ProfileEdit() {
         }
 
         try {
-            const response = await fetch("/api/user/edit", {
+            const response = await fetch("/api/myPage/profile/edit", {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -121,12 +121,9 @@ export default function ProfileEdit() {
         }
     };
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <>
+            {isLoading && <LoadingSpinner />}
             <Form onSubmit={handleEditProfile}>
                 <CustomProfileImageUploader
                     profileImage={imgSrc}

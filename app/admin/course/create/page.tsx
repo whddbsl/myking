@@ -26,7 +26,6 @@ const CreateCoursePage: React.FC = () => {
         description: "",
         difficulty: "초급",
         distance: 0,
-        popularity: 0,
         latitude: 0,
         longitude: 0,
         duration: 0,
@@ -65,7 +64,6 @@ const CreateCoursePage: React.FC = () => {
         formData.append("description", course.description);
         formData.append("difficulty", course.difficulty);
         formData.append("distance", course.distance.toString());
-        formData.append("popularity", course.popularity.toString());
         formData.append("latitude", course.latitude.toString());
         formData.append("longitude", course.longitude.toString());
         formData.append("duration", course.duration.toString());
@@ -158,17 +156,6 @@ const CreateCoursePage: React.FC = () => {
                             type="number"
                             name="distance"
                             value={course.distance}
-                            onChange={handleChange}
-                        />
-                    </S.FormGroup>
-
-                    <S.FormGroup>
-                        <S.Label htmlFor="popularity">인기</S.Label>
-                        <S.Input
-                            id="popularity"
-                            type="number"
-                            name="popularity"
-                            value={course.popularity}
                             onChange={handleChange}
                         />
                     </S.FormGroup>

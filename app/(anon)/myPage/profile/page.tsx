@@ -7,7 +7,7 @@ import PartyButton from "@/components/user/partyButton/party";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/application/states/userStore";
 import { getToken } from "@/utils/getToken";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 export default function Profile() {
     const router = useRouter();
@@ -25,7 +25,7 @@ export default function Profile() {
             }
 
             try {
-                const response = await fetch("/api/user", {
+                const response = await fetch("/api/myPage/profile", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -56,22 +56,26 @@ export default function Profile() {
         fetchUser();
     }, []);
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <>
+            {isLoading && <LoadingSpinner />}
             <PC.ProfileContainer>
                 <div>
-                    <img id="profile-image" src={imgSrc} alt="profile" />
+                    <PC.ProfileImage
+                        id="profile-image"
+                        src={imgSrc}
+                        alt="profile"
+                    />
                     <div id="nickname-container">
                         <PC.H4>{nickname}</PC.H4>
                         <div
                             onClick={() => router.push("/myPage/profile/edit")}
                         >
                             <PC.ProfileInfo>내 정보 확인</PC.ProfileInfo>
-                            <img src="/images/right_arrow.svg" alt="button" />
+                            <PC.ArrowImage
+                                src="/images/right_arrow.svg"
+                                alt="button"
+                            />
                         </div>
                     </div>
                 </div>

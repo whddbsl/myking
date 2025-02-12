@@ -9,6 +9,7 @@ export const createNewCourse = async (
     await courseRepository.createCourse({
         ...course,
         course_id: 0,
+        popularity: false,
         created_at: new Date(),
     });
 };

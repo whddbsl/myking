@@ -20,7 +20,6 @@ export class SupabaseStorageService {
             .getPublicUrl(`${directory}/${file.name}`);
 
         return publicUrl;
-        return `${supabase.storageUrl}/object/public/images/${directory}/${file.name}`;
     }
 
     async uploadProfileImage(file: File, kakaoId: string): Promise<string> {

@@ -6,15 +6,14 @@ import { useEffect, useState } from "react";
 import { Container } from "../myCreated/page.styles";
 import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
+import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
-    img {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
 `;
 
 interface StateProps {
@@ -22,15 +21,20 @@ interface StateProps {
 }
 
 const CustomState = styled(PC.State)<StateProps>`
-    background-color: ${(props) =>
+    background-color: #e55555;
+    /* background-color: ${(props) =>
         props.state === "모집중" ? "#e55555" : "#b0b0b0"};
     cursor: ${(props) => (props.state === "모집중" ? "pointer" : "default")};
-    pointer-events: ${(props) => (props.state === "모집중" ? "auto" : "none")};
+    pointer-events: ${(props) =>
+        props.state === "모집중" ? "auto" : "none"}; */
 `;
 
 export default function MyParticipatedPage() {
     const [partyList, setPartyList] = useState<PartyMyParticipatedDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
+        user_id: "",
+    });
 
     useEffect(() => {
         const fetchList = async () => {
@@ -41,13 +45,16 @@ export default function MyParticipatedPage() {
             }
 
             try {
-                const response = await fetch("/api/parties/participated", {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
+                const response = await fetch(
+                    "/api/myPage/profile/myParticipated",
+                    {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
                 if (!response.ok) {
                     throw new Error(
                         "내가 참여한 파티 목록을 가져오는 데 실패했습니다."
@@ -55,7 +62,9 @@ export default function MyParticipatedPage() {
                 }
 
                 const data = await response.json();
-                setPartyList(data);
+                setPartyList(data.myParticipatedList);
+                setCurrentId(data.currentId.user_id);
+                console.log(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
             } finally {
@@ -66,12 +75,67 @@ export default function MyParticipatedPage() {
         fetchList();
     }, []);
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
+    console.log("id", currentId);
+
+    const handleDeleteMember = async (
+        current_members: number,
+        party_id: number
+    ) => {
+        if (!confirm("참가를 취소하시겠습니까?")) return;
+
+        try {
+            const putResponse = await fetch(
+                `/api/myPage/profile/myParticipated`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        party_id: party_id,
+                        current_members: current_members,
+                    }),
+                }
+            );
+
+            if (!putResponse.ok) {
+                throw new Error("참가 인원 업데이트 중 오류가 발생했습니다.");
+            }
+
+            const DeleteResponse = await fetch(
+                `/api/myPage/profile/myParticipated`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        party_id: party_id,
+                        user_id: currentId,
+                    }),
+                }
+            );
+
+            if (!DeleteResponse.ok) {
+                throw new Error("참가 정보 삭제 중 오류가 발생했습니다.");
+            }
+
+            setPartyList((prevList) =>
+                prevList.filter(
+                    (party) => party.party_id !== party_id.toString()
+                )
+            );
+
+            alert("참가 취소가 완료되었습니다.");
+        } catch (error) {
+            console.error("Error:", error);
+            alert("참가 정보 삭제 중 오류가 발생했습니다.");
+        }
+    };
 
     return (
         <div>
+            {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 참여한 내역이 없습니다.</div>
@@ -81,12 +145,12 @@ export default function MyParticipatedPage() {
                     {partyList.map((party) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
-                                <CustomProfileImage>
-                                    <img
+                                <PC.ProfileImageWrap>
+                                    <CustomProfileImage
                                         src={party.user.profile_image}
                                         alt="profile_image"
                                     />
-                                </CustomProfileImage>
+                                </PC.ProfileImageWrap>
                                 <PC.ProfileInfo>
                                     <h1>{party.user.nickname}</h1>
                                     <h2>{party.timeLabel}</h2>
@@ -116,7 +180,10 @@ export default function MyParticipatedPage() {
                                 <CustomState
                                     state={party.filter_state}
                                     onClick={() =>
-                                        console.log(party.filter_state)
+                                        handleDeleteMember(
+                                            party.current_members,
+                                            Number(party.party_id)
+                                        )
                                     }
                                 >
                                     {party.current_members} /{" "}

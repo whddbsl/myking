@@ -48,6 +48,7 @@ export class SbUserRepository implements UserRepository {
 
         return data;
     }
+
     async getUsers(): Promise<User[]> {
         const supabase = await createClient();
         const { data: users, error } = await supabase.from("user").select();

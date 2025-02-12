@@ -17,7 +17,6 @@ const EditCoursePage = () => {
         description: "",
         difficulty: "초급",
         distance: 0,
-        popularity: 0,
         latitude: 0,
         longitude: 0,
         duration: 0,
@@ -39,7 +38,6 @@ const EditCoursePage = () => {
                     description: data.description || "",
                     difficulty: data.difficulty || "초급",
                     distance: data.distance || 0,
-                    popularity: data.popularity || 0,
                     latitude: data.latitude || 0,
                     longitude: data.longitude || 0,
                     duration: data.duration || 0,
@@ -135,10 +133,8 @@ const EditCoursePage = () => {
         <S.AdminContainer>
             <S.ContentWrapper>
                 <S.Header>
-                    
-                        <S.Title>코스 수정하기</S.Title>
-                        <p>코스의 정보를 수정합니다.</p>
-                    
+                    <S.Title>코스 수정하기</S.Title>
+                    <p>코스의 정보를 수정합니다.</p>
                 </S.Header>
 
                 <S.FormWrapper onSubmit={handleSubmit}>
@@ -193,18 +189,6 @@ const EditCoursePage = () => {
                             name="distance"
                             placeholder="코스 거리를 입력하세요"
                             value={course.distance}
-                            onChange={handleChange}
-                            required
-                        />
-                    </S.FormGroup>
-                    <S.FormGroup>
-                        <S.Label htmlFor="popularity">인기도</S.Label>
-                        <S.Input
-                            id="popularity"
-                            type="number"
-                            name="popularity"
-                            placeholder="코스 인기도를 입력하세요"
-                            value={course.popularity}
                             onChange={handleChange}
                             required
                         />

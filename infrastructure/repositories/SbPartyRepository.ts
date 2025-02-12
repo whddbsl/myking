@@ -1,13 +1,19 @@
 import { PartyRepository } from "@/domain/repositories/PartyRepository";
 import { Party } from "../../domain/entities/Party";
 import { createClient } from "@/utils/supabase/server";
-import { PartyMyParticipatedDto, UserDto } from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
+import {
+    PartyMyParticipatedDto,
+    UserDto,
+} from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
 
 //implements -> SbPartyRepository는 PartyRepository를 따른다
 export class SbPartyRepository implements PartyRepository {
     async getParty(): Promise<Party[]> {
         const supabase = await createClient();
-        const { data: party, error } = await supabase.from("party").select(/* `*, mountain: mountains(name)` */); // party 테이블을 party라는 이름으로 불러올 data
+        const { data: party, error } = await supabase
+            .from("party")
+            .select()
+            .order("created_at", { ascending: false });
         if (error) {
             throw new Error(error.message);
         }
@@ -17,10 +23,6 @@ export class SbPartyRepository implements PartyRepository {
             created_at: new Date(party.created_at),
             meeting_date: new Date(party.meeting_date),
             end_date: new Date(party.end_date),
-            // mountain: {
-            //     ...party.mountain,
-            //     name: party.mountain.name,
-            // },
         }));
     } // 엔티티 형태로 반환
 
@@ -46,7 +48,7 @@ export class SbPartyRepository implements PartyRepository {
 
     async createParty(party: Party): Promise<void> {
         const supabase = await createClient();
-        const { error } = await supabase
+        const { data: partyData, error: partyError } = await supabase
             .from("party")
             .insert([
                 {
@@ -57,12 +59,44 @@ export class SbPartyRepository implements PartyRepository {
                     //current_members: party.current_members,
                     meeting_date: party.meeting_date.toISOString(),
                     end_date: party.end_date.toISOString(),
-                    //filter_state: party.filter_state,
+                    filter_state: "모집중",
                     filter_gender: party.filter_gender,
-                    filter_age: JSON.stringify(party.filter_age), // JSON 문자열로 저장
+                    filter_age: party.filter_age,
                 },
             ])
+            .select("party_id")
+            .single();
+        if (partyError) {
+            throw new Error(partyError.message);
+        }
+
+        const partyId = partyData.party_id;
+
+        //partyMember에도 들어가야 하는 정보 party_id는 만들어준 파티의 id, user_id는 그 파티에 들어가는 팀장
+        const partyMembers = {
+            party_id: partyId,
+            user_id: party.creator_id,
+        };
+
+        const { error: memberError } = await supabase
+            .from("party_member")
+            .insert(partyMembers);
+
+        if (memberError) throw memberError;
+    }
+
+    async updateParty(party: Party): Promise<void> {
+        const supabase = await createClient();
+        const { error } = await supabase
+            .from("party")
+            .update([
+                {
+                    current_members: party.current_members,
+                },
+            ])
+            .eq("party_id", party.party_id) // 앞: db 컬럼명, 뒤: 참가하는 party의 id
             .select();
+
         if (error) {
             throw new Error(error.message);
         }
@@ -80,7 +114,10 @@ export class SbPartyRepository implements PartyRepository {
             throw new Error(userError.message);
         }
 
-        const { data, error } = await supabase.from("party").select("*").eq("creator_id", user?.user_id);
+        const { data, error } = await supabase
+            .from("party")
+            .select("*")
+            .eq("creator_id", user?.user_id);
 
         if (error) {
             throw new Error(error.message);
@@ -94,7 +131,9 @@ export class SbPartyRepository implements PartyRepository {
         }));
     }
 
-    async getMyParticipatedParty(kakaoId: string): Promise<PartyMyParticipatedDto[]> {
+    async getMyParticipatedParty(
+        kakaoId: string
+    ): Promise<PartyMyParticipatedDto[]> {
         const supabase = await createClient();
         const { data: userData, error: userError } = await supabase
             .from("user")
@@ -119,11 +158,12 @@ export class SbPartyRepository implements PartyRepository {
 
         const partyIds = partyList.map((member) => member.party_id);
 
-        const { data: participatedData, error: participatedError } = await supabase
-            .from("party")
-            .select("*")
-            .in("party_id", partyIds)
-            .neq("creator_id", userId);
+        const { data: participatedData, error: participatedError } =
+            await supabase
+                .from("party")
+                .select("*")
+                .in("party_id", partyIds)
+                .neq("creator_id", userId);
 
         if (!participatedData || participatedError) {
             throw new Error(participatedError.message);
