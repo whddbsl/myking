@@ -16,8 +16,9 @@ export interface PartyMyParticipatedDto {
     max_members: number;
     meeting_date: string;
     end_date: string;
+    end_day: string;
     filter_state: "모집중" | "마감";
-    filter_gender: "여성" | "남성" | "성별무관";
+    filter_gender: string[];
     filter_age: string[];
     timeLabel: string;
     user: UserDto;

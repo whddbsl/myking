@@ -14,7 +14,7 @@ export default function SignUp() {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: "kakao",
                 options: {
-                    redirectTo: "http://localhost:3000/auth/callback",
+                    redirectTo: "http://172.31.98.20:3000/auth/callback",
                 },
             });
 

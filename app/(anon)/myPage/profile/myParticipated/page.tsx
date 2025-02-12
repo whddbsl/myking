@@ -8,6 +8,7 @@ import * as PC from "@/app/(anon)/parties/page.styles";
 import styled from "styled-components";
 import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -21,12 +22,12 @@ interface StateProps {
 }
 
 const CustomState = styled(PC.State)<StateProps>`
-    background-color: #e55555;
-    /* background-color: ${(props) =>
-        props.state === "모집중" ? "#e55555" : "#b0b0b0"};
-    cursor: ${(props) => (props.state === "모집중" ? "pointer" : "default")};
+    /* background-color: #e55555; */
+    background-color: ${(props) =>
+        props.state !== "기간 마감" ? "#e55555" : "#b0b0b0"};
+    cursor: ${(props) => (props.state !== "기간 마감" ? "pointer" : "default")};
     pointer-events: ${(props) =>
-        props.state === "모집중" ? "auto" : "none"}; */
+        props.state !== "기간 마감" ? "auto" : "none"};
 `;
 
 export default function MyParticipatedPage() {
@@ -35,6 +36,7 @@ export default function MyParticipatedPage() {
     const [currentId, setCurrentId] = useState<PartyCreatorIdDto>({
         user_id: "",
     });
+    const [mountainList, setMountainList] = useState<MountainListDto[]>([]);
 
     useEffect(() => {
         const fetchList = async () => {
@@ -64,6 +66,7 @@ export default function MyParticipatedPage() {
                 const data = await response.json();
                 setPartyList(data.myParticipatedList);
                 setCurrentId(data.currentId.user_id);
+                setMountainList(data.mountainDetails);
                 console.log(data);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
@@ -134,66 +137,82 @@ export default function MyParticipatedPage() {
     };
 
     return (
-        <div>
+        <>
             {isLoading && <LoadingSpinner />}
+            {partyList === null && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 참여한 내역이 없습니다.</div>
                 </Container>
             ) : (
-                <PC.Cards>
-                    {partyList.map((party) => (
-                        <PC.Card key={party.party_id}>
-                            <PC.ProfileSection>
-                                <PC.ProfileImageWrap>
-                                    <CustomProfileImage
-                                        src={party.user.profile_image}
-                                        alt="profile_image"
-                                    />
-                                </PC.ProfileImageWrap>
-                                <PC.ProfileInfo>
-                                    <h1>{party.user.nickname}</h1>
-                                    <h2>{party.timeLabel}</h2>
-                                </PC.ProfileInfo>
-                            </PC.ProfileSection>
-                            <PC.LinkWrapper href={`/parties/${party.party_id}`}>
-                                <PC.InfoSection>
-                                    <PC.Meeting>
-                                        <span>산이름</span>
-                                        <span>{party.meeting_date}</span>
-                                    </PC.Meeting>
-                                    <PC.Tag>
-                                        <span>#{party.max_members}명</span>
-                                        <span>#{party.filter_gender}</span>
-                                        {party.filter_age.map((age) => (
-                                            <span key={age}>#{age}</span>
-                                        ))}
-                                    </PC.Tag>
-                                </PC.InfoSection>
-                            </PC.LinkWrapper>
+                <PC.Cards style={{ padding: "16px" }}>
+                    {partyList.map((party, index) => {
+                        const endDate = new Date(party.end_day);
+                        const isExpired = endDate < new Date();
 
-                            <PC.Footer>
-                                <PC.EndDate>
-                                    <h1>모집마감일</h1>
-                                    <h2>D-{party.end_date}</h2>
-                                </PC.EndDate>
-                                <CustomState
-                                    state={party.filter_state}
-                                    onClick={() =>
-                                        handleDeleteMember(
-                                            party.current_members,
-                                            Number(party.party_id)
-                                        )
-                                    }
+                        return (
+                            <PC.Card key={party.party_id}>
+                                <PC.ProfileSection>
+                                    <PC.ProfileImageWrap>
+                                        <CustomProfileImage
+                                            src={party.user.profile_image}
+                                            alt="profile_image"
+                                        />
+                                    </PC.ProfileImageWrap>
+                                    <PC.ProfileInfo>
+                                        <h1>{party.user.nickname}</h1>
+                                        <h2>{party.timeLabel}</h2>
+                                    </PC.ProfileInfo>
+                                </PC.ProfileSection>
+                                <PC.LinkWrapper
+                                    href={`/parties/${party.party_id}`}
                                 >
-                                    {party.current_members} /{" "}
-                                    {party.max_members} 취소하기
-                                </CustomState>
-                            </PC.Footer>
-                        </PC.Card>
-                    ))}
+                                    <PC.InfoSection>
+                                        <PC.Meeting>
+                                            <span>
+                                                {mountainList[index]?.name ||
+                                                    "알 수 없음"}
+                                            </span>
+                                            <span>{party.meeting_date}</span>
+                                        </PC.Meeting>
+                                        <PC.Tag>
+                                            <span>#{party.max_members}명</span>
+                                            <span>#{party.filter_gender}</span>
+                                            {party.filter_age.map((age) => (
+                                                <span key={age}>#{age}</span>
+                                            ))}
+                                        </PC.Tag>
+                                    </PC.InfoSection>
+                                </PC.LinkWrapper>
+
+                                <PC.Footer>
+                                    <PC.EndDate>
+                                        <h1>모집마감일</h1>
+                                        <h2>D-{party.end_date}</h2>
+                                    </PC.EndDate>
+                                    <CustomState
+                                        state={
+                                            isExpired
+                                                ? "기간 마감"
+                                                : party.filter_state
+                                        }
+                                        onClick={() => {
+                                            if (!isExpired) {
+                                                handleDeleteMember(
+                                                    party.current_members,
+                                                    Number(party.party_id)
+                                                );
+                                            }
+                                        }}
+                                    >
+                                        취소하기
+                                    </CustomState>
+                                </PC.Footer>
+                            </PC.Card>
+                        );
+                    })}
                 </PC.Cards>
             )}
-        </div>
+        </>
     );
 }

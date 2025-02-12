@@ -52,6 +52,12 @@ export default function AuthCallback() {
 
                 if (result.exists) {
                     router.push("/");
+                    setUser(
+                        data.session?.user.user_metadata.provider_id,
+                        data.session?.user.user_metadata.name,
+                        result.nickname,
+                        result.profileImage
+                    );
                 } else {
                     router.push("/auth/setNickname");
                 }
@@ -67,9 +73,5 @@ export default function AuthCallback() {
         handleAuthCallback();
     }, [router, setUser, resetUser]);
 
-    return (
-        <ProtectedRoute>
-            {isLoading ? <LoadingSpinner /> : <div>로그인 처리중...</div>}
-        </ProtectedRoute>
-    );
+    return <ProtectedRoute>{isLoading && <LoadingSpinner />}</ProtectedRoute>;
 }

@@ -59,39 +59,43 @@ export default function Profile() {
     return (
         <>
             {isLoading && <LoadingSpinner />}
-            <PC.ProfileContainer>
-                <div>
-                    <PC.ProfileImage
-                        id="profile-image"
-                        src={imgSrc}
-                        alt="profile"
-                    />
-                    <div id="nickname-container">
-                        <PC.H4>{nickname}</PC.H4>
-                        <div
-                            onClick={() => router.push("/myPage/profile/edit")}
-                        >
-                            <PC.ProfileInfo>내 정보 확인</PC.ProfileInfo>
-                            <PC.ArrowImage
-                                src="/images/right_arrow.svg"
-                                alt="button"
-                            />
+            <div style={{ padding: "16px" }}>
+                <PC.ProfileContainer>
+                    <div>
+                        <PC.ProfileImage
+                            id="profile-image"
+                            src={imgSrc}
+                            alt="profile"
+                        />
+                        <div id="nickname-container">
+                            <PC.H4>{nickname}</PC.H4>
+                            <div
+                                onClick={() =>
+                                    router.push("/myPage/profile/edit")
+                                }
+                            >
+                                <PC.ProfileInfo>내 정보 확인</PC.ProfileInfo>
+                                <PC.ArrowImage
+                                    src="/images/right_arrow.svg"
+                                    alt="button"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <LevelInfo />
-            </PC.ProfileContainer>
-            <PC.H4 style={{ padding: "8px 0", marginTop: "24px" }}>
-                등산 메이트 모집 현황
-            </PC.H4>
-            <PartyButton
-                text="내가 올린 파티"
-                route="/myPage/profile/myCreated"
-            />
-            <PartyButton
-                text="내가 참여한 파티"
-                route="/myPage/profile/myParticipated"
-            />
+                    <LevelInfo />
+                </PC.ProfileContainer>
+                <PC.H4 style={{ padding: "8px 0", marginTop: "24px" }}>
+                    등산 메이트 모집 현황
+                </PC.H4>
+                <PartyButton
+                    text="내가 올린 파티"
+                    route="/myPage/profile/myCreated"
+                />
+                <PartyButton
+                    text="내가 참여한 파티"
+                    route="/myPage/profile/myParticipated"
+                />
+            </div>
         </>
     );
 }

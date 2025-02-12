@@ -8,6 +8,7 @@ import { useUserStore } from "@/application/states/userStore";
 import styled from "styled-components";
 import { Container } from "./page.styles";
 import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
 
 const CustomProfileImage = styled(PC.ProfileImage)`
     width: 36px;
@@ -18,6 +19,7 @@ const CustomProfileImage = styled(PC.ProfileImage)`
 
 export default function MyCreatedPage() {
     const [partyList, setPartyList] = useState<PartyMyCreatedDto[]>([]);
+    const [mountainList, setMountainList] = useState<MountainListDto[]>([]);
     const { nickname, profileImage } = useUserStore();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -44,7 +46,8 @@ export default function MyCreatedPage() {
                 }
 
                 const data = await response.json();
-                setPartyList(data);
+                setPartyList(data.myCreatedList);
+                setMountainList(data.mountainDetails);
             } catch (error: any) {
                 console.error("내가 생성한 파티 목록 가져오기 실패: ", error);
             } finally {
@@ -85,15 +88,15 @@ export default function MyCreatedPage() {
     };
 
     return (
-        <div>
+        <>
             {isLoading && <LoadingSpinner />}
             {partyList.length === 0 ? (
                 <Container>
                     <div>아직 작성한 글이 없습니다.</div>
                 </Container>
             ) : (
-                <PC.Cards>
-                    {partyList.map((party) => (
+                <PC.Cards style={{ padding: "16px" }}>
+                    {partyList.map((party, index) => (
                         <PC.Card key={party.party_id}>
                             <PC.ProfileSection>
                                 <PC.ProfileImageWrap>
@@ -117,19 +120,24 @@ export default function MyCreatedPage() {
                                     </button>
                                 </PC.ActionButtons>
                             </PC.ProfileSection>
-                            <PC.InfoSection>
-                                <PC.Meeting>
-                                    <span>산이름</span>
-                                    <span>{party.meeting_date}</span>
-                                </PC.Meeting>
-                                <PC.Tag>
-                                    <span>#{party.max_members}명</span>
-                                    <span>#{party.filter_gender}</span>
-                                    {party.filter_age.map((age) => (
-                                        <span key={age}>#{age}</span>
-                                    ))}
-                                </PC.Tag>
-                            </PC.InfoSection>
+                            <PC.LinkWrapper href={`/parties/${party.party_id}`}>
+                                <PC.InfoSection>
+                                    <PC.Meeting>
+                                        <span>
+                                            {mountainList[index]?.name ||
+                                                "알 수 없음"}
+                                        </span>
+                                        <span>{party.meeting_date}</span>
+                                    </PC.Meeting>
+                                    <PC.Tag>
+                                        <span>#{party.max_members}명</span>
+                                        <span>#{party.filter_gender}</span>
+                                        {party.filter_age.map((age) => (
+                                            <span key={age}>#{age}</span>
+                                        ))}
+                                    </PC.Tag>
+                                </PC.InfoSection>
+                            </PC.LinkWrapper>
 
                             <PC.Footer>
                                 <PC.EndDate>
@@ -145,6 +153,6 @@ export default function MyCreatedPage() {
                     ))}
                 </PC.Cards>
             )}
-        </div>
+        </>
     );
 }
