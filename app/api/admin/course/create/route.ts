@@ -32,7 +32,6 @@ export async function POST(request: Request) {
                 | "중급"
                 | "상급") || "초급",
         distance: Number(formData.get("distance")?.toString() || 0),
-        popularity: Number(formData.get("popularity")?.toString() || 0),
         latitude: Number(formData.get("latitude")?.toString() || 0),
         longitude: Number(formData.get("longitude")?.toString() || 0),
         duration: Number(formData.get("duration")?.toString() || 0),

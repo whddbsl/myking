@@ -155,10 +155,6 @@ const CoursePage = () => {
                                                             난이도:{" "}
                                                             {course.difficulty}
                                                         </li>
-                                                        <li>
-                                                            인기:{" "}
-                                                            {course.popularity}
-                                                        </li>
                                                     </ul>
                                                 </S.DetailText>
                                             </S.DetailContainer>
