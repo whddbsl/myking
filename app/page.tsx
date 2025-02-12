@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, MouseEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 import {
     PageContainer,
     Header,
@@ -44,17 +45,13 @@ export default function Home() {
     const [mountains, setMountains] = useState<MountainWithCoursesDto[]>([]);
     const [error, setError] = useState("");
     const [parties, setParties] = useState<PartyListDto[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
 
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
 
     const carouselRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        fetchMountains();
-        fetchParties();
-    }, []);
 
     const fetchMountains = async () => {
         try {
@@ -75,13 +72,20 @@ export default function Home() {
             if (!res.ok) {
                 throw new Error("파티 정보를 가져오지 못했습니다.");
             }
-            const data: PartyListDto[] = await res.json();
+            const data = await res.json();
             console.log("Fetched parties:", data);
-            setParties(data);
+            // API 응답 객체에서 partyList 프로퍼티만 추출하여 사용
+            setParties(data.partyList);
         } catch (err) {
             console.error(err);
         }
     };
+
+    useEffect(() => {
+        Promise.all([fetchMountains(), fetchParties()]).then(() => {
+            setLoading(false);
+        });
+    }, []);
 
     const handleSearchClick = () => {
         router.push("/search");
@@ -94,6 +98,7 @@ export default function Home() {
     const handlePartyClick = (partyId: number) => {
         router.push(`/parties/${partyId}`);
     };
+
     const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
         if (carouselRef.current) {
             setIsDragging(true);
@@ -112,7 +117,18 @@ export default function Home() {
     const handleMouseUp = () => {
         setIsDragging(false);
     };
+
     const handleMouseLeave = () => setIsDragging(false);
+
+    if (loading) {
+        // 로딩 상태일 때 LoadingSpinner 컴포넌트를 반환합니다.
+        return <LoadingSpinner />;
+    }
+
+    if (error) {
+        return <PageContainer>오류 발생: {error}</PageContainer>;
+    }
+
     return (
         <PageContainer>
             <Header>
@@ -205,7 +221,7 @@ export default function Home() {
                                 </span>
                                 <p className="description">{party.description}</p>
                                 <div className="club-info">
-                                    상태: {party.filter_state} / 모집 인원: {party.max_members}yyy
+                                    상태: {party.filter_state} / 모집 인원: {party.max_members}
                                 </div>
                             </MateCard>
                         );

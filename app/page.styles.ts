@@ -135,12 +135,11 @@ export const MountainCard = styled.div`
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    min-width: 420px;
-
+    min-width: 360px; /* 420px에서 360px로 줄임 */
     @media (max-width: 768px) {
         flex-direction: column;
-        min-width: 420px;
-        max-width: 500px;
+        min-width: 360px;
+        max-width: 480px; /* 필요에 따라 조정 */
     }
 `;
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Script from "next/script";
 import { useParams } from "next/navigation";
 import { MountainWithCoursesDto } from "@/application/usecases/mountainDetails/dto/MountainWithCoursesDto";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 import {
     PageContainer,
     MountainHeader,
@@ -138,7 +139,7 @@ export default function MountainDetailPage() {
     }, [mapLoaded]);
 
     if (loading) {
-        return <PageContainer>로딩 중...</PageContainer>;
+        return <LoadingSpinner />;
     }
 
     if (error) {
