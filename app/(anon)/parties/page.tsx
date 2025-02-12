@@ -6,7 +6,7 @@ import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDt
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
 import { LiaSlidersHSolid } from "react-icons/lia";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const PartyPage: React.FC = () => {
     const { filters, resetFilters } = useFilterStore();

@@ -6,7 +6,7 @@ import { PartyDetailDto } from "@/application/usecases/partyLookup/dto/PartyDeta
 import { getToken } from "@/utils/getToken";
 import { PartyCreatorIdDto } from "@/application/usecases/partyLookup/dto/PartyCreatorIdDto";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/loadingSpinner/loadingSpineer";
+import LoadingSpinner from "@/components/loadingSpinner/loadingSpinner";
 
 const PartyDetailPage: React.FC = () => {
     const router = useRouter();
