@@ -37,7 +37,6 @@ export async function PUT(
         description: course.description,
         difficulty: course.difficulty,
         distance: course.distance,
-        popularity: course.popularity,
         latitude: course.latitude,
         longitude: course.longitude,
         duration: course.duration,

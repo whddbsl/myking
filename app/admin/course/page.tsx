@@ -77,7 +77,7 @@ const CoursePage = () => {
                             <S.Th>산 이름</S.Th>
                             <S.Th>코스 이름</S.Th>
                             <S.Th>높이 (km)</S.Th>
-                            <S.Th>소요 시간 (분)</S.Th>
+                            <S.Th>소요 시간</S.Th>
                             <S.Th>생성일</S.Th>
                             <S.Th>관리</S.Th>
                         </S.Tr>

@@ -42,12 +42,10 @@ const UserPage = () => {
                 <S.Header>
                     <div>
                         <S.Title>유저 관리</S.Title>
-                        <p>총 {userList.length}명의 사용자가 등록되어 있습니다.</p>
+                        <p>
+                            총 {userList.length}명의 사용자가 등록되어 있습니다.
+                        </p>
                     </div>
-                    <S.AddButton href="/admin/user/create">
-                        <FiPlus size={20} />
-                        새로운 유저 등록
-                    </S.AddButton>
                 </S.Header>
 
                 <S.Table>
