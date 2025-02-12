@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { PartyListDto } from "@/application/usecases/partyLookup/dto/PartyListDto";
 import { MountainListDto } from "@/application/usecases/partyLookup/dto/MountainListDto";
 import { useFilterStore } from "@/application/states/useFilterStore";
+import { LiaSlidersHSolid } from "react-icons/lia";
 
 const PartyPage: React.FC = () => {
     const { filters, resetFilters } = useFilterStore();
@@ -60,26 +61,45 @@ const PartyPage: React.FC = () => {
         (mountain) => mountain.mountain_id === filters.mountain_id
     )?.mountain_name;
 
-    const handleFilterOpen = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const closeModal = () => {
-        setIsOpen(false);
-    };
-
     return (
         <div>
-            <div>
-                <button onClick={handleFilterOpen}>필터</button>
-                {filters.mountain_id !== 0 && <div>{selectedMountain}</div>}
-                <div>{filters.filter_state}</div>
-                <div>{filters.filter_gender}</div>
-                <div>{filters.filter_age.join(", ")}</div>
-            </div>
-
+            <PC.FilterContainer>
+                <PC.FilterButton onClick={() => setIsOpen(true)}>
+                    <LiaSlidersHSolid /> <span>필터</span>
+                </PC.FilterButton>
+                {(filters.mountain_id !== 0 ||
+                    filters.filter_state ||
+                    (filters.filter_gender &&
+                        filters.filter_gender.length > 0) ||
+                    (filters.filter_age && filters.filter_age.length > 0)) && (
+                    <PC.FilterTagContainer>
+                        {filters.mountain_id !== 0 && (
+                            <PC.FilterTag>{selectedMountain}</PC.FilterTag>
+                        )}
+                        {filters.filter_state && (
+                            <PC.FilterTag>{filters.filter_state}</PC.FilterTag>
+                        )}
+                        {filters.filter_gender &&
+                            filters.filter_gender.length > 0 && (
+                                <PC.FilterTag>
+                                    {filters.filter_gender.join(", ")}
+                                </PC.FilterTag>
+                            )}
+                        {filters.filter_age &&
+                            filters.filter_age.length > 0 && (
+                                <PC.FilterTag>
+                                    {filters.filter_age.join(", ")}
+                                </PC.FilterTag>
+                            )}
+                    </PC.FilterTagContainer>
+                )}
+            </PC.FilterContainer>
             {isOpen && (
-                <Filter mountainList={mountainList} onClose={closeModal} />
+                <Filter
+                    mountainList={mountainList}
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                />
             )}
 
             {partyList.length === 0 ? (
@@ -110,7 +130,15 @@ const PartyPage: React.FC = () => {
                                     </PC.Meeting>
                                     <PC.Tag>
                                         <span>#{party.max_members}명</span>
-                                        <span>#{party.filter_gender}</span>
+                                        <span>
+                                            {party.filter_gender.map(
+                                                (gender) => (
+                                                    <span key={gender}>
+                                                        #{gender}
+                                                    </span>
+                                                )
+                                            )}
+                                        </span>
                                         {party.filter_age.map((age) => (
                                             <span key={age}>#{age}</span>
                                         ))}
