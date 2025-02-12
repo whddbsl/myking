@@ -15,14 +15,6 @@ export const ProfileContainer = styled.div`
         align-items: center;
     }
 
-    /* img {
-        width: 55px;
-        height: 55px;
-        padding: 8px;
-        border-radius: 50%;
-        object-fit: cover;
-    } */
-
     #nickname-container {
         div {
             display: flex;
@@ -57,7 +49,7 @@ export const ProfileInfo = styled.p`
 export const ProfileMain = styled(Main)`
     justify-content: unset;
     align-items: unset;
-    height: calc(95vh - 50px);
+    height: calc(95vh - 63px);
 `;
 
 export const ErrorMessage = styled.p`

@@ -99,21 +99,23 @@ export default function MapPage() {
     };
 
     return (
-        <MC.MapContainer
-            ref={containerRef}
-            dragging={dragging}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-        >
-            <MC.MapImg
-                ref={mapRef}
-                src="/images/map.png"
-                alt="map"
-                position={position}
-                scale={scale}
-            />
-        </MC.MapContainer>
+        <div style={{ padding: "16px" }}>
+            <MC.MapContainer
+                ref={containerRef}
+                dragging={dragging}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+            >
+                <MC.MapImg
+                    ref={mapRef}
+                    src="/images/map.png"
+                    alt="map"
+                    position={position}
+                    scale={scale}
+                />
+            </MC.MapContainer>
+        </div>
     );
 }

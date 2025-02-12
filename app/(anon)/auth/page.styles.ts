@@ -36,5 +36,5 @@ export const KakaoButton = styled.button`
     border-radius: 12px;
     padding: 16px 120px;
     cursor: pointer;
-    margin-bottom: 24px;
+    margin-bottom: 96px;
 `;

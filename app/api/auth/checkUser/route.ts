@@ -1,7 +1,8 @@
 import { UserRepository } from "@/domain/repositories/UserRepository";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
         const { kakaoId } = await request.json();
         console.log("kakao id: ", kakaoId);
@@ -16,16 +17,17 @@ export async function POST(request: Request) {
         console.log("Existing User: ", existingUser);
 
         if (existingUser) {
-            return new Response(JSON.stringify({ exists: true }), {
-                status: 200,
-                headers: { "Content-Type": "application/json" },
-            });
+            return NextResponse.json(
+                {
+                    exists: true,
+                    nickname: existingUser.nickname,
+                    profileImage: existingUser.profile_image,
+                },
+                { status: 200 }
+            );
         }
 
-        return new Response(JSON.stringify({ exists: false }), {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-        });
+        return NextResponse.json({ exists: false }, { status: 200 });
     } catch (error: any) {
         console.error("Error in POST /api/auth/checkUser: ", error);
         return new Response(`오류 발생: ${error.message}`, { status: 500 });

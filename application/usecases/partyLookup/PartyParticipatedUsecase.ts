@@ -78,6 +78,7 @@ export const findMyParticipatedList = async (
             end_date: calcDday(new Date(party.end_date)),
             timeLabel: calcTimeLabel(new Date(party.created_at)),
             user: party.user,
+            end_day: party.end_date,
         }))
     );
 

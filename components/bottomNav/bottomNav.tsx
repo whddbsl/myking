@@ -26,7 +26,7 @@ const BottomNav = () => {
         {
             name: "마이",
             href: "/myPage/profile",
-            additionalPaths: ["/myPage/map", "/edit", "/profile"],
+            additionalPaths: ["/myPage/map", "/profile"],
             icon: "/images/myPage.svg",
         },
     ];

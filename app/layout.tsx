@@ -118,6 +118,7 @@ export default function RootLayout({
         !pathname.includes("/auth") &&
         !pathname.includes("/admin") &&
         !pathname.includes("/create");
+    const applyContainer = !pathname.includes("/admin");
     return (
         <html lang="en">
             <head>
@@ -130,7 +131,11 @@ export default function RootLayout({
                 <ThemeProvider theme={theme}>
                     <GlobalStyle />
                     <AuthProvider>
-                        <Container>{children}</Container>
+                        {applyContainer ? (
+                            <Container>{children}</Container>
+                        ) : (
+                            <>{children}</>
+                        )}
                     </AuthProvider>
                 </ThemeProvider>
                 {showBottomNav && (

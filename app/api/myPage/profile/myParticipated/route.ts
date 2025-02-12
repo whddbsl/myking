@@ -1,4 +1,4 @@
-import { deletePartyMember } from "@/application/usecases/partyMember/DeletePartyMemberUsecase";
+import { deletePartyMember } from "@/application/usecases/PartyMember/DeletePartyMemberUsecase";
 import { updateParty } from "@/application/usecases/party/UpdatePartyUsecase";
 import { PartyMyParticipatedDto } from "@/application/usecases/partyLookup/dto/PartyParticipatedDto";
 import { findMyParticipatedList } from "@/application/usecases/partyLookup/PartyParticipatedUsecase";
@@ -11,6 +11,10 @@ import { PartyMemberRepository } from "@/domain/repositories/PartyMemberReposito
 import { FindUUidByKakaoUsecase } from "@/application/usecases/partyLookup/FindUuidByKakaoUsecase";
 import { SbUserRepository } from "@/infrastructure/repositories/SbUserRepository";
 import { UserRepository } from "@/domain/repositories/UserRepository";
+import { MountainRepository } from "@/domain/repositories/MountainRepository";
+import { SbMountainRepository } from "@/infrastructure/repositories/SbMountainRepository";
+import { MountainListDto } from "@/application/usecases/admin/course/dto/MountainListDto";
+import { findMountainById } from "@/application/usecases/admin/course/FindMountainaByIdUsecase";
 
 export async function GET(req: NextRequest) {
     const authHeader = req.headers.get("Authorization");
@@ -39,13 +43,27 @@ export async function GET(req: NextRequest) {
     const kakaoId = userData.user.user_metadata.provider_id;
     const partyRepository: PartyRepository = new SbPartyRepository();
     const userRepository: UserRepository = new SbUserRepository();
+    const mountainRepository: MountainRepository = new SbMountainRepository();
 
     const currentId = await FindUUidByKakaoUsecase(userRepository, kakaoId);
 
     try {
         const myParticipatedList: PartyMyParticipatedDto[] =
             await findMyParticipatedList(partyRepository, kakaoId);
-        return NextResponse.json({ myParticipatedList, currentId });
+
+        const mountainDetails: MountainListDto[] = await Promise.all(
+            myParticipatedList.map(async (party) => {
+                return findMountainById(
+                    mountainRepository,
+                    party.mountain_id.toString()
+                );
+            })
+        );
+        return NextResponse.json({
+            myParticipatedList,
+            currentId,
+            mountainDetails,
+        });
     } catch (error: any) {
         return NextResponse.json(
             { message: "내가 참여한 파티 목록 조회 중 오류가 발생했습니다." },
