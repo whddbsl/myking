@@ -17,13 +17,22 @@ export class SbPartyRepository implements PartyRepository {
         if (error) {
             throw new Error(error.message);
         }
-        return party.map((party) => ({
-            // party의 created_at이 string으로 받아지기 떄문에 Date로 바꿔줌
-            ...party,
-            created_at: new Date(party.created_at),
-            meeting_date: new Date(party.meeting_date),
-            end_date: new Date(party.end_date),
-        }));
+        return party
+            .map((party) => ({
+                // party의 created_at이 string으로 받아지기 떄문에 Date로 바꿔줌
+                ...party,
+                created_at: new Date(party.created_at),
+                meeting_date: new Date(party.meeting_date),
+                end_date: new Date(party.end_date),
+            }))
+            .sort((a, b) => {
+                // 모집중이면 우선순위 높게
+                if (a.filter_state === "모집중" && b.filter_state === "마감")
+                    return -1;
+                if (a.filter_state === "마감" && b.filter_state === "모집중")
+                    return 1;
+                return 0; // 같다면 변경 없음
+            });
     } // 엔티티 형태로 반환
 
     async getPartyById(partyId: string): Promise<Party> {
