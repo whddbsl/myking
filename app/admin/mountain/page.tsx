@@ -5,11 +5,9 @@ import { Mountain } from "@/domain/entities/Mountain";
 import { useEffect, useState } from "react";
 import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
 import * as S from "./page.styles";
-import Loading from "@/app/loading";
 
 const AdminMountainPage = () => {
     const [mountains, setMountains] = useState<Mountain[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchMountains = async () => {
@@ -19,17 +17,11 @@ const AdminMountainPage = () => {
                 setMountains(data);
             } catch (error) {
                 console.error("Error fetching mountains:", error);
-            } finally {
-                setIsLoading(false);
             }
         };
 
         fetchMountains();
     }, []);
-
-    if (isLoading) {
-        return <Loading />;
-    }
 
     const handleDelete = async (mountainId: string) => {
         if (!confirm("정말로 이 산을 삭제하시겠습니까?")) return;
