@@ -42,7 +42,7 @@
 
 ### Frontend
 - React, Next.js, TypeScript
-- Zustand, CSS Modules, SASS
+- Zustand, Styled-Components
 - PWA 지원
 
 ### Backend
